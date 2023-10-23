@@ -1,0 +1,17 @@
+@startuml Tool
+
+class Tool extends Loot {
+  - damage: float
+  - solidity: float
+  - maxSolidity: float
+  - textureBlackAndWhite: Texture
+  - hitZoneLenght: Pair<Integer, Integer>
+  - hitZonePointDecallage: Pair<Integer, Integer>
+
+  + Tool(toolType: ToolType, x: int, y: int, bounce: boolean, dir: Vector2, collected: boolean)
+  + getTextureBlackAndWhite(): Texture
+  + getHitZoneLenght(): Pair<Integer, Integer>
+  + getHitZonePointDecallage(): Pair<Integer, Integer>
+}
+
+@enduml

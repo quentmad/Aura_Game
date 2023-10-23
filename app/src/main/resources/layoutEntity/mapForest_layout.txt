@@ -1,0 +1,3 @@
+cerf1 660 140
+autruche 500 400
+cerf1 160 140

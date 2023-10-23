@@ -1,0 +1,59 @@
+@startuml Entity
+
+class Entity extends CollidableObject{
+  - spriteSheetInfo: SpriteSheetInfo
+  - currentSpriteX: int
+  - currentSpriteY: int
+  - currentBeginX: int
+  - hitboxHeightFlat: int
+  - lastEndSpriteX: int
+  - posHitboxX: int
+  - posHitboxY: int
+  - hitboxWidth: int
+  - spriteSheetData: SpriteSheetData
+  - tabOfAction: int[]
+  - actualActionName: String
+  - spritesActionDuration: int[]
+  - currentSpriteDuration: int
+  - defaultSpriteDuration: int
+  - currentDeplacement: Pair<Integer,Integer>
+  - currentDirectionLetter: String
+  - refreshTEMPO: int
+  - actualRegion: Region
+  - degatDefault: float
+  - hitZoneLenghtDefault: Pair<Integer,Integer>
+  - hitZonePointDecallageDefault: Pair<Integer,Integer>
+  - speed: int
+
+  + Entity(type: EntityType, speed: int, initX: int, initY: int)
+  + getDefaultSpriteDuration(): int
+  + getSpritesActionDuration(): int[]
+  + setCurrentBeginX(beginX: int): void
+  + getCurrentBeginX(): int
+  + getCurrentDeplacement(): Pair<Integer,Integer>
+  + getSpriteSheetInfo(): SpriteSheetInfo
+  + getCurrentSpriteX(): int
+  + setCurrentSpriteX(x: int): void
+  + getCurrentSpriteY(): int
+  + getHitboxHeightFlat(): int
+  + getLastEndSpriteX(): int
+  + getPosHitboxX(): int
+  + getPosHitboxY(): int
+  + getHitboxWidth(): int
+  + getCenterX(): int
+  + changeAction(action: String): void
+  + getActualActionName(): String
+  + updateHitbox(): void
+  + getDifferrenceImageHitboxX(): int
+  + getActualRegion(): Region
+  + isXOnRegion(x: int): boolean
+  + isYOnRegion(y: int): boolean
+  + getLootSpawnCenterX(lootWidth: int): int
+  + hit(): void
+  + hitZoneFromDirection(): Rectangle
+  + collideZoneNoMove(entCol: List<Entity>, zone: Rectangle): List<Entity>
+  + isInDanger(): boolean
+  + canSee(player: Entity): boolean
+}
+
+@enduml

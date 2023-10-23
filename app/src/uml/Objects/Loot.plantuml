@@ -1,0 +1,33 @@
+@startuml Loot
+
+class Loot extends BasicObject {
+  - name: String
+  - type: String
+  - texture: Texture
+  - shadowTexture: Texture
+  - offY: int
+  - description: String
+  - collected: boolean
+  - bouncing: boolean
+  - bounceY: float
+  - maxBounceY: int
+  - dir: Vector2
+  - player: PlayableEntity
+  - region: Region
+  - lootType: LootType
+  - bouncingUp: boolean
+
+  + Loot(lt: LootType, x: int, y: int, bounce: boolean, dir: Vector2, collected: boolean)
+  + getName(): String
+  + getTexture(): Texture
+  + getShadowTexture(): Texture
+  + getType(): String
+  + getLootType(): LootType
+  + isCollected(): boolean
+  + getBounceY(): int
+  + update(dt: float): void
+  + startBounce(): void
+  + setCollected(b: boolean): void
+}
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml CollidableObject
+
+class CollidableObject extends BasicObject{
+  - name: String
+  - hitboxFlat: Rectangle
+  - tall: int
+  - offY: int
+  - hitboxHeight: int
+  - hitboxPolygon: Polygon
+  - ui: UI
+  - maxLives: float
+  - life: float
+  - dead: boolean
+  - deathLoots: List<Triplet<String, Integer, Integer>>
+  - lootManager: LootManager
+  - listIndexGrid: List<Pair<Integer, Integer>>
+
+  + CollidableObject(name: String, hitboxFlat: Rectangle, posC_X: int, posC_Y: int, tall: int, hitboxPolygon: Polygon, hitboxHeight: int, offY: int, deathLoots: List<Triplet<String, Integer, Integer>>)
+  + getName(): String
+  + getListIndexGrid(): List<Pair<Integer, Integer>>
+  + setListIndexGrid(newGridList: List<Pair<Integer, Integer>>): void
+  + getHitboxFlat(): Rectangle
+  + getTall(): int
+  + getUI(): UI
+  + getOffY(): int
+  + getHitboxHeight(): int
+  + getHitboxPolygon(): Polygon
+  + getLootSpawnCenterX(lootWidth: int): int
+  + getCenterX(): int
+  + setHitboxPolygon(poly: Polygon): void
+  + getLife(): float
+  + getMaxLives(): float
+  + hurt(pv: float): void
+  + spawnDeathLoots(): void
+  + isPresentInZoneNoMove(zone: Rectangle): boolean
+}
+
+@enduml

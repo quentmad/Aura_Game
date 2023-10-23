@@ -1,0 +1,27 @@
+@startuml Item
+
+class Item extends CollidableObject {
+  - textureItem: Texture
+  - z: int
+  - listOriginalPolygon: float[]
+  - textureWidth: int
+  - textureHeight: int
+  - type: ItemType
+  - color: String
+
+  + Item(type: ItemType, casePosX: int, casePosY: int, color: String)
+  + getTextureItem(): Texture
+  + getZ(): int
+  + getListOriginalPolygon(): float[]
+  + getType(): ItemType
+  + getColor(): String
+  + getCenterX(): int
+  + getLootSpawnCenterX(lootWidth: int): int
+  + updateHitboxsAndPosition(casePosX: int, casePosY: int): void
+  + updatePolygonPoints(casePosX: int, casePosY: int): float[]
+  + willCollideIn(region: Region): boolean
+  + willCollideGroundNoMove(region: Region, vertices: float[]): boolean
+  + willCollidePolygonNoMove(verticesColission: float[], objCol: List<CollidableObject>, map: Region): List<CollidableObject>
+}
+
+@enduml

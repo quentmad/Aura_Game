@@ -1,0 +1,32 @@
+@startuml PlayableEntity
+
+class PlayableEntity extends Entity {
+  - currentToolIndex: int
+  - currentTool: Tool
+  - currentMeleeToolName: String
+  - currentRangedToolName: String
+  - spriteTool: SpriteSheetInfo[]
+  - currentToolSpriteY: int
+  - currentToolSizeSprite: int
+  - toolsspriteSheetData: ToolsSpriteSheetData
+
+  + PlayableEntity(typeSheet: EntityType, speed: int)
+  + getCurrentMeleeToolName(): String
+  + setCurrentMeleeToolName(toolName: String): void
+  + getCurrentToolSpriteY(): int
+  + getCurrentToolSizeSprite(): int
+  + isToolSelected(): boolean
+  + updateSpriteToolInfo(): void
+  + getCurrentMeleeToolName(): String
+  + setCurrentMeleeToolName(toolName: String): void
+  + getCurrentToolSpriteY(): int
+  + getCurrentToolSizeSprite(): int
+  + isToolSelected(): boolean
+  + updateSpriteToolInfo(): void
+  + getTextureRegionTool(sizeSprite: int): TextureRegion[][]
+  + getSpriteTool(): SpriteSheetInfo[]
+  + getToolsspriteSheetData(): ToolsSpriteSheetData
+  + updateSpriteDurationFromActionName(): boolean
+}
+
+@enduml

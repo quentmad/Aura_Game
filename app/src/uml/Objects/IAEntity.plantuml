@@ -1,0 +1,14 @@
+@startuml IAEntity
+
+class IAEntity extends Entity {
+  - behaviorTimer: float
+  - behaviorInterval: float
+  - behavior: Behavior
+  - behaviorManager: BehaviorManager
+
+  + IAEntity(typeSheet: EntityType, speed: int, behaviorInterval: float, initX: int, initY: int)
+  + update(deltaTime: float): void
+  + getActionNameFromNumber(number: int): String
+}
+
+@enduml

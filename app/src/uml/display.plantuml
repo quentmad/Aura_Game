@@ -1,0 +1,10 @@
+@startuml display
+!include ./Objects/BasicObject.plantuml
+!include ./Objects/CollidableObject.plantuml
+!include ./Objects/Entity.plantuml
+!include ./Objects/Item.plantuml
+!include ./Objects/Loot.plantuml
+!include ./Objects/IAEntity.plantuml
+!include ./Objects/PlayableEntity.plantuml
+!include ./Objects/Tool.plantuml
+@enduml

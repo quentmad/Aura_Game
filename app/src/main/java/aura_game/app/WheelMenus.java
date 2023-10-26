@@ -19,8 +19,8 @@ public class WheelMenus {
 
     private WheelMenus(String colorMenu ) {
         activeWheel = null;
-        meleeWeapons = new Wheel<>(colorMenu, 12, 64, "slotWheelMenuMelee");
-        rangedWeapons = new Wheel<>(colorMenu, 12, 64, "slotWheelMenuRanged");
+        meleeWeapons = new Wheel<>(colorMenu, 12, 64, "slotWheelMenuMelee",0);
+        rangedWeapons = new Wheel<>(colorMenu, 12, 64, "slotWheelMenuRanged",80);
 
     }
 
@@ -106,6 +106,12 @@ public class WheelMenus {
             activeWheel.moveSlotSelected(direction);
         }     }
 
+
+  /**Appel la méthode des deux wheel*/
+    public void renderActualTool(SpriteBatch batch) {
+        meleeWeapons.renderActualTool(batch);
+        rangedWeapons.renderActualTool(batch);
+    }
 
 
     /**Appel la méthode du {@code activeWheel}*/

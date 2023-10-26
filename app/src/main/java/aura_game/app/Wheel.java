@@ -17,11 +17,14 @@ import aura_game.app.Objects.Tool;
 public class Wheel<T>{
 
     private Sprite wheelMenuSprite;
+    /**Tool actuel du joueur (il a enter dessus) */
+    private Tool actualPlayerTool;
+    /**Element selectionné (pas actuel) */
     private Tool selectedElement;
     private List<Tool> content;
     /**Positions (bas a gauche) d'affichage du slot 64*64 x1 y1.. x6 y6*/
     private final int[] positionsSlot;
-    /*Indice de l'élément sélectionnée*/
+    /*Indice de l'élément sélectionnée (pas actuel du joueur)*/
     private int selectedSlotIndex;
     /**Slot au maximum dans le content*/
     private int totalSlot;
@@ -34,11 +37,16 @@ public class Wheel<T>{
     private int startMenuY;
     private final Sprite selectedSlotSprite;   
 
+
+    /**Slot rond de taille 64*64 situé en bas à droite de l'image, possède le meleeWeapons actuel du joueur*/
+    private Sprite spriteActualToolSlot;
+
+
     private AudioManager audioManager;    
 
 
     /**Par exemple Tool Ranged, Tool Melee, Sorts, Compétences */
-    public Wheel(String colorMenu,int totalSlot, int sizeSlot, String selectedSlotName) {
+    public Wheel(String colorMenu,int totalSlot, int sizeSlot, String selectedSlotName, int slotActualToolDecalX) {
 
         wheelMenuSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/wheelMenu_"+colorMenu+".png")));
         wheelMenuSprite.setCenter(900, 300);
@@ -56,17 +64,23 @@ public class Wheel<T>{
         this.slotOccupied = 0;
         this.selectedSlotSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/"+selectedSlotName+".png")));;
         this.selectedElement = null;
+        this.actualPlayerTool = null;
+        //Slot de taille 64*64 des tools actuels
+        this.spriteActualToolSlot = new Sprite(new Texture(Gdx.files.internal("src/main/resources/Rond_slot64_Tool_jarques(blue).png")));
+        this.spriteActualToolSlot.setPosition(990+slotActualToolDecalX, 50);//A 50 des bords
         this.audioManager = AudioManager.getInstance();
 
     }
 
     /** 
      * Ce lance lorsqu'on appuie sur {@code enter} quand le wheelMenu est ouvert.
-     * Defini l'arme actuelle (le nom) de cette categorie du joueur à l'arme du selected slotIndex
+     * Defini l'arme actuelle (le nom) de cette categorie du joueur à l'arme du selected slotIndex.
+     * Defini le tool actuel a celui selectionné également.
      * @param player
      */
     public void setActualTool(PlayableEntity player){
         if(selectedElement !=null){
+            this.actualPlayerTool = selectedElement;
             player.setCurrentMeleeToolName(selectedElement.getName());
             System.out.println(player.getCurrentMeleeToolName());
         }
@@ -143,6 +157,17 @@ public class Wheel<T>{
             this.selectedSlotSprite.setPosition(startMenuX+ positionsSlot[selectedSlotIndex*2], startMenuY +  positionsSlot[selectedSlotIndex*2+1]-sizeSlot);//! mauvais calcul du coup
         }
 
+    }
+
+    /**Affiche a l'ecran le slot rond et le tool actuel du joueur, qui ont déjà une position défini,
+     * Si actualPlayerTool est null, ne fait rien
+     */
+    public void renderActualTool(SpriteBatch batch) {
+        if(actualPlayerTool !=null){
+            spriteActualToolSlot.draw(batch);
+            System.out.println(spriteActualToolSlot.getX()+"y:"+ spriteActualToolSlot.getY());
+            batch.draw(actualPlayerTool.getTextureBlackAndWhite(),spriteActualToolSlot.getX(), spriteActualToolSlot.getY());
+        }
     }
 
 

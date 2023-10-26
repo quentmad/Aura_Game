@@ -18,6 +18,7 @@ public class MyInputProc implements InputProcessor {
     private static MyInputProc instance;
     /**Liste des keycode actuellement pressé*/
     private List<Integer> keysPressed;
+    
     /**Liste des actions continues(Walk_L...) actuellements pressés 
      * Permet de pouvoir passer d'une direction/action à l'autre sans etre arreté par changeAction(null) si on lache une ancienne touche
      */

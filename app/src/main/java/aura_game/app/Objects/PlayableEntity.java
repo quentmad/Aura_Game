@@ -11,8 +11,8 @@ import aura_game.app.Type.EntityType;
 public class PlayableEntity extends Entity {
 
     /*Arme/outil qu'a actuellement le joueur en main, null/"" sinon */
-    private int currentToolIndex;//!remove
-    private Tool currentTool;//!remove
+    //private int currentToolIndex;//!remove
+    //private Tool currentTool;//!remove
 
     private String currentMeleeToolName;
 
@@ -34,8 +34,8 @@ public class PlayableEntity extends Entity {
         this.spriteTool = new SpriteSheetInfo[]{new SpriteSheetInfo(64,"tools64"), new SpriteSheetInfo(128,"tools128"), new SpriteSheetInfo(192,"tools192")};
         this.currentToolSpriteY = -1;
         this.currentToolSizeSprite = -1;
-        this.currentToolIndex = -1;
-        this.currentTool = null;
+        //this.currentToolIndex = -1;
+        //this.currentTool = null;
         this.currentMeleeToolName = "";
         this.currentRangedToolName = "";
     }
@@ -121,7 +121,7 @@ public class PlayableEntity extends Entity {
             setCurrentSpriteX(actualActionTool[2]);
         }else{
             System.out.println("remove tool" );
-            currentToolIndex = -1;
+            //currentToolIndex = -1;
             currentToolSpriteY = -1;
             currentToolSizeSprite = -1;
             setCurrentBeginX(0);

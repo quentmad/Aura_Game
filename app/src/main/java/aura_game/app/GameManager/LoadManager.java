@@ -38,7 +38,7 @@ public class LoadManager {
      * Initialise les dépendances et configurations nécessaires pour le gestionnaire de chargement. Cette méthode joue un rôle central
      * dans l'application du modèle de conception "Pattern Observer" (Observateur) conjointement avec le principe d'"Injection de Dépendances".
      * En utilisant ce modèle et ce principe, les classes peuvent s'observer mutuellement sans créer de dépendances directes.
-     *
+     * <p>
      * La méthode met en place les dépendances requises pour le gestionnaire de chargement. Elle prépare les objets et attributs
      * cruciaux, notamment le gestionnaire de mise à jour, la région du jeu, le joueur, l'inventaire du joueur et le gestionnaire d'entrée.
      * Cette initialisation crée une base solide pour le chargement des éléments du jeu en garantissant que les dépendances sont correctement

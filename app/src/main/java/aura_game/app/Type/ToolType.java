@@ -49,7 +49,7 @@ public enum ToolType {
     /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     private final Pair<Integer,Integer> hitZonePointDecallage;    
-
+ 
 
     ToolType(LootType lootType, float damage, float maxSolidity,Pair<Integer,Integer> hitZoneLenght,Pair<Integer,Integer> hitZonePointDecallage ) {
         this.lootType = lootType;

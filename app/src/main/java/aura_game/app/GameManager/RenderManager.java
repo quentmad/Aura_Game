@@ -80,6 +80,8 @@ public class RenderManager {
         renderMap();
         renderObjects();
         renderSky(dt);
+        //render les elements heart, slots tools...
+        wheelMenus.renderActualTool(batch);
         renderActiveMenu();
         batch.end();
         tempoRenderZoneDegatPlayer();

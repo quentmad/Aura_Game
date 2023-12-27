@@ -61,17 +61,17 @@ public class AudioManager {
      * @param volume du sonn joué entre 0 et 1
      */
     public void playSound(Sound sound,float volume ){
-        sound.play(volume);
+        sound.play(0);//! remettre volume !!!!!!!!! TODO
     }
 
     /**MEttre action et name dans les type si pas fait (item, entity...) */
     public void playSound(String action,String name, float volume ){
         switch (action +"_"+ name){
             case "wood_hurt":
-                soundBreakWood.play(volume);
+                soundBreakWood.play(0);//! remettre volume !!!!!!!!!
                 break;
             case"entity_hurt":
-                soundHurtEntity.play(volume);                  
+                soundHurtEntity.play(0);//! remettre volume !!!!!!!!!
         }
 
     }

@@ -75,18 +75,30 @@ public class Wheel<T>{
     /** 
      * Ce lance lorsqu'on appuie sur {@code enter} quand le wheelMenu est ouvert.
      * Defini l'arme actuelle (le nom) de cette categorie du joueur à l'arme du selected slotIndex.
-     * Defini le tool actuel a celui selectionné également.
+     * Defini le tool actuel pour cette category a celui selectionné également.
+     * <p> Attention: set le tool actuel du type mais pas directement le tool du joueur
      * @param player
      */
-    public void setActualTool(PlayableEntity player){
+    public void setActualToolCategory(PlayableEntity player){
         if(selectedElement !=null){
             this.actualPlayerTool = selectedElement;
-            player.setCurrentMeleeToolName(selectedElement.getName());
-            System.out.println(player.getCurrentMeleeToolName());
+            //if(player.getCurrentCategory!!! )//TODO faire un setter de la category actuelle du tool du joueur
+            //Puis quand amelioration on stockera que l'arme (si possible) et pas name et cate donc ca sera mieux
+            //Permet de mettre a jour l'arme actuelle lors de enter si c'est le meme type (evite que le joueur est une ancienne arme non maj)
+            //player.setCurrentMeleeToolName(selectedElement.getName());
+            //System.out.println(player.getCurrentMeleeToolName());
         }
     }
 
-
+    /**
+     * Defini l'arme actuelle du joueur a l'arme actuelle de ce wheel (soit l'arme actuelle de melee soit ranged)
+     * @param player
+     */
+    public void setActualToolPlayer(PlayableEntity player){
+        if(actualPlayerTool !=null){
+            player.setCurrentToolName(actualPlayerTool.getName());
+        }
+    }
 
 
     /**

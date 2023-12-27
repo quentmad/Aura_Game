@@ -31,6 +31,15 @@ public class WheelMenus {
         return instance;
     }
 
+    
+
+    public Wheel<Tool> getMeleeWeapons() {
+        return meleeWeapons;
+    }
+
+    public Wheel<Tool> getRangedWeapons() {
+        return rangedWeapons;
+    }
 
     /**Defini le Wheel actif, si le string est un nom valide */
     public void setActiveWheel(String wheel) {
@@ -71,7 +80,7 @@ public class WheelMenus {
      */
     public void setActualTool(PlayableEntity player){
         if (activeWheel != null) {
-            activeWheel.setActualTool(player);
+            activeWheel.setActualToolCategory(player);
         } 
     }
 

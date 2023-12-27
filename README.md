@@ -15,5 +15,4 @@ La quête principale de votre aventure est d'aider Aura à retrouver sa famille.
 
 Le jeu se déroule dans des lieux naturels tels que des forêts magiques, et il est rythmé par des musiques calmes et atmosphériques, ainsi que par des musiques plus mouvementées lors des moments de combat.
 
-#### Style
 Le jeu est conçu dans le style RPG et il vous permet de découvrir un univers fantastique et de vivre une aventure passionnante avec un animal mignon et courageux. Vous devez faire preuve de courage et de détermination pour protéger la planète et aider l'animal à retrouver sa famille, tout en affrontant des méchants et en surmontant les challenges qui se dressent sur votre route.

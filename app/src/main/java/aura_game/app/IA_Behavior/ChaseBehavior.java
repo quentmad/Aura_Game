@@ -7,7 +7,7 @@ import aura_game.app.Objects.IAEntity;
 public class ChaseBehavior implements Behavior {
     /**On utilise la position de la cible (target) pour calculer la direction vers celle-ci, puis déplace l'entité dans cette direction.*/
     private Entity target;
-    
+
     /**Logique de poursuite de la cible la plus proche*/
     public ChaseBehavior(Entity target) {
         this.target = target;
@@ -18,7 +18,7 @@ public class ChaseBehavior implements Behavior {
         // Logique de poursuite de la cible la plus proche
         // Utilisez les méthodes de l'entité pour déterminer la cible et ajuster le mouvement en conséquence
         // Par exemple, calculez la direction vers la cible et déplacez-vous dans cette direction
-        
+
         // Exemple :
         /*
         Vector2 targetPosition = target.getPosition();

@@ -172,7 +172,7 @@ public class RenderManager {
     /**Affiche l'outil/arme selectionné actuellement par le joueur, ou n'affiche rien si il n'y a rien de selectionné */
     public void renderTool(){
 
-        if( player.getCurrentMeleeToolName()  != "" && player.getCurrentToolSizeSprite() != -1){
+        if( player.getCurrentToolName()  != "" && player.getCurrentToolSizeSprite() != -1){
             //Décallage de x et y si on a une sprite plus grande que celle du personnage
             int marge = (player.getCurrentToolSizeSprite() - 64);
             if(marge>0){marge/=2;}else{marge=0;}

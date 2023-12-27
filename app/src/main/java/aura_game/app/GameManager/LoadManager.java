@@ -210,7 +210,10 @@ public class LoadManager {
             if (updateManager.activeMenu().equals("crafting")) {    
                 crafting.getCraftManager().craftItem(Pair.of(crafting.getLootSelected().getName(),1));
             }else if (updateManager.activeMenu().equals("wheel")) { wheelMenus.setActualTool(player);}
-            });
+        });
+
+        inputHandler.mapKeyToAction(Input.Keys.A, () -> { wheelMenus.getMeleeWeapons().setActualToolPlayer(player);});
+        inputHandler.mapKeyToAction(Input.Keys.Z, () -> { wheelMenus.getRangedWeapons().setActualToolPlayer(player);});
     }
     
 }

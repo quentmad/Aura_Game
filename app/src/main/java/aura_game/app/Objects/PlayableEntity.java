@@ -1,10 +1,10 @@
 package aura_game.app.Objects;
 
-import org.apache.commons.lang3.tuple.Pair;
+//import org.apache.commons.lang3.tuple.Pair;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import aura_game.app.LootManager;
+//import aura_game.app.LootManager;
 import aura_game.app.SpriteSheet.*;
 import aura_game.app.Type.EntityType;
 
@@ -14,9 +14,8 @@ public class PlayableEntity extends Entity {
     //private int currentToolIndex;//!remove
     //private Tool currentTool;//!remove
 
-    private String currentMeleeToolName;
+    private String currentToolName;
 
-    private String currentRangedToolName;
     
     /**SpriteSheet Texture de taille 64,128,192*/
     private final SpriteSheetInfo[] spriteTool;
@@ -36,8 +35,7 @@ public class PlayableEntity extends Entity {
         this.currentToolSizeSprite = -1;
         //this.currentToolIndex = -1;
         //this.currentTool = null;
-        this.currentMeleeToolName = "";
-        this.currentRangedToolName = "";
+        this.currentToolName = "";
     }
 
     /** @return L'index de l'arme/outil actuellement selectionné par la main du player*/
@@ -73,11 +71,12 @@ public class PlayableEntity extends Entity {
         }
         return "";
     }*/
-    public String getCurrentMeleeToolName(){
-        return currentMeleeToolName;
+
+    public String getCurrentToolName(){
+        return currentToolName;
     }
-    public void setCurrentMeleeToolName(String toolName){
-        this.currentMeleeToolName = toolName;
+    public void setCurrentToolName(String toolName){
+        this.currentToolName = toolName;
     }
 
     /*
@@ -98,7 +97,7 @@ public class PlayableEntity extends Entity {
      * @return {@code true} si un outil/arme est actuellement selectionné, sinon {@code false}
      */
     public boolean isToolSelected(){
-        String selec = getCurrentMeleeToolName();
+        String selec = getCurrentToolName();
         if ( selec == ""){ 
             return false;
         }
@@ -110,11 +109,11 @@ public class PlayableEntity extends Entity {
      *///TODO modif here: ùaj les 2
     public void updateSpriteToolInfo(){
         int[] actualActionTool = null;
-        if(getCurrentMeleeToolName() != ""){//Alors une arme est selectionné
-            actualActionTool =  getToolsspriteSheetData().getActionInfo(getCurrentMeleeToolName(), getActualActionName());
+        if(getCurrentToolName() != ""){//Alors une arme est selectionné
+            actualActionTool =  getToolsspriteSheetData().getActionInfo(getCurrentToolName(), getActualActionName());
         }    
         if(actualActionTool != null){
-            System.out.print(getCurrentMeleeToolName());
+            System.out.print(getCurrentToolName());
             currentToolSpriteY = actualActionTool[0];
             currentToolSizeSprite = actualActionTool[1];
             setCurrentBeginX(actualActionTool[2]);

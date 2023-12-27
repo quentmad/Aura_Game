@@ -11,14 +11,14 @@ public enum EntityType {//TODO: ajouter speed ici ?
     player("player", 64, 64, 50, 32, 50, 10, 8,///TODO C'est 8 mais le 9 remet a 0.. (faire +1%nb)
         new int[] {
            //order:U L D R
-           //SpellCast Thrust   Walk      Slash         Shoot      Hurt             
+           //SpellCast Thrust   Walk      Slash         Shoot      Hurt
             6,6,6,6, 7,7,7,7, 8,8,8,8,   5,5,5,5,     12,12,12,12, 5 // endSpriteX
         },new String[] {
             "SpellCast_U", "SpellCast_L",  "SpellCast_D", "SpellCast_R", "Thrust_U","Thrust_L", "Thrust_D", "Thrust_R", "Walk_U","Walk_L", "Walk_D", "Walk_R",
             "Slash_U", "Slash_L", "Slash_D", "Slash_R", "Shoot_U", "Shoot_L", "Shoot_D", "Shoot_R", "Hurt_D"},
         Arrays.asList(
         ), 1, Pair.of(15, 20),Pair.of(4, -5)),
-            
+
     cerf1("cerf1", 48, 60, 45, 32, 56, 16, 3,
         new int[] {
             // Walk: D L R U
@@ -40,7 +40,7 @@ public enum EntityType {//TODO: ajouter speed ici ?
         /*Pour rappel tab[][] le premier correspond a la hauteur et le 2e a la largeur
         Par exemple tab[0][1] vaut 2
         {1, 2, 3},
-        {4, 5, 6},  
+        {4, 5, 6},
         {7, 8, 9} */
 
     /**Nom pour charger le fichier png spriteSheet*/
@@ -68,7 +68,7 @@ public enum EntityType {//TODO: ajouter speed ici ?
     private final float degatDefault;
     /**Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
     private final Pair<Integer,Integer> hitZoneLenghtDefault;
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     private final Pair<Integer,Integer> hitZonePointDecallageDefault;
 
@@ -98,7 +98,7 @@ public enum EntityType {//TODO: ajouter speed ici ?
     public int spriteWidth() {
         return spriteWidth;
     }
-    /**@return la hauteur d'une sprite de la spriteSheet*/    
+    /**@return la hauteur d'une sprite de la spriteSheet*/
     public int spriteHeight() {
         return spriteHeight;
     }
@@ -143,13 +143,13 @@ public enum EntityType {//TODO: ajouter speed ici ?
     public Pair<Integer, Integer> hitZoneLenghtDefault() {
         return hitZoneLenghtDefault;
     }
-    
+
     /**dégats que fait l'entité, sans armes */
     public float degatDefault() {
         return degatDefault;
     }
 
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     public Pair<Integer, Integer> hitZonePointDecallageDefault() {
         return hitZonePointDecallageDefault;

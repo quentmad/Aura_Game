@@ -5,23 +5,22 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
-import aura_game.app.Type.LootType;
 import aura_game.app.Type.ToolType;
 
 /**Un outil est un loot avec des attributs supplémentaire
- * On utilise LootType et ToolType (les 2 par outil ) pour construire les tools
- * Les outils spéciaux (arcs, bombes... ) ne sont pas ici
+ * On utilise LootType et ToolType (les 2 par outil) pour construire les tools
+ * Les outils spéciaux (arcs, bombes...) ne sont pas ici
  */
 public class Tool extends Loot{
-    /**dégats que fait l'outil*/
+    /**Dégats que fait l'outil*/
     private final float damage;
     private float solidity;
     private float maxSolidity;
-    /**Texture noir et blanche pour affichage sur le wheel Menu (basé sur la texture de base avec effet contraste noir et blanc eleve de "Photos"*/
+    /**Texture noir et blanc pour affichage sur le wheel Menu (basé sur la texture de base avec effet contraste noir et blanc eleve de "Photos"*/
     private Texture textureBlackAndWhite;
     /**Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
     private final Pair<Integer,Integer> hitZoneLenght;
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     private final Pair<Integer,Integer> hitZonePointDecallage;    
 
@@ -37,7 +36,7 @@ public class Tool extends Loot{
 
     }
 
-    /**Texture noir et blanche pour affichage sur le wheel Menu (basé sur la texture de base avec effet contraste noir et blanc eleve de "Photos"*/
+    /**Texture noir sur blanc pour affichage sur le wheel Menu (basé sur la texture de base avec effet contraste noir et blanc eleve de "Photos"*/
     public Texture getTextureBlackAndWhite(){
         return textureBlackAndWhite;
     }
@@ -47,7 +46,8 @@ public class Tool extends Loot{
         return hitZoneLenght;
     }
     
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un
+     * côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     public Pair<Integer, Integer> getHitZonePointDecallage() {
         return hitZonePointDecallage;

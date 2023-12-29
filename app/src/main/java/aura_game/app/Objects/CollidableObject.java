@@ -12,10 +12,10 @@ import aura_game.app.Type.LootType;
 import aura_game.app.Util.Triplet;
 
 
-/**BasicObject avec un hitbox de colission, et des loots lors de sa destruction */
+/**BasicObject avec un hitbox de collision, et des loots lors de sa destruction */
 public class CollidableObject extends BasicObject {
 
-    private String name;
+    private final String name;
 
     private Rectangle hitboxFlat;//Correspond à une hitbox rectangle simple plat pour le quadtree/grid
     private final int tall;//La taille 0 correspond à un item "plat"
@@ -29,11 +29,11 @@ public class CollidableObject extends BasicObject {
     protected float maxLives;
     protected float life;
     private boolean dead;
-    /**Loots qui peuvent etre donné par l'objet lorsqu'il est détruit:
+    /**Loots qui peuvent etre donné par l'objet lorsqu'il est détruit :
      * Name, Min, Max*/
-    private List<Triplet<String,Integer,Integer>> deathLoots;
+    private final List<Triplet<String,Integer,Integer>> deathLoots;
     private LootManager lootManager;
-    /**Dernière version des index dans lequel l'obj est présent dans la grille / grille de superposition si il y en a plusieurs*/
+    /**Dernière version des index dans lequel l'obj est présent dans la grille / grille de superposition s'il y en a plusieurs*/
     private List<Pair<Integer, Integer>> listIndexGrid;
 
 
@@ -80,13 +80,13 @@ public class CollidableObject extends BasicObject {
         return tall;
     }
 
-    /**bar de vies, coeurs... */
+    /**Bar de vies, cœurs... */
     public UI getUI(){
         return ui;
     }
 
     /**
-     * Retourne la différence entre le bas de l'image et le 1e pixel de l'item(en y).Cette valeur est extraite du itemType et est constante
+     * Retourne la différence entre le bas de l'image et le 1e pixel de l'item(en y). Cette valeur est extraite d'itemType et est constante
      * @return la valeur de différence 
      */
     public int getOffY(){
@@ -101,14 +101,14 @@ public class CollidableObject extends BasicObject {
     public Polygon getHitboxPolygon(){
         return hitboxPolygon;
     }
-    /**Ne devrait pas etre appelé, existe ici pour éviter pb */
+    /**Ne doit pas être appelé, existe ici pour éviter pb */
     public int getLootSpawnCenterX(int lootWidth){
         System.out.println("getLootSpawnCenterX should not be called directetly in CollidableObject");
         return -1;
     }
-     /**Ne devrait pas etre appelé, existe ici pour éviter pb */
+     /**Ne doit pas être appelé, existe ici pour éviter pb */
     public int getCenterX(){
-        System.out.println("getCenterX should not be called directetly in CollidableObject");   
+        System.out.println("getCenterX should not be called directly in CollidableObject");
         return -1;
     }
 
@@ -129,27 +129,27 @@ public class CollidableObject extends BasicObject {
     }
 
     /**
-     * A partir du deathLoots, génére des loots et lance spawnLoot pour chacun, selon le this
-     * Pour chaque loots possible, on en génere un nombre aléatoire entre min et max.
+     * Génère des loots à partir du deathLoots et lance spawnLoot pour chacun, selon le this
+     * Pour chaque loots possible, on en génère un nombre aléatoire entre min et max.
      */
     public void spawnDeathLoots() {
 
         for(int i =0; i<deathLoots.size();i++){
-            //Pour chaque loots possible, on en génere un nombre aléatoire entre min et max 
-            LootType lootType= LootType.valueOf(deathLoots.get(i).getFirst());
-            int nbLoots =(int)Math.floor(Math.random() * (deathLoots.get(i).getThird() - deathLoots.get(i).getSecond() + 1)) + deathLoots.get(i).getSecond();
+            //Pour chaque loots possible, on en génère un nombre aléatoire entre min et max
+            LootType lootType= LootType.valueOf(deathLoots.get(i).first());
+            int nbLoots =(int)Math.floor(Math.random() * (deathLoots.get(i).third() - deathLoots.get(i).second() + 1)) + deathLoots.get(i).second();
             //System.out.println(lootType.getName() + " : " +nbLoots+ "loots");
             for(int j = 0; j < nbLoots; j++){
                 // On appel spawnLoot en définisant une direction
                 int dx = Math.round((float) (Math.random() * 2 - 1));
                 int dy = Math.round((float) (Math.random() * 2 - 1));
                 //System.out.println("en " + dx + " "+ dy);
-                lootManager.spawnLoot(lootType, getLootSpawnCenterX(lootType.width()), getPosC_Y()+lootType.offY(),true , lootManager.getJumpVec(dx, dy, 1));;
+                lootManager.spawnLoot(lootType, getLootSpawnCenterX(lootType.width()), getPosC_Y()+lootType.offY(),true , lootManager.getJumpVec(dx, dy, 1));
             }
         }
     }
 
-    /**Vérifie si l'objet this se trouve la zone de colission, suivant sa hitbox {@code polygon} 
+    /**Vérifie si l'objet this se trouve la zone de collision, suivant sa hitbox {@code polygon}
      *(pour rappel les entités ont seulement des rectangles et leur polygon est égal à leur rectangle) */
     public boolean isPresentInZoneNoMove(Rectangle zone) {
         float[] vertices = getHitboxPolygon().getTransformedVertices();

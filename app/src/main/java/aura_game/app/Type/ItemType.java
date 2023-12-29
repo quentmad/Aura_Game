@@ -51,18 +51,18 @@ public enum ItemType {//TODO: loots (arbre: branche,bois, feuilles) liste d'id ?
     new float[]{21,16, 25,18, 28,18, 28,16, 37,16, 37,18, 40,18, 44,16,
                 46,8, 44,3, 40,3, 40,1, 37,1, 37,3,
                 28,3, 28,1, 25,1, 25,3, 21,3, 19,8},new String[]{},
-    Arrays.asList(
-                new Triplet<>("stick", 2, 4)
-                )
+            List.of(
+                    new Triplet<>("stick", 2, 4)
+            )
     ),
 
     clear_trunk_tree("clear_trunk_tree",64,64, 7,11,54,//5
     new float[]{13,15, 5,20, 5,22, 7,22, 7,26, 3,30, 3,32,      16,44, 22,44, 27,40, 38,40, 43,44, 49,44,
                 62,32, 62,30, 58,26, 58,22, 60,22, 60,20, 55,15, 52,15, 52,9, 50,9, 50,7, 44,7, 38,11, 27,11, 21,7, 15,7, 15,9, 13,9},
                 new String[]{},
-    Arrays.asList(
-                new Triplet<>("stick", 1, 3)
-                )
+            List.of(
+                    new Triplet<>("stick", 1, 3)
+            )
     ),
 
     fir_1_tree("fir_1_tree",128,160,15,110,124,  //7
@@ -129,23 +129,23 @@ public enum ItemType {//TODO: loots (arbre: branche,bois, feuilles) liste d'id ?
     new float[]{11,13, 11,24, 15,24, 15,30, 19,34, 30,34, 30,32, 46,32, 46,30, 54,30, 62,24, 62,15,
                 58,13, 57,7, 54,3, 43,3, 43,5, 27,5, 27,7, 19,7},
     new String[]{},
-    Arrays.asList(
-                new Triplet<>("rock", 5, 10)
-                )
+            List.of(
+                    new Triplet<>("rock", 5, 10)
+            )
     ),
 
     boulder_little("boulder_little", 32,32 ,1,10,17, //15
     new float[]{3,9, 3,12, 9,18, 15,20, 26,20, 32,16, 32,13, 20,3, 13,3},
     new String[]{},
-    Arrays.asList(
-                new Triplet<>("rock", 1, 5)
-                )
+            List.of(
+                    new Triplet<>("rock", 1, 5)
+            )
     );
 
 
 
 
-    private String name;
+    private final String name;
     /**Le chemin d'accès à la texture (sans ombre) de l'item.*/
     private final String texturePath;
     /**Premier pixel en y par rapport au bas de l'image */
@@ -159,9 +159,9 @@ public enum ItemType {//TODO: loots (arbre: branche,bois, feuilles) liste d'id ?
     /**Hauteur du rectangle hitbox (sans vu isometrique (nombre de pixels en Y non transp/ombre bas))*/
     private final int hitboxHeight;
     private final float[] listPolygon;
-    /**Liste des couleurs possible pour l'item(green...) */
-    private String[] listColor;
-    private List<Triplet<String, Integer, Integer>> deathLoots;
+    /**Liste des couleurs possible pour l'item (green...) */
+    private final String[] listColor;
+    private final List<Triplet<String, Integer, Integer>> deathLoots;
 
     /**
      * @param itemName le nom de l'item
@@ -171,7 +171,7 @@ public enum ItemType {//TODO: loots (arbre: branche,bois, feuilles) liste d'id ?
      * @param tall La taille de l'item
      * @param hitboxHeight
      * @param listPolygon le tableau des points du polygon hitbox de l'item
-     * @param listColor le tableau des couleurs possible pour l'item(green...)
+     * @param listColor le tableau des couleurs possible pour l'item (green...)
      * @param deathLoots la liste des loots possible avec leur intervale min-max
      */
     ItemType(String itemName,int textureW, int textureH, int offY, int tall,int hitboxHeight, float[] listPolygon, String[] listColor, List<Triplet<String, Integer, Integer>> deathLoots) {
@@ -234,7 +234,7 @@ public enum ItemType {//TODO: loots (arbre: branche,bois, feuilles) liste d'id ?
     }
 
     /**Permet d'avoir le nom du fichier de l'image de l'item à partir de la couleur souhaité.
-     * Verifie si la couleur souhaité existe pour l'itemType en question
+     * Verifie si la couleur souhaitée existe pour l'itemType en question
      * @param color
      * @return Si Color existe retourne nomType+color sinon met un message d'erreur et retourne null
      */

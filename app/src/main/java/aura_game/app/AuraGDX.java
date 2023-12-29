@@ -4,12 +4,7 @@ package aura_game.app;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-//import com.badlogic.gdx.graphics.g2d.BitmapFont;
-//import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-//import com.badlogic.gdx.utils.Timer;
-//import com.badlogic.gdx.utils.Timer.Task;
 
-import aura_game.app.GameManager.AudioManager;
 import aura_game.app.GameManager.Game;
 import aura_game.app.GameManager.LoadManager;
 import aura_game.app.GameManager.RenderManager;
@@ -22,35 +17,30 @@ public class AuraGDX extends ApplicationAdapter {
 
     //SpriteBatch batch; // déclaration d'un objet SpriteBatch pour dessiner les images
 
-    private Game game;
     private UpdateManager updateManager;
-    private LoadManager loadManager;
     private RenderManager renderManager;
 
     /**
      * Permet de gérer les sons dans le jeu.
      */
-    private AudioManager audioManager;
+    //private AudioManager audioManager;
     /**
      * Gestion du clavier
      */
     private int frameCount=0;
+    FPSCounter fpsCounter;
 
-    /**
-     * Gestion du comptage des images par seconde (FPS).
-     */
-    private FPSCounter fpsCounter;
-
-    float delay = 0; // Délai initial avant la première exécution (0 signifie tout de suite)
-    float interval = 2; // Intervalle de temps entre chaque exécution (2 secondes)
+    //float delay = 0; // Délai initial avant la première exécution (0 signifie tout de suite)
+    //float interval = 2; // Intervalle de temps entre chaque exécution (2 secondes)
 
     @Override
     public void create () {
-        fpsCounter = new FPSCounter();
-        game = Game.getInstance();
+
+        fpsCounter = new FPSCounter();//Gestion du comptage des images par seconde (FPS)
+        Game game = Game.getInstance();
         game.start();
         updateManager = game.getUpdateManager();
-        loadManager = game.getLoadManager();
+        LoadManager loadManager = game.getLoadManager();
         renderManager = game.getRenderManager();
 
         loadManager.startNewGame();
@@ -59,7 +49,7 @@ public class AuraGDX extends ApplicationAdapter {
 
     }
 
-    //Appelé de façon continue par la boucle principale de libGDX
+    /**Appelé de façon continue par la boucle principale de libGDX*/
     @Override
     public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -72,16 +62,6 @@ public class AuraGDX extends ApplicationAdapter {
         }
         frameCount++;
     }
-    
-        /*Timer.schedule(new Task(){
-            @Override
-            public void run() {
-            // Code à exécuter toutes les 2 secondes
-            for(IAEntity ent : mapForest) {
-            System.out.println("2s");
-            //update toutes les entites de map
-        }
-        }, delay, interval);*/
 
 }
 

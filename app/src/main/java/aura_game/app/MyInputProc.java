@@ -16,15 +16,15 @@ import aura_game.app.Objects.PlayableEntity;
 public class MyInputProc implements InputProcessor {
 
     private static MyInputProc instance;
-    /**Liste des keycode actuellement pressé*/
+    /**Liste des keycode actuellement pressée*/
     private List<Integer> keysPressed;
     
-    /**Liste des actions continues(Walk_L...) actuellements pressés 
-     * Permet de pouvoir passer d'une direction/action à l'autre sans etre arreté par changeAction(null) si on lache une ancienne touche
+    /**Liste des actions continues (Walk_L...) actuellements pressés
+     * Permet de pouvoir passer d'une direction/action à l'autre sans etre arreté par changeAction(null) si on lâche une ancienne touche
      */
     private List<String> activeContinuousActions;
 
-    /**Si une action instantané/autonome est en cours*/
+    /**Si une action instantanée/autonome est en cours*/
     private boolean onGoingStaticAction = false;
 
     /**Instance unique du player présent dans GameManager*/
@@ -54,39 +54,32 @@ public class MyInputProc implements InputProcessor {
     }
 
     public String getNameActionWalkingFromKeycode(int keycode){
-        switch(keycode){
-            case Input.Keys.LEFT :
-                return "Walk_L";
-            case Input.Keys.RIGHT:
-                return "Walk_R";
-            case Input.Keys.UP:
-                return "Walk_U";
-            case Input.Keys.DOWN:
-                return "Walk_D";
-            default:
-                return null;
-        }
+        return switch (keycode) {
+            case Input.Keys.LEFT -> "Walk_L";
+            case Input.Keys.RIGHT -> "Walk_R";
+            case Input.Keys.UP -> "Walk_U";
+            case Input.Keys.DOWN -> "Walk_D";
+            default -> null;
+        };
     }
 //TODO: action déclenché (thrust,spellcast) et action instantanée(slash, shoot)
     /**
      * 
      * @param keycode
-     * @return True si c'est une action qui s'excutera entièrement en cliquant juste une fois (SLash,Thrust...)
+     * @return True si c'est une action qui s'excutera entièrement en cliquant juste une fois (Slash, Thrust...)
      */
     private boolean IsStaticAction(int keycode) {
-        switch(keycode){   
-            case Input.Keys.K://Slash
-                return true;
-            case Input.Keys.L: //Spellcast
-                return true;
-            case Input.Keys.P://Thrust
-                return true;
-            case Input.Keys.O://Shoot
-                return true;
-            default:
-                return false;
-
-        }
+        return switch (keycode) {
+            case Input.Keys.K ->//Slash
+                    true;
+            case Input.Keys.L -> //Spellcast
+                    true;
+            case Input.Keys.P ->//Thrust
+                    true;
+            case Input.Keys.O ->//Shoot
+                    true;
+            default -> false;
+        };
     }
     
     /**
@@ -138,7 +131,7 @@ public class MyInputProc implements InputProcessor {
      * Supprime la touche de la liste des touches enfoncées (keysPressed).
      * Si l'action associée à la touche relâchée était une action continue/de mouvement (Walk_L, Walk_R, etc.), 
      * elle est retirée de la liste activeContinuousActions.
-     * Si il n'y a pas d'action statique en cours, on lance finishAction().
+     * S'il n'y a pas d'action statique en cours, on lance finishAction().
      * @param keycode le code de la touche relâchée
      * @return true 
      */
@@ -158,7 +151,7 @@ public class MyInputProc implements InputProcessor {
     }
 
     /**
-     * Appelé lors de keyUp si il ni a pas d'action statique "en cours" ou par executeStaticAction() 
+     * Appelé lors de keyUp s'il n'y a pas d'action statique "en cours" ou par executeStaticAction()
      * dans entity a la fin de l'action.
      * Si la liste activeContinuousActions est vide, 
      * cela signifie qu'aucune touche de mouvement n'est enfoncée, 

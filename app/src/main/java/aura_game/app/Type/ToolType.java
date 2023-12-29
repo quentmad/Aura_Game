@@ -3,8 +3,8 @@ package aura_game.app.Type;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**Un outil est un loot avec des attributs supplémentaire
- * On utilise LootType et ToolType (les 2 par outil ) pour construire les tools
- * Les outils spéciaux (arcs, bombes... ) ne sont pas ici
+ * On utilise LootType et ToolType (les 2 par outil) pour construire les tools
+ * Les outils spéciaux (arcs, bombes...) ne sont pas ici
  */
 public enum ToolType {
     //! VALUE OF APRES POUR PAS STOCK LE LOOTTYPE ???
@@ -46,7 +46,7 @@ public enum ToolType {
     private final float maxSolidity;
     /**Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
     private final Pair<Integer,Integer> hitZoneLenght;
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     private final Pair<Integer,Integer> hitZonePointDecallage;    
  
@@ -78,7 +78,7 @@ public enum ToolType {
         return hitZoneLenght;
     }
 
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     public Pair<Integer, Integer> hitZonePointDecallage() {
         return hitZonePointDecallage;

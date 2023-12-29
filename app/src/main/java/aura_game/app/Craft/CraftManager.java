@@ -17,20 +17,20 @@ import aura_game.app.Type.ToolType;
 //Il y a deux type de craft ! Le craft des loots (ajout dans l'inventaire) et les items qu'on place et craft via le Plan
 public class CraftManager {
 
-    /**Un nom et une quantité à partir d"une liste de loots avec quantité*/
+    /**Un nom et une quantité à partir d'une liste de loots avec quantité*/
     private HashmapManager<Pair<String,Integer>, List<LootStack>> recipeManager;//TODO: craft un trucs qui a plusieurs qté
 
     //private HashmapManager<LootType, List<LootStack>> recipeManager;//TODO: craft un trucs qui a plusieurs qté
     
     /**Contient les loots disponible au craft. Permet d'afficher dans le menu tous les loots craftable, 
-     * et retrouvé via selectedSlot les ingredients du craft selectionné pour les afficher  */
+     * et retrouvé via selectedSlot les ingredients du craft sélectionné pour les afficher  */
     private List<LootType> availableLoots;
     private InventoryMenu inventoryMenu;
     private WheelMenus wheelMenus;
 
     public CraftManager() {
         this.recipeManager = new HashmapManager<>();
-        this.availableLoots = new ArrayList<LootType>();
+        this.availableLoots = new ArrayList<>();
         this.inventoryMenu = InventoryMenu.getInstance();
         this.wheelMenus = WheelMenus.getInstance();
         initHashmap();
@@ -47,7 +47,7 @@ public class CraftManager {
         return recipeManager;
     }
 
-    /**@return le lootType de availableLoots à l'emplacement i*/
+    /**@return le lootType d'availableLoots à l'emplacement i*/
     public LootType getAvailableLootsI(int i){
         return availableLoots.get(i);
     }
@@ -70,7 +70,7 @@ public class CraftManager {
             for (LootStack ingredient : ingredients) {
                 if (!inventoryMenu.hasLoot(ingredient.getLootType(), ingredient.getQuantity())) {
                     hasIngredients = false;
-                    System.out.println("You don't have enought resources to craft " +nameQuantity.getRight()+" "+nameQuantity.getLeft());
+                    System.out.println("You don't have enough resources to craft " +nameQuantity.getRight()+" "+nameQuantity.getLeft());
                     return false;
                 }
             }

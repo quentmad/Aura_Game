@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import aura_game.app.Craft.CraftManager;
 import aura_game.app.Type.LootType;
-/**Semblable au InventoryMenu, mais on affiche à gauche les crafts disponible 
- * et à droite les ingrédients + description pour crafter le loot selectionné */
+/**Semblable à l'InventoryMenu, mais on affiche à gauche les crafts disponible
+ * et à droite les ingrédients + description pour crafter le loot sélectionné */
 public class CraftingMenu extends BasicMenu {
     
     /**Inventaire crafting du joueur, singleton */
@@ -22,7 +22,7 @@ public class CraftingMenu extends BasicMenu {
         private CraftManager craftManager;
 
         private InventoryMenu playerInventory;
-        /**Sprite de la texture de la fenetre sur lequel apparait la description, liste des loots pour le craft... */
+        /**Sprite de la texture de la fenêtre sur lequel apparait la description, liste des loots pour le craft... */
         private Sprite infoWindowSprite;
         private Texture slot64;
 
@@ -76,13 +76,13 @@ public class CraftingMenu extends BasicMenu {
             return instance;
         }
 
-        /** Appelle moveSlotSelected et met à jour également lootSelectted et ingredientsSelected
+        /** Appelle moveSlotSelected et met à jour également lootSelected et ingredientsSelected
          * @param direction "R" ou "L"
          * @return
          */
         public int moveSlotAndLootsSelected(String direction){//TODO: vers haut et bas aussi
             int newSlotSelected = moveSlotSelected(direction);
-            //On défini le lootType(craft) et ses ingrédients selon le slot selectionné
+            //On défini le lootType(craft) et ses ingrédients selon le slot sélectionné
             lootSelected = craftManager.getAvailableLootsI(newSlotSelected);
             if(lootSelected !=null){
                 ingredientsSelected = craftManager.getRecipeManager().getData((Pair.of(lootSelected.getName(),1)));
@@ -109,9 +109,9 @@ public class CraftingMenu extends BasicMenu {
                     // Dessin de l'image du lootType craftable à sa position                    //! taille fake limite (16) ici   
                     batch.draw(lootType.getTexture(), xy.getLeft() + marge, xy.getRight() + marge,16+ lootWidth - (2*marge), 16+lootHeight  - (2*marge));
                 }
-                //TODO pour ecrire
+                //TODO pour écrire
                 drawTextCenterIn("CRAFTING STATION",600,500,2.0f,batch,font);
-                //draw des ingredients du slot selectionné, avec les ingredients
+                //draw des ingredients du slot sélectionné, avec les ingredients
                 if(ingredientsSelected !=null && lootSelected !=null){
                     infoWindowSprite.draw(batch);//Fenetre d'informations
                     drawTextCenterIn(lootSelected.getName(),850+150,425,1.5f,batch,font);//Nom du loot
@@ -129,7 +129,7 @@ public class CraftingMenu extends BasicMenu {
                 }
         }
         
-        /**Pour l'affichage des ingredients, de gauche a droite et bas en haut */
+        /**Pour l'affichage des ingredients, de gauche à droite et bas en haut */
         public Pair<Integer,Integer> getXYPositionLoot64(int i){
             int x = startSlotX64 + (i % numColumns64) * (LootWidth64 + padding64);
             int y = startSlotY64 + (i / numColumns64) * (lootHeight64 + padding64);

@@ -1,7 +1,7 @@
 package aura_game.app.SpriteSheet;
 
 /**
- * Classe permettant de stocker les pair de action/taille pour remplir ensuite le tableau 2D qui servira a remplir le hashmap
+ * Classe permettant de stocker les pair d'action/taille pour remplir ensuite le tableau 2D qui servira à remplir le hashmap
  */
 public class Act_Sz {
     private final String action;
@@ -14,7 +14,7 @@ public class Act_Sz {
 
     }
     /**
-     * @return L'action en question (Walk...) SANS LA DIRECTION car déduit après
+     * @return L'action en question (Walk...) SANS LA DIRECTION, car déduit après
      */
     public String action(){
         return action;

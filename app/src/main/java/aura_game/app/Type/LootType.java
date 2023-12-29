@@ -3,16 +3,7 @@ package aura_game.app.Type;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-/**
- * Enumeration définissant la structure des items (arbres,armes...)
- * Attributs:
- * @param texturePath Le chemin d'accès à la texture de l'item.
- * param shadowTexturePath Le chemin d'accès à la texture d'ombre de l'item.
- * @param differenceProf La différence entre le bas de l'image et le 1e pixel de l'item(en y)
- * @param hitboxTall La taille de l'item en hauteur (1m70...)
- * @param listPolygon la liste des points du polygon hitbox de l'item
- * @param listColor la liste des couleurs possible pour ce itemType (red, green)
- */
+
 public enum LootType {
     
     stick("stick","resource",1,3,32,"Ceci est un baton de bois. Tu peux t'en servir pour construire des trucs !"),
@@ -71,7 +62,7 @@ public enum LootType {
     private final String type;
     /**Premier pixel en y par rapport au bas de l'image */
     private final int offY;//offY = diffferenceProf
-    /**description, pour l'inventaire*/
+    /**Description, pour l'inventaire*/
     private final String description;
     private final int width;
     //TODO ID
@@ -79,7 +70,7 @@ public enum LootType {
     //TODO: pour les armes, food... OU faire un armeType avec loottype dedans
     LootType(String name, String type, int sizeShadow, int offY, int width, String description) {
         this.name = name;
-        if(type != "tool" && type !=  "melee" &&  type != "ranged" && type != "ammunition"){
+        if(!type.equals("tool") && !type.equals("melee") && !type.equals("ranged") && !type.equals("ammunition")){
             this.texturePath = "src/main/resources/Loots/"+name+".png";
         }else{
             this.texturePath = "src/main/resources/Weapons/"+name+".png";

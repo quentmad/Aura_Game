@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import org.apache.commons.lang3.tuple.Pair;
 
-import aura_game.app.Grid;
 import aura_game.app.Region;
 import aura_game.app.GameManager.AudioManager;
 import aura_game.app.GameManager.Game;
@@ -22,17 +21,17 @@ public class Entity extends CollidableObject {
     private int currentSpriteX;//--> Mouvements des differents mouvements d'une action
     private int currentSpriteY;//-> Action choisi
     /**
-     *Etant donné que certaines action avec certaines armes (hache et slash par exemple) doivent commencer et finir par 2 au lieu de 0
+     *Etant donné que certaines actions avec certaines armes (hache et slash par exemple) doivent commencer et finir par 2 au lieu de 0.
      */
     private int currentBeginX;
 
     /**Hauteur de l'hitbox de l'entite pour marcher etc (colission/avec pts de vue iso)*/
     private int hitboxHeightFlat;
-    /**endSpriteX de la derniere Direction car lorsque l'action s'arrete, ca passe a null */
+    /**endSpriteX de la derniere Direction, car lorsque l'action s'arrete, ça passe à null */
     private int lastEndSpriteX;
-    /**Point bas gauche du debut du rectangle d'hitbox, par rapport a la position de l'entite */
+    /**Point bas gauche du debut du rectangle d'hitbox, par rapport à la position de l'entite */
     private int posHitboxX;
-    /**Point bas gauche du debut du rectangle d'hitbox, par rapport a la position de l'entite */
+    /**Point bas gauche du debut du rectangle d'hitbox, par rapport à la position de l'entite */
     private int posHitboxY;
     /**Largeur du rectangle hitbox */
     private int hitboxWidth;
@@ -47,7 +46,7 @@ public class Entity extends CollidableObject {
     private final int defaultSpriteDuration;
 
     Pair<Integer,Integer> currentDeplacement;
-    /**(U,D,L,R) utile pour attaquer... changeAction (action+currentDirectionLetter) */
+    /**(U, D, L, R) utile pour attaquer... changeAction (action+currentDirectionLetter) */
     private String currentDirectionLetter;
 
     /**Instance*/
@@ -56,12 +55,12 @@ public class Entity extends CollidableObject {
     /**Instance*/
     private int refreshTEMPO = 0;//TODO TEMPO
     private Region actualRegion;
-    /**dégats que fait l'entité, sans armes */
+    /**Dégats que fait l'entité, sans armes */
     private final float degatDefault;
 
     /**Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
     private final Pair<Integer,Integer> hitZoneLenghtDefault;
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité
     */
     private final Pair<Integer,Integer> hitZonePointDecallageDefault;
@@ -164,12 +163,12 @@ public class Entity extends CollidableObject {
         return getPosC_X() + (spriteSheetInfo.SPRITE_WIDTH())/2;
     }
 
-    /**Méthode appelé lorsqu'on souhaite changer d'action
-     * Si c'est une action statique alors on déduit d'abord la direction de l'action à partir de la direction actuelle de l'entité
+    /**Méthode appelée lorsqu'on souhaite changer d'action
+     * Si c'est une action statique alors, on déduit d'abord la direction de l'action à partir de la direction actuelle de l'entité
      * Change tabOfAction, la direction (U,D,L,R) utile pour attaquer... 
      * et le déplacement c y (par exemple 0 1 pour U)
      * Met a null tabOfAction si l'action est null
-     * Si c'est une action dont certaines sprites ont une durée différentes de celle par défault, on modifie le spritesActionDuration[]
+     * Si c'est une action dont certaines sprites ont une durée différente de celle par défault, on modifie le spritesActionDuration[]
      */
     public void changeAction(String action){
         if(action !=null){
@@ -183,7 +182,7 @@ public class Entity extends CollidableObject {
             currentDeplacement = this.getDeplacementFromAction(action);//Defini x y current
             //Si c'est un PlayableEntity et qu'il a un Tool en main, penser à mettre à jour spriteY et size 
             if (this instanceof PlayableEntity && Game.getInstance().isGameStarted()){//!!!!!!!!
-                if(!((PlayableEntity)this).getCurrentToolName().equals("")){
+                if(!((PlayableEntity) this).getCurrentToolName().isEmpty()){
                     ((PlayableEntity)this).updateSpriteToolInfo();//TODO comparer pour pas lancer ca a chaque change action meme h24 sans outils
                     ((PlayableEntity)this).updateSpriteDurationFromActionName();
                 }
@@ -205,18 +204,13 @@ public class Entity extends CollidableObject {
      * @return une pair X Y du type (1,0)
      */
     private Pair<Integer, Integer> getDeplacementFromAction(String currentAction) {
-        switch (currentAction) {
-            case "Walk_U":
-                return Pair.of(0, 1);
-            case "Walk_L":
-                return Pair.of(-1, 0);
-            case "Walk_D":
-                return Pair.of(0, -1);
-            case "Walk_R":
-                return Pair.of(1, 0);
-            default:
-                return Pair.of(0, 0); // Action sans mouvement
-        }
+        return switch (currentAction) {
+            case "Walk_U" -> Pair.of(0, 1);
+            case "Walk_L" -> Pair.of(-1, 0);
+            case "Walk_D" -> Pair.of(0, -1);
+            case "Walk_R" -> Pair.of(1, 0);
+            default -> Pair.of(0, 0); // Action sans mouvement
+        };
     }
 
 
@@ -349,7 +343,6 @@ public class Entity extends CollidableObject {
     /**Cette méthode est appelé lorsqu'on souhaite donner un coup, à la fin de l'animation statique.
      * Recherche avec le rectangle de la zone de dégat de l'objet utilisé (ou main) (selon la direction) utilisé si il y a un item/entité dans la zone.
      * Si oui, on lance hurt(int pv) sur ces objets.
-     * @return
      */
     public void hit(){//Animation de mort (attendre fin anim coup) + ajout detection polynom
         Rectangle zoneDegat = zoneDegatFromDirection();

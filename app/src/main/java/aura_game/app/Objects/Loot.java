@@ -12,7 +12,7 @@ import aura_game.app.Util.Util;
  * Classe représentant les objets de butin dans le jeu.
  */
 public class Loot extends BasicObject{
-    private String name;//stick, leaf...
+    private final String name;//stick, leaf...
     private String type; // Type de l'objet de butin (flèche, bombe, clé, etc.).
     /**Size 32 * 32*/
     private Texture texture;// Sprite de l'objet de butin.

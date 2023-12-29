@@ -38,15 +38,15 @@ public class PlayableEntity extends Entity {
         this.currentToolName = "";
     }
 
-    /** @return L'index de l'arme/outil actuellement selectionné par la main du player*/
+    /** @return L'index de l'arme/outil actuellement sélectionné par la main du player*/
     /*public int getCurrentToolIndex(){
         return currentToolIndex;
     }*/
 
 
 
-    /**Pour les entités on retourne la valeur par defaut.
-     *  Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
+    /**Pour les entités, on retourne la valeur par défaut.
+     *  Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     /*private Pair<Integer, Integer> getCurrentHitZonePointDecallage() {
         if(currentTool != -1){
@@ -63,7 +63,7 @@ public class PlayableEntity extends Entity {
 
 
     /**
-     * @return Le nom de l'arme selectionné, "" si il n'y en a pas
+     * @return Le nom de l'arme selectionné, "" s'il n'y en a pas
      */ /*
     public String getCurrentToolName(){
         if(currentToolIndex >=0 && currentToolIndex <= toolsspriteSheetData.getTools().length){
@@ -97,11 +97,7 @@ public class PlayableEntity extends Entity {
      * @return {@code true} si un outil/arme est actuellement selectionné, sinon {@code false}
      */
     public boolean isToolSelected(){
-        String selec = getCurrentToolName();
-        if ( selec == ""){ 
-            return false;
-        }
-        return true;
+        return !getCurrentToolName().isEmpty();
     }
 
     /**
@@ -109,7 +105,7 @@ public class PlayableEntity extends Entity {
      *///TODO modif here: ùaj les 2
     public void updateSpriteToolInfo(){
         int[] actualActionTool = null;
-        if(getCurrentToolName() != ""){//Alors une arme est selectionné
+        if(!getCurrentToolName().isEmpty()){//Alors une arme est selectionné
             actualActionTool =  getToolsspriteSheetData().getActionInfo(getCurrentToolName(), getActualActionName());
         }    
         if(actualActionTool != null){
@@ -131,7 +127,7 @@ public class PlayableEntity extends Entity {
     /**
      * Appelé lorsque le joueur a un tool en main dans l'inventaire et met à jour le currentToolIndex, 
      * le reste sera mis à jour selon se currentToolIndex en debut d'action par changeAction
-     *  (car cela depend de l'action mais il ni en a pas pendant l'inventaire ouvert)
+     *  (car cela depend de l'action, mais il ni en a pas pendant l'inventaire ouvert)
      */
     /*
     public void updateCurrentToolIndex(String tool){
@@ -140,26 +136,22 @@ public class PlayableEntity extends Entity {
 
 
     /**
-     * Selectionne le TextureRegion[][] correspondant a la size de la Sprite. Pour draw la bonne image de Tool/arme
+     * Sélectionne le TextureRegion[][] correspondant à la size de la Sprite. Pour draw la bonne image de Tool/arme
      * @param sizeSprite
-     * @return
+     * @return Le TextureRegion[][] correspondant
      */
     public TextureRegion[][] getTextureRegionTool(int sizeSprite){
-        switch( sizeSprite){
-            case 64: 
-                return spriteTool[0].spriteSheetRegions();
-            case 128:
-                return spriteTool[1].spriteSheetRegions();
-            case 192:
-               return spriteTool[2].spriteSheetRegions(); 
-            default:
-                throw new IllegalArgumentException("La taille"+ sizeSprite + "n'a pas de TextureRegion[][] correspondante");   
-
-        }
+        return switch (sizeSprite) {
+            case 64 -> spriteTool[0].spriteSheetRegions();
+            case 128 -> spriteTool[1].spriteSheetRegions();
+            case 192 -> spriteTool[2].spriteSheetRegions();
+            default ->
+                    throw new IllegalArgumentException("La taille" + sizeSprite + "n'a pas de TextureRegion[][] correspondante");
+        };
     }
     /**TODO: pas suivant mais select dans inventory
-     * Permet de selectionner l'outil suivant du tableau. 
-     * On s'arrete a 1 après la fin du tableau pour permettre de déselectionner les armes quand on a fait le tour
+     * Permet de sélectionner l'outil suivant du tableau.
+     * On s'arrête a 1 après la fin du tableau pour permettre de déselectionner les armes quand on a fait le tour
      */
     /*
     public void selectNextTool(){
@@ -186,7 +178,7 @@ public class PlayableEntity extends Entity {
         String action = getActualActionName().substring(0, getActualActionName().length() - 2);
         switch (action) {
             case "Slash":
-            //Si c'est un outil qui commence pas a 0 c'est donc un tool donc on veut la val 4, sinon par defaut 0+1
+            //Si c'est un outil qui commence pas a 0 c'est donc un tool donc on veut la val 4, sinon par défaut 0+1
                 this.getSpritesActionDuration()[3] = getCurrentBeginX()+ 1;
                 this.getSpritesActionDuration()[4] = getCurrentBeginX()+ 1;
                 this.getSpritesActionDuration()[5] = getDefaultSpriteDuration() + 1;

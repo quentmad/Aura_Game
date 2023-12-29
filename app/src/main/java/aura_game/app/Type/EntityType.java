@@ -1,6 +1,5 @@
 package aura_game.app.Type;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,16 +15,15 @@ public enum EntityType {//TODO: ajouter speed ici ?
         },new String[] {
             "SpellCast_U", "SpellCast_L",  "SpellCast_D", "SpellCast_R", "Thrust_U","Thrust_L", "Thrust_D", "Thrust_R", "Walk_U","Walk_L", "Walk_D", "Walk_R",
             "Slash_U", "Slash_L", "Slash_D", "Slash_R", "Shoot_U", "Shoot_L", "Shoot_D", "Shoot_R", "Hurt_D"},
-        Arrays.asList(
-        ), 1, Pair.of(15, 20),Pair.of(4, -5)),
+            List.of(), 1, Pair.of(15, 20),Pair.of(4, -5)),
 
     cerf1("cerf1", 48, 60, 45, 32, 56, 16, 3,
         new int[] {
             // Walk: D L R U
             2, 2, 2, 2  // endSpriteX
         },new String[] {"Walk_D","Walk_L", "Walk_R", "Walk_U"},
-        Arrays.asList(
-            new Triplet<>("stick", 0, 4)
+            List.of(
+                    new Triplet<>("stick", 0, 4)
             ), 1, Pair.of(30, 40),Pair.of(0, 0)),
 
     autruche("autruche", 48, 48, 50, 20, 48, 10, 6,
@@ -33,8 +31,8 @@ public enum EntityType {//TODO: ajouter speed ici ?
             // Walk: D L R U
              5, 5, 5, 5  // endSpriteX
         },new String[] {"Walk_D","Walk_L", "Walk_R", "Walk_U"},
-        Arrays.asList(
-            new Triplet<>("stick", 0, 4)
+            List.of(
+                    new Triplet<>("stick", 0, 4)
             ), 1, Pair.of(30, 40),Pair.of(0, 0));
 
         /*Pour rappel tab[][] le premier correspond a la hauteur et le 2e a la largeur
@@ -55,20 +53,20 @@ public enum EntityType {//TODO: ajouter speed ici ?
     private final  int hitboxWidth;
     /**Hauteur du rectangle hitbox (sans vu isometrique (nombre de pixels en Y non transp))*/
     private final int hitboxHeight;
-    /**Hauteur de l'hitbox de l'entite pour marcher etc (colission)*/
+    /**Hauteur de l'hitbox de l'entite pour marcher etc (collision)*/
     private final int hitboxHeightFlat;
-    /**le endSpriteX default qui permet de retrouver la derniere Direction car lorsque l'action s'arrete, ca passe a null */
+    /**le endSpriteX default qui permet de retrouver la dernière Direction, car lorsque l'action s'arrête, ça passe à null */
     private final int lastEndSpriteX;
     private final int[] spriteSheetXEnd;
     /**Permet de retrouver le nom de l'action correspondant dans spriteSheetActions */
     private final String[] spriteSheetActionsName;
-    private List<Triplet<String, Integer, Integer>> deathLoots;
+    private final List<Triplet<String, Integer, Integer>> deathLoots;
     //Pour les coups/hit:
-    /**dégats que fait l'entité, sans armes */
+    /**Dégats que fait l'entité, sans armes */
     private final float degatDefault;
     /**Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
     private final Pair<Integer,Integer> hitZoneLenghtDefault;
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction)
+    /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     private final Pair<Integer,Integer> hitZonePointDecallageDefault;
 
@@ -117,12 +115,12 @@ public enum EntityType {//TODO: ajouter speed ici ?
         return hitboxHeight;
     }
 
-    /**@return Hauteur de l'hitbox de l'entite pour marcher etc (colission)*/
+    /**@return Hauteur de l'hitbox de l'entite pour marcher etc (collision)*/
     public int hitboxHeightFlat() {
         return hitboxHeightFlat;
     }
 
-    /**@return le endSpriteX default qui permet de retrouver la derniere Direction car lorsque l'action s'arrete, ca passe a null */
+    /**@return le endSpriteX default qui permet de retrouver la derniere Direction, car lorsque l'action s'arrête, ça passe à null */
     public int lastEndSpriteX(){
         return lastEndSpriteX;
     }
@@ -144,12 +142,12 @@ public enum EntityType {//TODO: ajouter speed ici ?
         return hitZoneLenghtDefault;
     }
 
-    /**dégats que fait l'entité, sans armes */
+    /**Dégats que fait l'entité, sans armes */
     public float degatDefault() {
         return degatDefault;
     }
 
-    /** Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction)
+    /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
     public Pair<Integer, Integer> hitZonePointDecallageDefault() {
         return hitZonePointDecallageDefault;

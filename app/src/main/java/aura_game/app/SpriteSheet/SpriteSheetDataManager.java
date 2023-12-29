@@ -16,7 +16,7 @@ public class SpriteSheetDataManager {
     /** Cette méthode vérifie si une instance de SpriteSheetData existe déjà pour ce type d'entité dans la HashMap, 
      * et si c'est le cas, elle la retournera. Sinon, elle créera une nouvelle instance de SpriteSheetData, 
      * l'ajoutera à la HashMap et la renverra.
-     * @param entityType type d'entité pour lequel on veut avoir une instance
+     * @param entityType type d'entité pour laquelle on veut avoir une instance
      */
     public static SpriteSheetData getSpriteSheetDataInstance(EntityType entityType) {
         if (spriteSheetDataMap.containsKey(entityType.getName())) {

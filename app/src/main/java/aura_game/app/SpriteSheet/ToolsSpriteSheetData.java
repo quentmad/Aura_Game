@@ -8,13 +8,13 @@ import java.util.HashMap;
 public class ToolsSpriteSheetData {
 
     /**
-     * La classe est un singleton, ce qui oblige a n'avoir qu'un seul exemplaire de ToolsSpriteSheetData.
+     * La classe est un singleton, ce qui oblige à n'avoir qu'un seul exemplaire de ToolsSpriteSheetData.
      * Ainsi, tout le monde accédera à la meme instance
      */
     private static ToolsSpriteSheetData instance;
 
     private String[] tools;
-    private Act_Sz actions[][];
+    private Act_Sz[][] actions;
     
     /**
      * Name (ex: Bow -> HashmapAction de Bow -> spriteY, sizeSprite (64 / 128 / 192)
@@ -22,7 +22,7 @@ public class ToolsSpriteSheetData {
     private HashMap<String, HashMap<String, int[]>> spriteDataMap;
 
     /**
-     * Privé pour respecter l'unicité de instance. Rempli directement le hashmap
+     * Privé pour respecter l'unicité d'instance. Rempli directement le hashmap
      */
     private ToolsSpriteSheetData() {
         this.spriteDataMap = new HashMap<>();//TODO maj anglais minuscule
@@ -71,7 +71,7 @@ public class ToolsSpriteSheetData {
      */
     public int getToolIndex(String tool){
         for(int i = 0; i<tools.length; i++){
-            if(tools[i] == tool){
+            if(tools[i].equals(tool)){
                 return i;
             }
         }
@@ -83,10 +83,10 @@ public class ToolsSpriteSheetData {
     }
 
     /**
-     * A partir du tableau de Tools et tableau 2d d'actions (sans direction), insert dans la hashmap les actions 
+     * À partir du tableau de Tools et tableau 2d d'actions (sans direction), insert dans la hashmap les actions
      * (avec direction) ainsi que la spriteY qui est déduit de la position dans actions[][], ainsi que la size de Sprite, 
-     * Pour connaitre SpriteY: On ajoute un a chaque fois. Il y en a 3 différents car 3 spritesSheet différents (64,128,192)
-     * permettant par la suite de savoir ou placer l'image, et quelle sprite entre 64 128 et 192 afficher
+     * Pour connaitre SpriteY: On ajoute un à chaque fois. Il y en a 3 différents cars 3 spritesSheet différents (64,128,192)
+     * permettant par la suite de savoir où placer l'image, et quelle sprite entre 64 128 et 192 afficher
      */
     private void insertIntoToolsDataMap() {        
         //Remplir la HashMap à partir des tableaux
@@ -101,24 +101,24 @@ public class ToolsSpriteSheetData {
                 for(int k=0; k < actionsWithDir.length; k++ ){
                     int spriteY = -1;
                     switch(size){
-                        case 64: 
+                        case 64:
                             y64++;
                             spriteY = y64;
                             break;
-                        case 128: 
+                        case 128:
                             y128++;
-                            spriteY = y128; 
+                            spriteY = y128;
                             break;
                         case 192:
                             y192++;
                             spriteY = y192;
                             break;
-                    }     
+                    }
                     int beginX =0;
                     //System.out.println(actionsWithDir[k] +",Y:"+spriteY + ", size:"+size);
                     //Si on a un Tool et qu'on est en Slash alors le début est le 3e sprite.
                     //Ainsi, le sprite de debut n'est pas 0 pour tous...
-                    if((tools[i] == "Hache" ||tools[i]== "Marteau" ||tools[i] == "Pioche") && (actions[i][j].action() == "Slash")){
+                    if((tools[i].equals("Hache") || tools[i].equals("Marteau") || tools[i].equals("Pioche")) && (actions[i][j].action().equals("Slash"))){
                         //System.out.println(actionsWithDir[k] +",Y:"+spriteY + ", size:"+size + " 2 "+tools[i]);
                         beginX = 2;
                     }           
@@ -150,17 +150,15 @@ public class ToolsSpriteSheetData {
      * @return toutes les actions avec la direction (Walk_U, Walk_D...)
      */
     private String[] getCompleteActions(String action){
-        switch(action){
-            case "Spellcast": case "Thrust": case "Walk": case "Slash": case "Shoot":
-                return new String[]{action+"_U", action+"_L",action+"_D", action+"_R"};
-            case "Hurt":
-                return new String[]{action+"_D"};
-            case "all":
-                return new String[] {
-                    "SpellCast_U", "SpellCast_L",  "SpellCast_D", "SpellCast_R", "Thrust_U","Thrust_L", "Thrust_D", "Thrust_R", "Walk_U","Walk_L", "Walk_D", "Walk_R",
+        return switch (action) {
+            case "Spellcast", "Thrust", "Walk", "Slash", "Shoot" ->
+                    new String[]{action + "_U", action + "_L", action + "_D", action + "_R"};
+            case "Hurt" -> new String[]{action + "_D"};
+            case "all" -> new String[]{
+                    "SpellCast_U", "SpellCast_L", "SpellCast_D", "SpellCast_R", "Thrust_U", "Thrust_L", "Thrust_D", "Thrust_R", "Walk_U", "Walk_L", "Walk_D", "Walk_R",
                     "Slash_U", "Slash_L", "Slash_D", "Slash_R", "Shoot_U", "Shoot_L", "Shoot_D", "Shoot_R", "Hurt_D"};
-        }
-        return null;
+            default -> null;
+        };
     }
       
 }

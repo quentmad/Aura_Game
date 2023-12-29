@@ -62,14 +62,11 @@ public class WheelMenus {
      * @return {@code true} si w est un menu existant /valide, sinon {@code false} 
      */
     public boolean isValidWheelName(String w){
-        switch(w){
-            case "meleeWeapons":
-                return true;
-            case "rangedWeapons":
-                return true;
-            default:
-            return false;
-        }
+        return switch (w) {
+            case "meleeWeapons" -> true;
+            case "rangedWeapons" -> true;
+            default -> false;
+        };
     }
 
     /** 

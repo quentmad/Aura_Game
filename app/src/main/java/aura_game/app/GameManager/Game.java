@@ -18,7 +18,7 @@ import aura_game.app.Weather.Sky;
  * Responsable de l'initialisation des gestionnaires, de la création des objets de jeu et de la gestion du cycle de vie du jeu.
  */
 public class Game {
-    //TODO Creer un map qui est une liste de Region + un Sky
+    //TODO Créer un map qui est une liste de Region + un Sky
     private static Game instance;
     private LoadManager loadManager;
     private UpdateManager updateManager;

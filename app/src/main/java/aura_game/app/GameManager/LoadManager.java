@@ -22,7 +22,7 @@ import aura_game.app.Type.ItemType;
 import aura_game.app.Type.LootType;
 
 /**
- * Systeme de chargement, initialisation d'élements (pas de création des objets)
+ * Système de chargement, initialisation d'éléments (pas de création des objets)
  */
 public class LoadManager {
     private UpdateManager updateManager;
@@ -115,7 +115,7 @@ public class LoadManager {
 
 
     /**
-     * Charge et lis le fichier puis place les objets/items aux bonnes coordonnées sur la map en question (si il n'y a pas de colission)
+     * Charge et lis le fichier puis place les objets/items aux bonnes coordonnées sur la map en question s'il n'y a pas de collision
      * @param regionName le nom de la map pour charger le fichier de la map layout d'items
      */
     public void loadRegionLayoutItems(String regionName) {
@@ -152,7 +152,7 @@ public class LoadManager {
     }
     //TODO TODO TODO TODO
     /**
-     * Rempli la hashmap qui relis les keycode aux actions effectués (par exemple si on appuie sur E ca ouvre/ferme l'inventaire)
+     * Rempli la hashmap qui relit les keycode aux actions effectuées (par exemple si on appuie sur E ça ouvre/ferme l'inventaire)
      */
     private void initHashMapInputHandler(){
 
@@ -160,8 +160,8 @@ public class LoadManager {
             if (updateManager.activeMenu().equals("inventory")){
                 playerInventory.drop();
             }   });
-        inputHandler.mapKeyToAction(Input.Keys.E, () -> { updateManager.invertActiveMenu("inventory");});
-        inputHandler.mapKeyToAction(Input.Keys.C, () -> { updateManager.invertActiveMenu("crafting");});
+        inputHandler.mapKeyToAction(Input.Keys.E, () -> updateManager.invertActiveMenu("inventory"));
+        inputHandler.mapKeyToAction(Input.Keys.C, () -> updateManager.invertActiveMenu("crafting"));
         inputHandler.mapKeyToAction(Input.Keys.R, () -> { updateManager.invertActiveMenuWheel("rangedWeapons");/*wheelMenus.setActiveWheel("rangedWeapons");*/});
         inputHandler.mapKeyToAction(Input.Keys.M, () -> { updateManager.invertActiveMenuWheel("meleeWeapons");/*wheelMenus.setActiveWheel("meleeWeapons");*/});
 
@@ -212,8 +212,8 @@ public class LoadManager {
             }else if (updateManager.activeMenu().equals("wheel")) { wheelMenus.setActualTool(player);}
         });
 
-        inputHandler.mapKeyToAction(Input.Keys.A, () -> { wheelMenus.getMeleeWeapons().setActualToolPlayer(player);});
-        inputHandler.mapKeyToAction(Input.Keys.Z, () -> { wheelMenus.getRangedWeapons().setActualToolPlayer(player);});
+        inputHandler.mapKeyToAction(Input.Keys.A, () -> wheelMenus.getMeleeWeapons().setActualToolPlayer(player));
+        inputHandler.mapKeyToAction(Input.Keys.Z, () -> wheelMenus.getRangedWeapons().setActualToolPlayer(player));
     }
     
 }

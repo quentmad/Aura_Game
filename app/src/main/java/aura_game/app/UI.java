@@ -3,8 +3,6 @@ package aura_game.app;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import aura_game.app.Objects.CollidableObject;
 
 /**Cette classe permet de génerer les coeurs/barres... des CollidableObject */
@@ -12,8 +10,8 @@ public class UI {//RENOMMER LIFE ??? et include life et maxlife, hurt... ?
     
 //Placé 10 au dessus du CollidableObject, ne s'affiche que si la barre est pas entière, et disparait au bout de 5s si il ne prend pas d'autres dégats
 
-private Texture bar_font;
-private Texture bar_red;
+private final Texture bar_font;
+private final Texture bar_red;
 private final float barWidth;
 protected final float barHeight;
 /**Barre mis a jour  */

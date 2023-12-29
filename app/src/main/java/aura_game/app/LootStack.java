@@ -1,7 +1,5 @@
 package aura_game.app;
 
-import org.w3c.dom.Text;
-
 import com.badlogic.gdx.graphics.Texture;
 
 import aura_game.app.Type.LootType;
@@ -37,12 +35,12 @@ public class LootStack {
     public void addOneQuantity(){
         this.quantity++;
     }
-    /**Ajoute la quantité souhaité */
+    /**Ajoute la quantité souhaitée */
     public void addQuantity(int qt){
         this.quantity+=qt;
     }
 
-    /**Enlève la quantité souhaité */
+    /**Enlève la quantité souhaitée */
     public void removeQuantity(int qt){
         this.quantity-=qt;
     }

@@ -5,9 +5,9 @@ import org.apache.commons.lang3.tuple.Pair;
 /**Cette classe est un point commun entre Loot et Item/Entités */
 public abstract class BasicObject {
 
-    /**position du basicObject sur la carte --> point en bas à gauche de l'image */
+    /**Position du basicObject sur la carte --> point en bas à gauche de l'image */
     private  int posC_X;
-    /**position du basicObject sur la carte --> point en bas à gauche de l'image */
+    /**Position du basicObject sur la carte --> point en bas à gauche de l'image */
     private int posC_Y;    
 
     public BasicObject(int x, int y){
@@ -15,12 +15,12 @@ public abstract class BasicObject {
         this.posC_Y = y;
     }
 
-    /**position du basicObject sur la carte --> point en bas à gauche de l'image */
+    /**Position du basicObject sur la carte --> point en bas à gauche de l'image */
     public int getPosC_X() {
         return posC_X;
     }
     
-    /**position du basicObject sur la carte --> point en bas à gauche de l'image */
+    /**Position du basicObject sur la carte --> point en bas à gauche de l'image */
     public int getPosC_Y() {
         return posC_Y;
     }
@@ -28,7 +28,7 @@ public abstract class BasicObject {
      * @param x ajout à la position PosC_X actuelle
      */
     public void addToPosC_X(int x) {
-        posC_X+=x;;
+        posC_X+=x;
     }
     
     /**Modification de la position y
@@ -42,7 +42,7 @@ public abstract class BasicObject {
      * @param x la nouvelle position X
      */
     public void setPosC_X(int x) {
-        posC_X=x;;
+        posC_X=x;
     }
     
     /**Modification de la position y
@@ -86,9 +86,9 @@ public abstract class BasicObject {
 
     /**
      * Distance entre l'objet et obj2, par rapport au point en bas à droite de l'entité.
-     * Pour récuperer les valeurs: 
-     * int dx = calculateDistance(obj2).getLeft();
-     * int dy = calculateDistance(obj2).getRight();
+     * Pour récupérer les valeurs :
+     * int dx = calculateDistance(obj2).getLeft()
+     * int dy = calculateDistance(obj2).getRight()
      * @param obj2 l'objet 2
      * @return la pair dx dy 
      */

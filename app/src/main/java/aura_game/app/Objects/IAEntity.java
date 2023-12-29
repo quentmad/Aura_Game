@@ -1,16 +1,15 @@
 package aura_game.app.Objects;
 import aura_game.app.IA_Behavior.Behavior;
 import aura_game.app.IA_Behavior.BehaviorManager;
-import aura_game.app.SpriteSheet.*;
 import aura_game.app.Type.EntityType;
 //TODO: hitbox profil et hitbox face a changer en fonction de la direction/action (2 types)
 /**
  * Une IAEntity se déplace et agit selon Behavior
  */
 public class IAEntity extends Entity{
-    /**On utilise un compteur behaviorTimer pour contrôler l'intervalle de temps entre le changement de direction aléatoires de l'entité*/
+    /**On utilise un compteur behaviorTimer pour contrôler l'intervalle de temps entre le changement de direction aléatoire de l'entité*/
     private float behaviorTimer;
-    /**Défini a quelle fréquence on update l'action/direction de l'entité */
+    /**Défini à quelle fréquence on update l'action/direction de l'entité */
     private float behaviorInterval;
 
     Behavior behavior;
@@ -57,18 +56,13 @@ public class IAEntity extends Entity{
      * @return
      */
     public String getActionNameFromNumber(int number){
-        switch (number) {
-            case 1:
-                return "Walk_U";
-            case 2:
-                return "Walk_L";
-            case 3:
-                return "Walk_R";
-            case 4: 
-                return "Walk_D";
-            default:
-                return null;//Pas de mouvement
-        }        
+        return switch (number) {
+            case 1 -> "Walk_U";
+            case 2 -> "Walk_L";
+            case 3 -> "Walk_R";
+            case 4 -> "Walk_D";
+            default -> null;//Pas de mouvement
+        };
 
     }
     

@@ -20,7 +20,7 @@ public class UpdateManager {
     private String activeMenu;
     private WheelMenus wheelMenus;
     //RETIRER
-    private Grid gridTest = new Grid(500);
+    private final Grid gridTest = new Grid(500);
 
     public UpdateManager(){
         this.activeMenu = "game";
@@ -34,7 +34,7 @@ public class UpdateManager {
      * de dépendances directes, ce qui contribue à une structure de code modulaire et maintenable.
      * 
      * La méthode initialise les objets et attributs nécessaires pour la mise à jour du jeu. Elle configure les éléments
-     * requis tels que la région et le joueur.. Cette initialisation prépare le terrain pour une gestion efficace
+     * requis tels que la région et le joueur... Cette initialisation prépare le terrain pour une gestion efficace
      * de la logique de jeu et des interactions avec les entrées du joueur.
      * 
      * @param region La région du jeu pour la mise à jour.
@@ -43,10 +43,10 @@ public class UpdateManager {
     public void initialize(Region region, PlayableEntity player, WheelMenus wheelMenus) {
         this.region = region;
         this.player = player;
-        this.wheelMenus = wheelMenus;;
+        this.wheelMenus = wheelMenus;
 
     }
-    /**mises à jour nécessaires */
+    /**Mises à jour nécessaires */
     public void update() {
 
         player.doAction();

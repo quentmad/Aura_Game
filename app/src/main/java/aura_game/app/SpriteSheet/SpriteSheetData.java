@@ -15,7 +15,7 @@ public class SpriteSheetData {
 
     /**
      * Permet de récupérer les élements de spriteSheet de l'action et ainsi définir l'action actuelle de l'entité
-     * @param action l'action auquel on souhaite avoir les informations
+     * @param action l'action à laquelle on souhaite avoir les informations
      * @return Tableau d'entier unique à chaque type d'entité de la forme {startSpriteX, endSpriteX, spriteY} de l'action souhaité*/
     public int[] getTabofAction(String action){
         return spriteDataMap.getOrDefault(action, null);

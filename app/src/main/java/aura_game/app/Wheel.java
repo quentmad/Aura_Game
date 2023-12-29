@@ -17,7 +17,7 @@ import aura_game.app.Objects.Tool;
 public class Wheel<T>{
 
     private Sprite wheelMenuSprite;
-    /**Tool actuel du joueur (il a enter dessus) */
+    /**Tool actuel du joueur (il a fait enter dessus) */
     private Tool actualPlayerTool;
     /**Element selectionné (pas actuel) */
     private Tool selectedElement;
@@ -54,7 +54,7 @@ public class Wheel<T>{
         this.startMenuX = (int) wheelMenuSprite.getX();
         this.startMenuY = (int) wheelMenuSprite.getY();
         System.out.println("wheelMenu points is "+ startMenuX + " "+ startMenuY);
-        this.content = new ArrayList<Tool>();
+        this.content = new ArrayList<>();
         this.positionsSlot = new int[]{169,399, 85,377, 24,316, 2,232, 24,148, 85,87,        169,65, 253,87, 314,148, 336,232, 314,316, 253,377} ;  //x1 y1.. x12 y12  
         this.selectedSlotIndex = 0;
         this.totalSlot = totalSlot;
@@ -62,7 +62,7 @@ public class Wheel<T>{
 
         this.slotRestant = totalSlot;
         this.slotOccupied = 0;
-        this.selectedSlotSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/"+selectedSlotName+".png")));;
+        this.selectedSlotSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/"+selectedSlotName+".png")));
         this.selectedElement = null;
         this.actualPlayerTool = null;
         //Slot de taille 64*64 des tools actuels
@@ -75,8 +75,8 @@ public class Wheel<T>{
     /** 
      * Ce lance lorsqu'on appuie sur {@code enter} quand le wheelMenu est ouvert.
      * Defini l'arme actuelle (le nom) de cette categorie du joueur à l'arme du selected slotIndex.
-     * Defini le tool actuel pour cette category a celui selectionné également.
-     * <p> Attention: set le tool actuel du type mais pas directement le tool du joueur
+     * Defini le tool actuel pour cette category à celui selectionné également.
+     * <p> Attention: set le tool actuel du type, mais pas directement le tool du joueur
      * @param player
      */
     public void setActualToolCategory(PlayableEntity player){
@@ -91,7 +91,7 @@ public class Wheel<T>{
     }
 
     /**
-     * Defini l'arme actuelle du joueur a l'arme actuelle de ce wheel (soit l'arme actuelle de melee soit ranged)
+     * Defini l'arme actuelle du joueur a l'arme actuelle de ce wheel (soit l'arme actuelle de melee, soit ranged)
      * @param player
      */
     public void setActualToolPlayer(PlayableEntity player){
@@ -102,7 +102,7 @@ public class Wheel<T>{
 
 
     /**
-     * Ajoute à la liste l'élement en parametre si il reste de la place
+     * Ajoute à la liste l'élement en parametre s'il reste de la place
      * @param element 
      * @return true si l'ajout a fonctionné sinon false
      * 
@@ -114,7 +114,7 @@ public class Wheel<T>{
             if(result){
                 slotOccupied++;
                 slotRestant--;
-                System.out.println("Added " + element.getLootType().getName() + " to "+this.toString());
+                System.out.println("Added " + element.getLootType().getName() + " to "+ this);
                 return true;
             }
         }
@@ -144,13 +144,13 @@ public class Wheel<T>{
      */
     public void moveSlotSelected(String direction){
         //Si on appuie sur gauche et qu'on peut encore aller à gauche
-        if(direction == "R" && selectedSlotIndex > 0){
+        if(direction.equals("R") && selectedSlotIndex > 0){
             audioManager.playSound(audioManager.getSoundMoveSelectedItem(), 0.1f);
                 selectedSlotIndex--;
                 selectedElement = content.get(selectedSlotIndex);
                 this.selectedSlotSprite.setPosition(startMenuX+positionsSlot[selectedSlotIndex*2], startMenuY + positionsSlot[selectedSlotIndex*2+1]-sizeSlot);
         }
-        else if(direction == "L"  && selectedSlotIndex < slotOccupied -1){
+        else if(direction.equals("L") && selectedSlotIndex < slotOccupied -1){
             audioManager.playSound(audioManager.getSoundMoveSelectedItem(), 0.1f);
                 selectedSlotIndex++;
                 selectedElement = content.get(selectedSlotIndex);
@@ -171,7 +171,7 @@ public class Wheel<T>{
 
     }
 
-    /**Affiche a l'ecran le slot rond et le tool actuel du joueur, qui ont déjà une position défini,
+    /**Affiche à l'ecran le slot rond et le tool actuel du joueur, qui ont déjà une position défini,
      * Si actualPlayerTool est null, ne fait rien
      */
     public void renderActualTool(SpriteBatch batch) {

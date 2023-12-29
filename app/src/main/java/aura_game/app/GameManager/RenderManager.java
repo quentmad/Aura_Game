@@ -34,17 +34,17 @@ public class RenderManager {
     private UpdateManager updateManager;
     /**Police pour afficher du texte */
     private BitmapFont font;
-    /**lot de sprites pour les graphiques 2D */
+    /**Lot de sprites pour les graphiques 2D */
     private SpriteBatch batch;
-    /**pour dessiner des formes */
-    private ShapeRenderer shapeRenderer;//VIRER C'est pour draw les polygons pour tester colissions zone
+    /**Pour dessiner des formes */
+    private ShapeRenderer shapeRenderer;//VIRER C'est pour draw les polygons pour tester collisions zone
     private LootManager lootManager;
     /**
      * Initialise les dépendances nécessaires pour le gestionnaire de rendu. Cette méthode joue un rôle clé dans
      * l'application du modèle de conception "Pattern Observer" (Observateur) combiné au principe d'"Injection de Dépendances".
      * L'utilisation de ce modèle et de ce principe vise à maintenir une structure de code souple et modulaire,
      * en permettant aux classes de s'observer mutuellement sans créer de dépendances directes.
-     * 
+     *
      * Cette méthode permet d'éviter la création de dépendances cycliques entre les classes et facilite les interactions
      * entre les gestionnaires de manière fluide. Elle initialise les objets et attributs requis pour le rendu, tels que
      * la région, le joueur, l'inventaire du joueur et le ciel. De plus, elle configure des éléments essentiels pour
@@ -73,7 +73,7 @@ public class RenderManager {
     }
 
     
-    /**Render de tous les élements que l'ont veut afficher à l'écran */
+    /**Render de tous les élements que l'on veut afficher à l'écran */
     public void render() {
         batch.begin();
         float dt = Gdx.graphics.getDeltaTime();//DELTA TIME 
@@ -108,12 +108,12 @@ public class RenderManager {
                 renderTool();
                 boyDrawn = true;
             }
-            if(obj instanceof Item){
-                Item item = (Item) obj; // Conversion forcée au type Item
+            if(obj instanceof Item item){
+                // Conversion forcée au type Item
                 batch.draw(item.getTextureItem(),item.getPosOnScreenX(region.getCamera().getX()), item.getPosOnScreenY(region.getCamera().getY()) );
                 item.getUI().drawBar(item, batch);
-            }else if(obj instanceof Loot){
-                Loot l = (Loot) obj;
+            }else if(obj instanceof Loot l){
+                // Conversion forcée au type Loot
                 batch.draw(l.getShadowTexture(),l.getPosOnScreenX(region.getCamera().getX()), l.getPosOnScreenY(region.getCamera().getY()+l.getBounceY()),32,32 );//TODO 64 to 32 ok ????
                 batch.draw(l.getTexture(),l.getPosOnScreenX(region.getCamera().getX()), l.getPosOnScreenY(region.getCamera().getY()+l.getBounceY()),32,32 );
             }
@@ -144,9 +144,6 @@ public class RenderManager {
             case "wheel":
                 wheelMenus.render(batch, font);
                 break;
-            default:
-                break;
-
         }
     }
 
@@ -157,8 +154,7 @@ public class RenderManager {
 
     private void renderPolygonsForTest(){
         for(BasicObject obj : region.getBasicObjectsOnRegion()){
-            if(obj instanceof Item){
-                Item it = (Item) obj;
+            if(obj instanceof Item it){
                 // Commencez le dessin
                 ShapeRenderer shapeRenderer = new ShapeRenderer();
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -169,10 +165,10 @@ public class RenderManager {
     }
 
 
-    /**Affiche l'outil/arme selectionné actuellement par le joueur, ou n'affiche rien si il n'y a rien de selectionné */
+    /**Affiche l'outil/arme sélectionné actuellement par le joueur, ou n'affiche rien s'il n'y a rien de sélectionné */
     public void renderTool(){
 
-        if( player.getCurrentToolName()  != "" && player.getCurrentToolSizeSprite() != -1){
+        if(!player.getCurrentToolName().isEmpty() && player.getCurrentToolSizeSprite() != -1){
             //Décallage de x et y si on a une sprite plus grande que celle du personnage
             int marge = (player.getCurrentToolSizeSprite() - 64);
             if(marge>0){marge/=2;}else{marge=0;}

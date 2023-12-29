@@ -6,11 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-//import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 
 import aura_game.app.GameManager.Game;
-//import aura_game.app.GameManager.LoadManager;
 import aura_game.app.Objects.BasicObject;
 import aura_game.app.Objects.CollidableObject;
 import aura_game.app.Objects.Entity;
@@ -52,10 +49,10 @@ public class Region {
     /**Seuil de la caméra en Y pour déclencher le défilement*/
     private int CAMERA_THRESHOLD_Y;
 
-    /**Objets présent sur la carte (items, IAentités...
+    /**Objets présents sur la carte (items, IAentités...)
      * Utile pour afficher dans le bon ordre Z les entités (superposition...)*/
     private List<BasicObject> basicObjectsOnRegion;
-    /**Permet de lancer sort() sur ObjectsOnRegion que si il y a eu au moins un mouvement*/
+    /**Permet de lancer sort() sur ObjectsOnRegion que s'il y a eu au moins un mouvement*/
     private boolean objectsOnMapNeedSort;
 
     //private Quadtree quadtreeItem;
@@ -74,7 +71,7 @@ public class Region {
         this.regionWidth = carte.getWidth();
         this.regionHeight = carte.getHeight();
         this.screenWidth = Game.getInstance().getScreenWidth();
-        this.screenHeight = Game.getInstance().getScreenHeight();;
+        this.screenHeight = Game.getInstance().getScreenHeight();
         this.halfScreenWidth = screenWidth / 2;
         this.halfScreenHeight = screenHeight / 2;
         this.cameraMaxX = regionWidth - screenWidth;
@@ -82,7 +79,7 @@ public class Region {
         this.cam = new MyCamera();
         this.CAMERA_THRESHOLD_X=200;
         this.CAMERA_THRESHOLD_Y=90;
-        this.basicObjectsOnRegion=  new ArrayList<BasicObject>();
+        this.basicObjectsOnRegion= new ArrayList<>();
         //this.entitiesOnMap=  new ArrayList<IAEntity>();
         //this.quadtreeItem = new Quadtree(0, new Rectangle(0, 0, regionWidth, regionHeight));
         this.gridItem = new Grid(500);
@@ -122,14 +119,14 @@ public class Region {
     }
 
     /**
-     * Permet de lancer sort() sur basicObjectsOnRegion que si il y a eu au moins un mouvement
+     * Permet de lancer sort() sur basicObjectsOnRegion que s'il y a eu au moins un mouvement
      */
     public boolean getBasicObjectsOnRegionNeedSort(){
         return objectsOnMapNeedSort;
     }
 
     /**
-     * Permet de lancer sort() sur basicObjectsOnRegion que si il y a eu au moins un mouvement
+     * Permet de lancer sort() sur basicObjectsOnRegion que s'il y a eu au moins un mouvement
      */    
     public void setBasicObjectsOnRegionNeedSort(boolean bool){
         objectsOnMapNeedSort = bool;
@@ -254,9 +251,8 @@ public class Region {
     //On tri la liste en fonction de la profondeur du basicObject pour les afficher 
     //de manière decroissant et savoir plus facilement à quelle couche afficher les entites 
     /**
-     *Ajoute le basicObject (loots,items,entités) a la liste de la map, trié selon Z (s'affichant sur la map, dans l'ordre de Z)
-     * @param item item a rajouter à la liste
-     * @param list liste des items de la map qui s'affichent
+     *Ajoute le basicObject (loots, items, entités) a la liste de la map, trié selon Z (s'affichant sur la map, dans l'ordre de Z)
+     * @param newBasicObj objt a rajouter à la liste
      **/
     public void addSortedObject(BasicObject newBasicObj){//generic pour tt les items
         //System.out.println("passage \n");
@@ -268,12 +264,7 @@ public class Region {
             index++;
         }
         basicObjectsOnRegion.add(index, newBasicObj);
-        /*
-        for(Object aff : list){
-            System.out.print(aff.getZProf() + "  ");
-        }
-        System.out.print("end \n");
-        */
+
     }
 
 
@@ -351,7 +342,7 @@ public class Region {
 
     /**TODO: mettre dans Ent ????
      * Retire l'item de la region/map accessible depuis la  position de ent, si c'est possible, puis fait spawn les loots correspondant
-     * @param item l'item qu'on souhaite retirer (mort?)
+     * @param ent l'entité qu'on souhaite retirer (mort?)
      * @return
      */
     public boolean killFromRegion(Entity ent){
@@ -368,7 +359,7 @@ public class Region {
 
 
     /**
-     * Cette classe est appelé quand le joueur passe au dessus le loot et va le récupéré
+     * Cette classe est appelé quand le joueur passe au-dessus le loot et va le récupérer
      * Ainsi, on regarde si on peut le mettre dans l'inventaire, 
      * si c'est le cas on défini le loot comme collected (ce qui le retira de loots), et on le retire de basicObjectsOnRegion
      * @param loot le loot qu'on souhaite recupéré

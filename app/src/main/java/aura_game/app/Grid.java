@@ -21,7 +21,7 @@ public class Grid {
     private int caseSize;//0-caseSize-1, caseSize à 2*caseSize-1
     /**Taille de la 2e [] de grid et gridSuperposition: X */
     private int sizeW; 
-     /**Taille de la 1ere [] de grid et gridSuperposition :Y*/
+     /**Taille de la 1ʳᵉ [] de grid et gridSuperposition :Y*/
     private int sizeH; 
 
     public Grid(int caseSize){
@@ -47,10 +47,10 @@ public class Grid {
     }
 
     /**Permet de connaitre la case (ou les cases de superpositions) de l'entité à partir de son rectangle hitbox (maj), 
-     * @param rectHitbox le hitbox de l'objet dont on souhaite avoir la/s case (ou celles des superpositions si il y en a plusieurs)
-     *@return la liste des pairs numéros de case: si il y en a 1 : c'est la grille principale, sinon, c'est la grille de superposition 
+     * @param rect le hitbox de l'objet dont on souhaite avoir la/s case (ou celles des superpositions s'il y en a plusieurs)
+     *@return la liste des pairs numéros de case: s'il y en a 1 : c'est la grille principale, sinon, c'est la grille de superposition
      * Stocker cette Liste dans le CollidableObject permet de comparer avec la nouvelle pour savoir si une mise à jour est nécessaire,
-     * Permet également de remove en mettant en parametre de remove cette liste là 
+     * Permet également de remove en mettant en parametre de remove cette liste-là
      * Rappel : tableau2D[y][x]
      */
     public List<Pair<Integer,Integer>> getCaseFor(Rectangle rect){
@@ -109,9 +109,9 @@ public class Grid {
         ListCollidableObject inSameCases= new ListCollidableObject();
         ListCollidableObject objInColission = new ListCollidableObject();
         //On met dans une liste tous les objets présent (ou en partie au moins) dans les cases que survole zoneColission
-        for(int i = 0; i < pairsIndex.size(); i++ ){
-            inSameCases.addAll(grid[pairsIndex.get(i).getLeft()][pairsIndex.get(i).getRight()]);
-            inSameCases.addAll(gridSuperposition[pairsIndex.get(i).getLeft()][pairsIndex.get(i).getRight()]);
+        for (Pair<Integer, Integer> index : pairsIndex) {
+            inSameCases.addAll(grid[index.getLeft()][index.getRight()]);
+            inSameCases.addAll(gridSuperposition[index.getLeft()][index.getRight()]);
         }
 
         for (int i = 0; i < inSameCases.size(); i++) {
@@ -145,20 +145,20 @@ public class Grid {
         List<Pair<Integer, Integer>> pairsIndex = getCaseFor(objCible.getHitboxFlat());
         ListCollidableObject inSameCases= new ListCollidableObject();
         //On met dans une liste tous les objets présent (ou en partie au moins) dans les cases que survole zoneColission
-        for(int i = 0; i < pairsIndex.size(); i++ ){
-            inSameCases.addAll(grid[pairsIndex.get(i).getLeft()][pairsIndex.get(i).getRight()]);
-            inSameCases.addAll(gridSuperposition[pairsIndex.get(i).getLeft()][pairsIndex.get(i).getRight()]);
+        for (Pair<Integer, Integer> index : pairsIndex) {
+            inSameCases.addAll(grid[index.getLeft()][index.getRight()]);
+            inSameCases.addAll(gridSuperposition[index.getLeft()][index.getRight()]);
         }
         //Garde le CollidableObject dont la distance avec objCible est le plus court
         Pair<CollidableObject, Double> closestO= closestObject(inSameCases, objCible); 
         //Maintenant on verifie avec tous les objets dans les cases voisines qui peuvent potentiellement etre plus proche: 
         List<Pair<Integer, Integer>> neighborsCases = getNeighborsCasesFor(pairsIndex);
         ListCollidableObject neighborsObj = new ListCollidableObject();
-        for(int j = 0; j < neighborsCases.size(); j++){
+        for (Pair<Integer, Integer> neighborsCase : neighborsCases) {
             //Si il ni avait aucun objet dans les cases principale, ou qu'une case voisine se trouve moins loin que la distance avec l'objet le plus proche actuel
-            if(closestO.getRight() ==999999 ||closestO.getRight() > (distanceBetween(objCible.getHitboxFlat(), new Rectangle(neighborsCases.get(j).getRight(),neighborsCases.get(j).getLeft(),1,1)))){
-                neighborsObj.addAll(grid[neighborsCases.get(j).getLeft()][neighborsCases.get(j).getRight()]);
-                neighborsObj.addAll(gridSuperposition[neighborsCases.get(j).getLeft()][neighborsCases.get(j).getRight()]);
+            if (closestO.getRight() == 999999 || closestO.getRight() > (distanceBetween(objCible.getHitboxFlat(), new Rectangle(neighborsCase.getRight(), neighborsCase.getLeft(), 1, 1)))) {
+                neighborsObj.addAll(grid[neighborsCase.getLeft()][neighborsCase.getRight()]);
+                neighborsObj.addAll(gridSuperposition[neighborsCase.getLeft()][neighborsCase.getRight()]);
             }
         }
         Pair<CollidableObject, Double> neighborsclosest = closestObject(neighborsObj, objCible);
@@ -189,8 +189,8 @@ public class Grid {
     }
 
     /**@return la distance entre les centre des 
-     * @rect1
-     * @rect2
+     * @param rect1
+     * @param rect2
      */
     public double distanceBetween(Rectangle rect1, Rectangle rect2) {
         // Les coordonnées du centre des rectangles
@@ -213,7 +213,7 @@ public class Grid {
      * Appelé lorsque l'obj bouge et que son hitbox a été mis à jour. On teste si sa position dans grille/grille superposition a changé, 
      * si c'est le cas on appelle remove() avec la liste actuelle, on défini ensuite la liste (stocké dans CollidableObject) au getCaseFrom() et on lance add().
      * @param obj
-     * @return true si il a été mis à jour, false sinon
+     * @return true s'il a été mis à jour, false sinon
      */
     public boolean update(CollidableObject obj) {//PB: get et set non généralisé en cas de plusieurs grid
         List<Pair<Integer, Integer>> currentGridList = obj.getListIndexGrid(); // Liste actuelle
@@ -231,7 +231,7 @@ public class Grid {
 
     /**Ajoute obj à la grille /grille superposition de la manière suivante:
      * @param obj le CollidableObject qu'on veut rajouter dans la grille, en fonction de son hitbox
-     * @param listIndex la liste des index des cases. Si il y a plusieurs élements, on les ajoute dans la grille de superposition,
+     * @param listIndex la liste des index des cases. S'il y a plusieurs élements, on les ajoute dans la grille de superposition,
      * Sinon on l'ajoute à la grille principale
      */
     public void add(CollidableObject obj, List<Pair<Integer,Integer>> listIndex){
@@ -239,9 +239,9 @@ public class Grid {
             //System.out.print("1");
             grid[listIndex.get(0).getLeft()][listIndex.get(0).getRight()].add(obj);
         }else{
-            for(int i = 0; i< listIndex.size(); i++){
+            for (Pair<Integer, Integer> index : listIndex) {
                 //System.out.print(listIndex.size());
-                gridSuperposition[listIndex.get(i).getLeft()][listIndex.get(i).getRight()].add(obj);
+                gridSuperposition[index.getLeft()][index.getRight()].add(obj);
             }
         }
         obj.setListIndexGrid(listIndex);// Définit la nouvelle liste
@@ -250,15 +250,15 @@ public class Grid {
 
     /**Retire obj à la grille (notamment en cas de mise à jour) de la manière suivante:
      * @param obj le CollidableObject qu'on veut retirer de la grille, en fonction de son hitbox
-     * @param listIndex la liste des index des cases où il est présent. Si il y a plusieurs élements, il est présent dans la grille de superposition,
+     * @param listIndex la liste des index des cases où il est présent. S'il y a plusieurs élements, il est présent dans la grille de superposition,
      * Sinon, il est présent dans la grille principale
      */   
     public void remove(CollidableObject obj, List<Pair<Integer,Integer>> listIndex){
         if(listIndex.size() == 1){
             grid[listIndex.get(0).getLeft()][listIndex.get(0).getRight()].remove(obj);
         }else{
-            for(int i = 0; i< listIndex.size(); i++){
-                gridSuperposition[listIndex.get(i).getLeft()][listIndex.get(i).getRight()].remove(obj);
+            for (Pair<Integer, Integer> index : listIndex) {
+                gridSuperposition[index.getLeft()][index.getRight()].remove(obj);
             }
         }
     }

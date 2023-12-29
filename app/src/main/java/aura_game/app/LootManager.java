@@ -72,7 +72,7 @@ public class LootManager {
 
     /**
      * Méthode pour faire apparaître une arme.
-     * @param lt Le type de butin.
+     * @param tl Le type de butin.
      * @param x La position en x.
      * @param y La position en y.
      * @param bounce Indique si l'objet de butin doit rebondir.

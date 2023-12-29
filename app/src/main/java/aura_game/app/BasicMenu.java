@@ -11,7 +11,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import aura_game.app.GameManager.AudioManager;
 
-/**Utile pour gérer l'affichage des points commun entre le menu de inventory et crafting */
+import java.util.Objects;
+
+/**
+ * Utile pour gérer l'affichage des points commun entre le menu de "inventory" et crafting
+ */
 public abstract class BasicMenu {
 
     protected Sprite menuSprite;
@@ -25,9 +29,9 @@ public abstract class BasicMenu {
     private final int padding;
     private final int numColumns;
 
-    /**slot selectionné, permet de mettre le carré de selection sur le bon slot...*/
+    /**Slot sélectionné, permet de mettre le carré de selection sur le bon slot...*/
     protected int slotSelected;
-    /**Permet d'afficher les items de manière plus petit que la taille du slot*/
+    /**Permet d'afficher les items de manière plus petite que la taille du slot*/
     protected final int marge;
     /**Nombre de slots total dans le menu (à gauche)*/
     protected final int nbSlotsMenu;
@@ -40,7 +44,7 @@ public abstract class BasicMenu {
             int startSlotY, int padding, int numColumns, int slotSelected, int marge, int nbSlotsMenu) {
         menuSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/"+nameMenu+".png")));
         menuSprite.setCenter(600, 300);
-        this.selectedSlotSprite = new Sprite (new Texture(Gdx.files.internal("src/main/resources/"+nameSelectedSlot+".png")));;
+        this.selectedSlotSprite = new Sprite (new Texture(Gdx.files.internal("src/main/resources/"+nameSelectedSlot+".png")));
         this.lootWidth = lootWidth;
         this.lootHeight = lootHeight;
         this.startSlotX = startSlotX;
@@ -59,7 +63,7 @@ public abstract class BasicMenu {
         // Initialisez le sprite du menu avec la texture chargée
         menuSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/MENU_"+colorMenu+".png")));
         menuSprite.setCenter(600, 300);
-        // Initialisez le sprite du slot selectionné avec la texture chargée
+        // Initialisez le sprite du slot sélectionné avec la texture chargée
         selectedSlotSprite = new Sprite (new Texture(Gdx.files.internal("src/main/resources/selectedSlot.png")));
         //Valeurs:
         this.lootWidth = 80;
@@ -84,15 +88,15 @@ public abstract class BasicMenu {
 
     /**
      * @param direction "R" ou "L"
-     * @return
+     * @return le slotSelected mis a jour
      */
     public int moveSlotSelected(String direction){//TODO: vers haut et bas aussi
         //Si on appuie sur gauche et qu'on peut encore aller à gauche
-         if(direction == "L" && slotSelected > 0){
+         if(direction.equals("L") && slotSelected > 0){
             audioManager.playSound(audioManager.getSoundMoveSelectedItem(), 0.1f);
             return --slotSelected;
          }
-         else if(direction == "R"  && slotSelected < (nbSlotsMenu-slotRestantMenu)-1){
+         else if(direction.equals( "R") && slotSelected < (nbSlotsMenu-slotRestantMenu)-1){
             audioManager.playSound(audioManager.getSoundMoveSelectedItem(), 0.1f);
             return ++slotSelected;
         }
@@ -100,7 +104,16 @@ public abstract class BasicMenu {
         
     }
 
-
+    /**
+     * Dessine un texte centré dans une position donnée.
+     *
+     * @param text Le texte que l'on veut afficher.
+     * @param xCenter La coordonnée x du centre du texte.
+     * @param y La coordonnée y du texte.
+     * @param taille La taille du texte.
+     * @param batch Le SpriteBatch utilisé pour le rendu.
+     * @param font La BitmapFont utilisée pour le rendu du texte.
+     */
     public void drawTextCenterIn(String text, int xCenter,int y,float taille, SpriteBatch batch, BitmapFont font){
         font.getData().setScale(taille);
         GlyphLayout layout = new GlyphLayout(font, text); //Mesure la largeur du texte
@@ -109,6 +122,12 @@ public abstract class BasicMenu {
         font.getData().setScale(1.0f);
     }
 
+    /**
+     * Récupère les coordonnées XY de la position d'un butin.
+     *
+     * @param i L'indice du butin.
+     * @return Une paire d'entiers représentant les coordonnées XY de la position du butin.
+     */
     public Pair<Integer,Integer> getXYPositionLoot(int i){
         int x = startSlotX + (i % numColumns) * (lootWidth + padding);
         int y = startSlotY - (i / numColumns) * (lootHeight + padding);

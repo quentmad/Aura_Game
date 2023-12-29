@@ -7,7 +7,7 @@ import aura_game.app.Objects.CollidableObject;
 
 public class ListCollidableObject {
 
-    private List<CollidableObject> list = new ArrayList<CollidableObject>();
+    private List<CollidableObject> list = new ArrayList<>();
 
     public void remove(CollidableObject o){
         list.remove(o);

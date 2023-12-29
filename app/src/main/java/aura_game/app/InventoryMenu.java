@@ -25,7 +25,7 @@ public class InventoryMenu extends BasicMenu {
 
     private InventoryMenu(String colorMenu) {
         super(colorMenu);
-        this.content = new ArrayList<LootStack>();
+        this.content = new ArrayList<>();
         
     }
 
@@ -44,7 +44,7 @@ public class InventoryMenu extends BasicMenu {
 
 
     /**
-     * Verifie si le loot est déjà présent dans l'inventaire, et dans la quantité souhaité
+     * Verifie si le loot est déjà présent dans l'inventaire, et dans la quantité souhaitée
      * @param lootType
      * @param quantity
      * @return
@@ -74,7 +74,7 @@ public class InventoryMenu extends BasicMenu {
 
     /**TODO: notif en bas a droite d'ajout
      * Ajoute à l'inventaire la quantité précisé de loot
-     * @param Loot loot a rajouter dans l'inventaire (on ajoute son lootType)
+     * @param loot loot a rajouter dans l'inventaire (on ajoute son lootType)
      * @return True si l'opération s'est effectué avec succès
      */
     public boolean addToInventory(Loot loot, int quantity){
@@ -99,7 +99,7 @@ public class InventoryMenu extends BasicMenu {
     }
 
     /**
-     * Retire à l'inventaire la quantité demandé du loot (lors de craft, drop...)
+     * Retire à l'inventaire la quantité demandés du loot (lors de craft, drop...)
      * @return le loot dont on a retiré la quantité //TODO utile ? 
      */
     public boolean removeFromInventory(LootType lootType,int quantity){
@@ -141,7 +141,7 @@ public class InventoryMenu extends BasicMenu {
 
     /**Drop le loot selectionné */
     public boolean drop(){
-        if(content.size()>0){
+        if(!content.isEmpty()){
             if(content.get(slotSelected).getQuantity()>0){
                 LootType lt= content.get(slotSelected).getLootType();
                 //int oldSlotRestant = slotRestantMenu;

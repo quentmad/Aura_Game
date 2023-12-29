@@ -11,7 +11,7 @@ import aura_game.app.Region;
 import aura_game.app.Type.ItemType;
 
 /**
- * Un item a une image (a l'inverse d'une entite qui un spritesheet)
+ * Un item a une image (à l'inverse d'une entite qui un spritesheet)
 */
 public class Item extends CollidableObject {
     // ItemType:
@@ -57,16 +57,16 @@ public class Item extends CollidableObject {
         return z;
     }
     /**
-     * Permet de set la position de l'item a partir d'un x y et de cette liste de points du polygon
-     * @return la liste des points du polygon de base de l'item (origine a 0 0)
+     * Permet de set la position de l'item à partir d'un x y et de cette liste de points du polygon
+     * @return la liste des points du polygon de base de l'item (origine à 0 0)
      */
     public float[] getListOriginalPolygon(){
         return listOriginalPolygon;
     }
 
     /**
-     * retourne l'ItemType de l'item
-     * Utile  pour pouvoir créer de nouveaux items "comme celui ci"
+     * Retourne l'ItemType de l'item
+     * Utile pour pouvoir créer de nouveaux items "comme celui-ci"
      * @return l'ItemType de l'Item
      */
     public ItemType getType(){
@@ -84,13 +84,13 @@ public class Item extends CollidableObject {
         return getPosC_X() + (textureWidth)/2;
     }
 
-    /**@return le point x a laquelle il faut mettre le loot pour qu'il soit parfaitement centré horizontalement sur l'item */
+    /**@return le point x à lequel il faut mettre le loot pour qu'il soit parfaitement centré horizontalement sur l'item */
     public int getLootSpawnCenterX(int lootWidth){
         return getPosC_X() + (textureWidth / 2) - (lootWidth / 2);
     }
 
     /**
-     * Met a jour la position de l'item, le hitbox rectangle et polygon a partir des coordonnées en parametre
+     * Met a jour la position de l'item, le hitbox rectangle et polygon à partir des coordonnées en parametre
      * @param casePosX
      * @param casePosY
      */
@@ -105,7 +105,7 @@ public class Item extends CollidableObject {
         
     }
     /**
-     * Permet d'avoir la liste des points du polygon mis a jour avec les x y en parametre et le polygon origonal de l'item
+     * Permet d'avoir la liste des points du polygon mis à jour avec les x y en parametre et le polygon origonal de l'item
      * @param casePosX
      * @param casePosY
      * @return
@@ -126,49 +126,49 @@ public class Item extends CollidableObject {
 
 
     /**
-     * Détermine si il y a une colission avec la map / les entités /items avec la hitbox
+     * Détermine s'il y a une collision avec la map / les entités /items avec la hitbox
      * ayant pour origine ox oy: lorsqu'on veut poser un item... (pas de 
      * "mouvement/direction")
      * 
-     * @param map sur lequel l'objet se trouve lors de l'action effectué
-     * @return true si une colission est detecté, false sinon
+     * @param region sur lequel l'objet se trouve lors de l'action effectuée
+     * @return true si une collision est détecté, false sinon
      */
     public boolean willCollideIn(Region region) {
         float[] polyf = getHitboxPolygon().getVertices();// Tableau avec l'ensemble des points du polygone hitbox
         
-        // Colission avec polygon:
+        // Collision avec polygon:
         List<CollidableObject> objColList = region.getGridItem().getCollidingObjects(getHitboxFlat()).getList();
         // Detection au niveau de la region/pixmap
         if(willCollideGroundNoMove(region, polyf)){return true;}
         //Detection avec les autres entités
-        if(willCollidePolygonNoMove(polyf, objColList,region).size()>0){return true;}
+        if(!willCollidePolygonNoMove(polyf, objColList, region).isEmpty()){return true;}
         return false;
     }
 
 
-    /**Pour les items (sans mouvement), dit si il y a collision de this avec PixColision map
+    /**Pour les items (sans mouvement), dit s'il y a collision de this avec PixColision map
      * @param region la region cible
      * @param vertices la liste des points du polygon de this
     */
     public boolean willCollideGroundNoMove(Region region, float[] vertices){
         for (int i = 0; i < vertices.length; i += 2) {// i: x, i+1: y
-            /*Pour tous les points du polygon, on verifie si il y aurait collission avec
+            /*Pour tous les points du polygon, on verifie si il y aurait collision avec
              pixmap (le sol de la region)*/
             if (region.getPixColision().getPixel(Math.round(vertices[i]),
                     (region.getRegionHeight() - Math.round(vertices[i + 1]))) != 0) {// Y a pour origine le haut
-                //System.out.println("region colission at x: " + polyf[i] + ", y: " + polyf[i + 1]);
+                //System.out.println("region collision at x: " + polyf[i] + ", y: " + polyf[i + 1]);
                 return true;
             }
         }
         return false;
     }
-    /**Pour les items (sans mouvement), dit si il y a collision avec un autre CollidableObject de objCol
+    /**Pour les items (sans mouvement), dit s'il y a collision avec un autre CollidableObject de objCol
      * @param verticesColission la liste des points du polygon de this, celui qui veut faire l'action/lance la méthode
      * @param objCol la liste des CollidableObjects avec lequel il y a eu collision au niveau du rectangle hitbox
      * @param region la region cible
     */
-    public List<CollidableObject> willCollidePolygonNoMove(float[] verticesColission, List<CollidableObject> objCol, Region map){
-        List<CollidableObject> colissionPoly = new ArrayList<CollidableObject>();
+    public List<CollidableObject> willCollidePolygonNoMove(float[] verticesColission, List<CollidableObject> objCol, Region region){
+        List<CollidableObject> colissionPoly = new ArrayList<>();
         // Detection au niveau des objects (quadtree)
         for (CollidableObject object : objCol) {// Si la liste est non vide c'est qu'il y a des colissions au niveau des
                                           // rectangles

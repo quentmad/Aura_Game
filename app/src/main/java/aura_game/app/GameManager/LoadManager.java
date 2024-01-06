@@ -33,7 +33,7 @@ public class LoadManager {
     private CraftingMenu crafting;
     private WheelMenus wheelMenus;
 
-    
+
     /**
      * Initialise les dépendances et configurations nécessaires pour le gestionnaire de chargement. Cette méthode joue un rôle central
      * dans l'application du modèle de conception "Pattern Observer" (Observateur) conjointement avec le principe d'"Injection de Dépendances".
@@ -49,6 +49,8 @@ public class LoadManager {
      * @param player Le joueur jouable de la partie.
      * @param inventory L'inventaire du joueur.
      * @param inputHandler Le gestionnaire d'entrée pour le jeu.
+     * @param crafting Le gestionnaire de craft
+     * @param wheelMenu les menus de ranged et meele
      */
     public void initialize(UpdateManager updateManager,Region region, PlayableEntity player, InventoryMenu inventory, InputHandler inputHandler, CraftingMenu crafting, WheelMenus wheelMenu) {
         this.updateManager = updateManager;
@@ -60,7 +62,7 @@ public class LoadManager {
         this.wheelMenus = wheelMenu;
     }
         // Initialisez les éléments nécessaires ici
-    
+
 
     public void startNewGame() {
         // Logique de démarrage d'une nouvelle partie
@@ -69,7 +71,7 @@ public class LoadManager {
         // Autres étapes de création de la partie
     }
 
-    private void loadObjectsOnRegion(String regionName) {//TODO: il peut y avoir plusieurs map !  
+    private void loadObjectsOnRegion(String regionName) {//TODO: il peut y avoir plusieurs map !
         // Chargez la disposition des objets à partir du fichier
         loadRegionLayoutItems(regionName);
         // Chargez la disposition des entités (hors player) à partir du fichier
@@ -81,7 +83,7 @@ public class LoadManager {
      * Charge et lis le fichier puis place les entités (hors player) aux bonnes coordonnées sur la region/map en question
      * @param regionName le nom de la map pour charger le fichier de la region/map layout d'items
      */
-    public void loadMapLayoutEntities(String regionName) {
+    private void loadMapLayoutEntities(String regionName) {
         IAEntity ent;
         try {
             BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/layoutEntity/"+regionName+"_layout.txt"));
@@ -118,7 +120,7 @@ public class LoadManager {
      * Charge et lis le fichier puis place les objets/items aux bonnes coordonnées sur la map en question s'il n'y a pas de collision
      * @param regionName le nom de la map pour charger le fichier de la map layout d'items
      */
-    public void loadRegionLayoutItems(String regionName) {
+    private void loadRegionLayoutItems(String regionName) {
         Item ite;
         try {
             BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/layoutItem/"+regionName+"_layout.txt"));
@@ -182,22 +184,22 @@ public class LoadManager {
             } });
 
         inputHandler.mapKeyToAction(Input.Keys.UP,() -> {
-            if (updateManager.activeMenu().equals("game")) {    
+            if (updateManager.activeMenu().equals("game")) {
                 player.changeAction("Walk_U");} });
         inputHandler.mapKeyToAction(Input.Keys.DOWN,() -> {
-            if (updateManager.activeMenu().equals("game")){  
+            if (updateManager.activeMenu().equals("game")){
                 player.changeAction("Walk_D");} });
-        inputHandler.mapKeyToAction(Input.Keys.K,() -> {
+        inputHandler.mapKeyToAction(0,() -> {//Input.Keys.K
             if (updateManager.activeMenu().equals("game")){
                 player.changeAction("Slash");}  });
         inputHandler.mapKeyToAction(Input.Keys.L,() -> {
-            if (updateManager.activeMenu().equals("game")){  
+            if (updateManager.activeMenu().equals("game")){
                 player.changeAction("SpellCast");} });
-        inputHandler.mapKeyToAction(Input.Keys.P,() -> { 
-            if (updateManager.activeMenu().equals("game")){  
+        inputHandler.mapKeyToAction(Input.Keys.P,() -> {
+            if (updateManager.activeMenu().equals("game")){
                 player.changeAction("Thrust");} });
-        inputHandler.mapKeyToAction(Input.Keys.O,() -> {
-            if (updateManager.activeMenu().equals("game")){  
+        inputHandler.mapKeyToAction(1,() -> {//O
+            if (updateManager.activeMenu().equals("game")){
                 player.changeAction("Shoot");}  });
                 //?CHEAT HELP TEST
         inputHandler.mapKeyToAction(Input.Keys.S, () -> {
@@ -207,7 +209,7 @@ public class LoadManager {
         });
 
         inputHandler.mapKeyToAction(Input.Keys.ENTER,() -> {
-            if (updateManager.activeMenu().equals("crafting")) {    
+            if (updateManager.activeMenu().equals("crafting")) {
                 crafting.getCraftManager().craftItem(Pair.of(crafting.getLootSelected().getName(),1));
             }else if (updateManager.activeMenu().equals("wheel")) { wheelMenus.setActualTool(player);}
         });
@@ -215,5 +217,5 @@ public class LoadManager {
         inputHandler.mapKeyToAction(Input.Keys.A, () -> wheelMenus.getMeleeWeapons().setActualToolPlayer(player));
         inputHandler.mapKeyToAction(Input.Keys.Z, () -> wheelMenus.getRangedWeapons().setActualToolPlayer(player));
     }
-    
+
 }

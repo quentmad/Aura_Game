@@ -44,7 +44,7 @@ public enum ToolType {
     private final LootType lootType;
     private final float damage;
     private final float maxSolidity;
-    /**Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
+    /**Longueur de la zone de dégats avec cette arme: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
     private final Pair<Integer,Integer> hitZoneLenght;
     /** Décallage par rapport au point en bas à gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un côté touchant le rectangleHitbox (selon la direction)
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/

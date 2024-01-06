@@ -68,10 +68,10 @@ public class AudioManager {
     public void playSound(String action,String name, float volume ){
         switch (action +"_"+ name){
             case "wood_hurt":
-                soundBreakWood.play(0);//! remettre volume !!!!!!!!!
+                soundBreakWood.play(volume);//! remettre volume !!!!!!!!!
                 break;
             case"entity_hurt":
-                soundHurtEntity.play(0);//! remettre volume !!!!!!!!!
+                soundHurtEntity.play(volume);//! remettre volume !!!!!!!!!
         }
 
     }

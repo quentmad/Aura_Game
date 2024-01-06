@@ -33,7 +33,8 @@ public abstract class BasicObject {
     
     /**Modification de la position y
      * @param y ajout à la position PosC_Y actuelle
-     */    public void addToPosC_Y(int y) {
+     */
+    public void addToPosC_Y(int y) {
         posC_Y+=y;
     }
 

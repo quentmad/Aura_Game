@@ -70,13 +70,13 @@ public class MyInputProc implements InputProcessor {
      */
     private boolean IsStaticAction(int keycode) {
         return switch (keycode) {
-            case Input.Keys.K ->//Slash
+            case 0 ->//Slash
                     true;
             case Input.Keys.L -> //Spellcast
                     true;
             case Input.Keys.P ->//Thrust
                     true;
-            case Input.Keys.O ->//Shoot
+            case 1 ->//Shoot //O
                     true;
             default -> false;
         };
@@ -174,16 +174,47 @@ public class MyInputProc implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        // Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'touchDown'");
+
+        if (!keysPressed.contains(button)) {
+            //Si l'inventaire s'ouvre/se ferme on arrete les actions continues (si jamais elle sont tjr enfoncés)...
+            if(button == Input.Keys.E && !activeContinuousActions.isEmpty() ){
+                onGoingStaticAction = false;
+                keysPressed.clear();
+                activeContinuousActions.clear();
+                player.changeAction(null);
+            }
+            if(!onGoingStaticAction || button == Input.Keys.E){
+                keysPressed.add(button);
+                //Si c'est une action continues(Walk_L...) on le met dans activeActions
+                String actionWalking = getNameActionWalkingFromKeycode(button);
+                if(!Game.getInstance().getUpdateManager().activeMenu().equals("game")){
+                    if(actionWalking!=null){
+                        activeContinuousActions.add(actionWalking);
+                    }
+                    if(IsStaticAction(button)){
+                        onGoingStaticAction = true;
+                    }
+                }
+                Game.getInstance().getInputHandler().performAction(button);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        // Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'touchUp'");
-        return false;
+        keysPressed.remove(Integer.valueOf(button));
+        //Si l'action qu'on vient de désactiver est une action de mouvement/slash
+        String actionWalking = getNameActionWalkingFromKeycode(button);
+        if(actionWalking!=null){
+            activeContinuousActions.remove(actionWalking);
+            //Si il n'y a pas d'action statique en cours
+            if(!onGoingStaticAction){
+                finishAction();
+            }
+        }
+        return true;
     }
 
     @Override

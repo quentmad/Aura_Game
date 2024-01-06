@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 
 import aura_game.app.LootManager;
-import aura_game.app.UI;
+import aura_game.app.UIBar;
 import aura_game.app.Type.LootType;
 import aura_game.app.Util.Triplet;
 
@@ -25,7 +25,7 @@ public class CollidableObject extends BasicObject {
     private int hitboxHeight; 
     /*Apres verif sur Rectangle, afin d'avoir une vérification plus précise (les entités ont seulement des Rectangle)*/
     private Polygon hitboxPolygon; //Hitbox (flat). Utilisé lorsqu'une colission est détecté 
-    private UI ui;//Gère les coeurs, barre de vies, -3 / -6 ...
+    private UIBar ui;//Gère les coeurs, barre de vies, -3 / -6 ...
     protected float maxLives;
     protected float life;
     private boolean dead;
@@ -42,7 +42,7 @@ public class CollidableObject extends BasicObject {
      int tall, Polygon hitboxPolygon, int hitboxHeight,int offY, List<Triplet<String, Integer, Integer>> deathLoots){
         super(posC_X, posC_Y);
         this.name = name;
-        this.ui = new UI();
+        this.ui = new UIBar();
         this.maxLives = 2;
         this.life = maxLives;
         this.dead = false;
@@ -81,7 +81,7 @@ public class CollidableObject extends BasicObject {
     }
 
     /**Bar de vies, cœurs... */
-    public UI getUI(){
+    public UIBar getUI(){
         return ui;
     }
 

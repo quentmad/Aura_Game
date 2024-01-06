@@ -77,6 +77,7 @@ public class WheelMenus {
      */
     public void setActualTool(PlayableEntity player){
         if (activeWheel != null) {
+            System.out.println("activeWheel is "+ activeWheel);
             activeWheel.setActualToolCategory(player);
         } 
     }

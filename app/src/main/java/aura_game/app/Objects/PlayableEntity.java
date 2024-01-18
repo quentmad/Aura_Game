@@ -105,7 +105,8 @@ public class PlayableEntity extends Entity {
      *///TODO modif here: ùaj les 2
     public void updateSpriteToolInfo(){
         int[] actualActionTool = null;
-        if(!getCurrentToolName().isEmpty()){//Alors une arme est selectionné
+        System.out.println("current tool empty ? :"+!getCurrentToolName().equals(""));
+        if(!getCurrentToolName().equals("")){//Alors une arme est selectionné
             actualActionTool =  getToolsspriteSheetData().getActionInfo(getCurrentToolName(), getActualActionName());
         }    
         if(actualActionTool != null){

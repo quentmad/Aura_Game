@@ -1,0 +1,67 @@
+= Scénario de jeu vidéo d'aventure
+
+== Contexte
+
+Vous êtes un jeune explorateur qui rêve de découvrir les secrets du monde. Un jour, vous recevez une lettre mystérieuse qui vous invite à rejoindre une expédition vers une planète inconnue. Vous acceptez sans hésiter et vous embarquez sur une navette spatiale avec d'autres aventuriers. En chemin, vous êtes pris dans une tempête cosmique qui fait s'écraser la navette.
+
+== Personnages
+
+=== Le joueur
+
+Un jeune explorateur avide de découvertes et d'aventures.
+
+=== Aura
+
+Aura est un Fyra, un gardien de la nature. Il ressemble à un renard, mais avec des ailes et des cornes. Il propose d'aider le joueur à survivre sur la planète, en échange de son aide pour sauver son peuple.
+
+== Gameplay
+
+Le jeu se déroule sous la forme d'un jeu d'exploration et de résolution d'énigmes. Le joueur doit parcourir les différents biomes de la planète, utiliser les capacités d'Aura et faire attention à sa relation avec lui.
+
+== Quêtes principales
+
+. Recherche de l'artefact ancien
+. Aide à Aura pour retrouver sa famille
+
+== Fin du jeu
+
+Le jeu se termine par une confrontation finale avec le grand méchant, un ancien Fyra corrompu par le pouvoir de l'artefact. Le joueur doit faire un choix crucial qui détermine la fin du jeu.
+
+
+
+
+rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+
+= Scénario de Aura
+
+== Contexte
+
+Vous êtes Ayden, un jeune explorateur courageux qui se retrouve sur une planète dévastée par la guerre et la convoitise des humains. Un jour, alors qu'Ayden explore les ruines d'une ancienne forêt, il découvre un animal appelé Aura, un animal mystique doté d'un lien profond avec la nature.
+
+== Personnages
+
+=== Ayden
+
+Ayden est un jeune garçon courageux qui se retrouve sur une planète dévastée par la guerre et la convoitise des humains. Il est déterminé à libérer la famille d'Aura et à rétablir l'harmonie.
+
+=== Aura
+
+Aura est un Fyra, un gardien de la nature. Il ressemble à un renard, mais avec des ailes et des cornes. Il propose d'aider le joueur à survivre sur la planète, en échange de son aide pour sauver son peuple.
+
+== Gameplay
+
+Le jeu se déroule dans un monde isométrique à la fois magnifique et sombre, inspiré de l'univers visuel d'Ori et du film Avatar. Le joueur doit parcourir les différents biomes de la planète, utiliser les capacités d'Aura et faire attention à sa relation avec lui. La musique a un impact direct sur le monde qui l'entoure et peut réveiller la puissance dormante de la nature.
+
+== Quêtes principales
+
+. Recherche de l'artefact ancien
+. Aide à Aura pour retrouver sa famille
+. Collecte des fragments de la Clé Harmonique
+
+== Antagoniste principal
+
+Un chef tyrannique qui cherche à contrôler la puissance de la musique à des fins malveillantes.
+
+== Fin du jeu
+
+Lorsqu’Ayden assemble enfin tous les fragments de la Clé Harmonique, un portail s'ouvre. Il se retrouve transporté dans un monde parallèle où tout est dénué de couleur et où la musique est réduite à des mélodies en 64 bits. Dans ce monde altéré, Ayden doit naviguer à travers des énigmes complexes et utiliser sa maîtrise de la musique pour restaurer la symphonie originale et rétablir l'équilibre.

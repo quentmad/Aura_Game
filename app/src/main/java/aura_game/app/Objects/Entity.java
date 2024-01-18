@@ -182,7 +182,7 @@ public class Entity extends CollidableObject {
             currentDeplacement = this.getDeplacementFromAction(action);//Defini x y current
             //Si c'est un PlayableEntity et qu'il a un Tool en main, penser à mettre à jour spriteY et size 
             if (this instanceof PlayableEntity && Game.getInstance().isGameStarted()){//!!!!!!!!
-                if(!((PlayableEntity) this).getCurrentToolName().isEmpty()){
+                if(!((PlayableEntity) this).getCurrentToolName().equals("")){
                     ((PlayableEntity)this).updateSpriteToolInfo();//TODO comparer pour pas lancer ca a chaque change action meme h24 sans outils
                     ((PlayableEntity)this).updateSpriteDurationFromActionName();
                 }

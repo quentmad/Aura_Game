@@ -214,7 +214,7 @@ public class LoadManager {
             }else if (updateManager.activeMenu().equals("wheel")) { wheelMenus.setActualTool(player);}
         });
 
-        inputHandler.mapKeyToAction(Input.Keys.A, () -> wheelMenus.getMeleeWeapons().setActualToolPlayer(player));
+        inputHandler.mapKeyToAction(Input.Keys.A, () -> wheelMenus.getMeleeWeapons().setActualToolPlayer(player)); //TODO LAISSER NCA ICI ??? C'est ici qu'on dit qu'elle type d'arme on veut....
         inputHandler.mapKeyToAction(Input.Keys.Z, () -> wheelMenus.getRangedWeapons().setActualToolPlayer(player));
     }
 

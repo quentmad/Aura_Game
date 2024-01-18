@@ -177,7 +177,7 @@ public class Wheel<T>{
     public void renderActualTool(SpriteBatch batch) {
         if(actualPlayerTool !=null){
             spriteActualToolSlot.draw(batch);
-            System.out.println(spriteActualToolSlot.getX()+"y:"+ spriteActualToolSlot.getY());
+            //System.out.println(spriteActualToolSlot.getX()+"y:"+ spriteActualToolSlot.getY());
             batch.draw(actualPlayerTool.getTextureBlackAndWhite(),spriteActualToolSlot.getX(), spriteActualToolSlot.getY());
         }
     }

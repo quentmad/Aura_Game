@@ -1,0 +1,21 @@
+@startuml BasicObject
+
+abstract class BasicObject {
+  - posC_X: int
+  - posC_Y: int
+
+  + BasicObject(x: int, y: int)
+  + getPosC_X(): int
+  + getPosC_Y(): int
+  + addToPosC_X(x: int): void
+  + addToPosC_Y(y: int): void
+  + setPosC_X(x: int): void
+  + setPosC_Y(y: int): void
+  + getPosOnScreenX(cameraX: int): int
+  + getPosOnScreenY(cameraY: int): int
+  + getZProf(): int
+  + calculateDistancePair(obj2: CollidableObject): Pair<Integer, Integer>
+  + calculateDistance(obj2: CollidableObject): int
+}
+
+@enduml

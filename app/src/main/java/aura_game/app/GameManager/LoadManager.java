@@ -75,7 +75,7 @@ public class LoadManager {
         // Chargez la disposition des objets à partir du fichier
         loadRegionLayoutItems(regionName);
         // Chargez la disposition des entités (hors player) à partir du fichier
-        loadMapLayoutEntities(regionName);
+        //loadMapLayoutEntities(regionName);
 
     }
 
@@ -169,7 +169,7 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.LEFT,() -> {
             switch(updateManager.activeMenu()){
-                case "game": player.changeAction("Walk_L"); break;
+                case "game": player.getEntityStateMachine().changeStateAction("Walk", "L", !player.getCurrentToolName().equals("")); break;
                 case "inventory" : playerInventory.moveSlotSelected("L");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("L");break;
                 case "wheel" : wheelMenus.moveSlotSelected("L");break;
@@ -177,30 +177,54 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.RIGHT,() -> {
             switch(updateManager.activeMenu()){
-                case "game": player.changeAction("Walk_R"); break;
+                case "game": player.getEntityStateMachine().changeStateAction("Walk", "R", !player.getCurrentToolName().equals("")); break;
                 case "inventory" : playerInventory.moveSlotSelected("R");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("R");break;
                 case "wheel" : wheelMenus.moveSlotSelected("R");break;
             } });
 
         inputHandler.mapKeyToAction(Input.Keys.UP,() -> {
-            if (updateManager.activeMenu().equals("game")) {
-                player.changeAction("Walk_U");} });
+                    if (updateManager.activeMenu().equals("game")) {
+                        player.getEntityStateMachine().changeAction("Walk", "U", !player.getCurrentToolName().equals(""));
+                    }
+                });
         inputHandler.mapKeyToAction(Input.Keys.DOWN,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.changeAction("Walk_D");} });
+                player.getEntityStateMachine().changeAction("Walk", "D", !player.getCurrentToolName().equals(""));
+            }
+        });
         inputHandler.mapKeyToAction(0,() -> {//Input.Keys.K
-            if (updateManager.activeMenu().equals("game")){
-                player.changeAction("Slash");}  });
+            if (updateManager.activeMenu().equals("game")){                     //TODO modof + propre
+                player.getEntityStateMachine().changeAction("Slash", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+            }
+        });
         inputHandler.mapKeyToAction(Input.Keys.L,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.changeAction("SpellCast");} });
+                player.getEntityStateMachine().changeAction("SpellCast", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+            }
+        });
         inputHandler.mapKeyToAction(Input.Keys.P,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.changeAction("Thrust");} });
+                player.getEntityStateMachine().changeAction("Thrust", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+            }
+        });
+        inputHandler.mapKeyToAction(Input.Keys.SPACE,() -> {
+            if (updateManager.activeMenu().equals("game")){
+                player.getEntityStateMachine().changeAction("Jump", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+            }
+        });
+        inputHandler.mapKeyToAction(Input.Keys.D,() -> {//Run if already walking
+            System.out.println("a" + player.getEntityStateMachine().getCurrentStateName());
+            if (/*updateManager.activeMenu().equals("game") && */ player.getEntityStateMachine().getCurrentStateName().equals("Walk")){
+                System.out.println("-----------------------------run now please");
+                player.getEntityStateMachine().changeAction("Run", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+            }
+        });
         inputHandler.mapKeyToAction(1,() -> {//O
             if (updateManager.activeMenu().equals("game")){
-                player.changeAction("Shoot");}  });
+                player.getEntityStateMachine().changeAction("Shoot", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+            }
+        });
                 //?CHEAT HELP TEST
         inputHandler.mapKeyToAction(Input.Keys.S, () -> {
             playerInventory.addToInventory(new Loot(LootType.branch,0,0,false,null,true),12);

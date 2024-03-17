@@ -84,12 +84,12 @@ public class RenderManager {
         wheelMenus.renderActualTool(batch);
         renderActiveMenu();
         batch.end();
-        tempoRenderZoneDegatPlayer();
+        //tempoRenderZoneDegatPlayer();
     }
     /**Pour tester/verifier */
     public void tempoRenderZoneDegatPlayer(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        Rectangle r = player.zoneDegatFromDirection();
+        Rectangle r = player.zoneDegatFromDirection(player.getEntityStateMachine().getCurrentDirectionLetter());
         shapeRenderer.rect(r.getX(), r.getY(), r.getWidth(),r.getHeight());
         shapeRenderer.end();
     }
@@ -104,7 +104,7 @@ public class RenderManager {
         //System.out.println("sprite player :" +player.getCurrentSpriteX());
         for(BasicObject obj :region.getBasicObjectsOnRegion()){
             if(!boyDrawn && player.getZProf()>obj.getZProf()){//Y du boy <-> Z
-                batch.draw(player.getSpriteSheetInfo().spriteSheetRegions()[player.getCurrentSpriteY()][player.getCurrentSpriteX()], player.getPosOnScreenX(region.getCamera().getX()), player.getPosOnScreenY(region.getCamera().getY()));
+                batch.draw(player.getSpriteSheetInfo().spriteSheetRegions()[player.getEntityStateMachine().getCurrentState().getCurrentSpriteY()][player.getEntityStateMachine().getCurrentState().getCurrentSpriteX()], player.getPosOnScreenX(region.getCamera().getX()), player.getPosOnScreenY(region.getCamera().getY()));
                 renderTool();
                 boyDrawn = true;
             }
@@ -120,12 +120,12 @@ public class RenderManager {
             else{//Entity
                 IAEntity entity = (IAEntity) obj;
                 //System.out.println("Y "+entity.getCurrentSpriteY()+ "X "+entity.getCurrentSpriteX());
-                batch.draw(entity.getSpriteSheetInfo().spriteSheetRegions()[entity.getCurrentSpriteY()][entity.getCurrentSpriteX()], entity.getPosOnScreenX(region.getCamera().getX()), entity.getPosOnScreenY(region.getCamera().getY()));
+                batch.draw(entity.getSpriteSheetInfo().spriteSheetRegions()[entity.getEntityStateMachine().getCurrentState().getCurrentSpriteY()][entity.getEntityStateMachine().getCurrentState().getCurrentSpriteX()], entity.getPosOnScreenX(region.getCamera().getX()), entity.getPosOnScreenY(region.getCamera().getY()));
                 entity.getUI().drawBar(entity, batch);
             }
         }
         if(!boyDrawn){     
-            batch.draw(player.getSpriteSheetInfo().spriteSheetRegions()[player.getCurrentSpriteY()][player.getCurrentSpriteX()], player.getPosOnScreenX(region.getCamera().getX()), player.getPosOnScreenY(region.getCamera().getY()));
+            batch.draw(player.getSpriteSheetInfo().spriteSheetRegions()[player.getEntityStateMachine().getCurrentState().getCurrentSpriteY()][player.getEntityStateMachine().getCurrentState().getCurrentSpriteX()], player.getPosOnScreenX(region.getCamera().getX()), player.getPosOnScreenY(region.getCamera().getY()));
             renderTool();
         }
     
@@ -173,7 +173,7 @@ public class RenderManager {
             int marge = (player.getCurrentToolSizeSprite() - 64);
             if(marge>0){marge/=2;}else{marge=0;}
             TextureRegion[][] textureReg= player.getTextureRegionTool(player.getCurrentToolSizeSprite() );
-            batch.draw(textureReg[player.getCurrentToolSpriteY()][player.getCurrentSpriteX()], player.getPosOnScreenX(region.getCamera().getX())-marge, player.getPosOnScreenY(region.getCamera().getY())-marge);
+            batch.draw(textureReg[player.getCurrentToolSpriteY()][player.getEntityStateMachine().getCurrentState().getCurrentSpriteX()], player.getPosOnScreenX(region.getCamera().getX())-marge, player.getPosOnScreenY(region.getCamera().getY())-marge);
         }
     }
     public void dispose() {

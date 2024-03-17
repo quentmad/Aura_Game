@@ -147,9 +147,11 @@ public class InventoryMenu extends BasicMenu {
                 //int oldSlotRestant = slotRestantMenu;
                 removeFromInventory(lt, 1);
                 /*if(oldSlotRestant !=slotRestantMenu){
+                /*if(oldSlotRestant !=slotRestantMenu){
                     updateToolIndexFrom(slotSelected);//COMME CA ?
                 }*/
-                LootManager.getInstance().spawnLoot(lt,player.getLootSpawnCenterX(lt.width()), player.getPosC_Y()+lt.offY(),true, LootManager.getInstance().getJumpVec(player.getCurrentDeplacement().getLeft(),player.getCurrentDeplacement().getRight() , 1) );
+                Pair<Integer,Integer> dep = player.getEntityStateMachine().getCurrentState().getMovementOf(player.getEntityStateMachine().getCurrentDirectionLetter());
+                LootManager.getInstance().spawnLoot(lt,player.getLootSpawnCenterX(lt.width()), player.getPosC_Y()+lt.offY(),true, LootManager.getInstance().getJumpVec(dep.getLeft(),dep.getRight() , 1) );
                 return true;
             }
         }

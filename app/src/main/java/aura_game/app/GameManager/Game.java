@@ -66,7 +66,7 @@ public class Game {
         wheelMenus = WheelMenus.getInstance();//PAS besoin de init car pas de dépendances
         crafting = CraftingMenu.getInstance();
         region = new Region("map_AuraDark2", "mappix_CollisionX2");
-        player = new PlayableEntity(EntityType.player, 5);//4
+        player = new PlayableEntity(EntityType.player, 3);//4
         sky = new Sky();
         inputHandler = InputHandler.getInstance();
         inputProcessor  = MyInputProc.getInstance();

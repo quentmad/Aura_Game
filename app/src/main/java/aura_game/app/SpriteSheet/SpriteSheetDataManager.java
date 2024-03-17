@@ -39,8 +39,8 @@ public class SpriteSheetDataManager {
      */
     private static Map<String, int[]> createActionDataMap(EntityType entType ) {
         Map<String, int[]> map = new HashMap<>();
-        String[] actionsName = entType.spriteSheetActionsName();
-        int[] actions = entType.spriteSheetXEnd();
+        String[] actionsName = null;// entType.spriteSheetActionsName(); //TODO : a changer
+        int[] actions = null;//entType.spriteSheetXEnd();
         int numActions = actionsName.length; // Nombre d'actions
 
         for (int i = 0; i < numActions; i++) {

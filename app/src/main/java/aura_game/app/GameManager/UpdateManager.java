@@ -49,7 +49,7 @@ public class UpdateManager {
     /**Mises à jour nécessaires */
     public void update() {
 
-        player.doAction();
+        player.getEntityStateMachine().executeCurrentAction(player);
         updateEntities(); // Mettre à jour les behavior et positions des entités du jeu
         // Autres mises à jour nécessaires
         LootManager.getInstance().update(2);

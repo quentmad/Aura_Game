@@ -239,7 +239,7 @@ public class Entity extends CollidableObject {
      * Si oui, on lance hurt(int pv) sur ces objets.
      */
     public void hit(){//Animation de mort (attendre fin anim coup) + ajout detection polynom
-        Rectangle zoneDegat = zoneDegatFromDirection(entityStateMachine.getCurrentDirectionLetter());
+        Rectangle zoneDegat = zoneDegatFromDirection(entityStateMachine.getCurrentOrientation().getDirection());
         //System.out.println(zoneDegat);
         //Liste des items en colission par rapport à leur rectangle
         List<CollidableObject> itemsColRect = actualRegion.getGridItem().getCollidingObjects(zoneDegat).getList();

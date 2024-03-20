@@ -4,15 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import aura_game.app.*;
+import aura_game.app.LPCActions.EntityStateMachine;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.badlogic.gdx.Input;
 
-import aura_game.app.CraftingMenu;
-import aura_game.app.InputHandler;
-import aura_game.app.InventoryMenu;
-import aura_game.app.Region;
-import aura_game.app.WheelMenus;
 import aura_game.app.Objects.IAEntity;
 import aura_game.app.Objects.Item;
 import aura_game.app.Objects.Loot;
@@ -169,7 +166,7 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.LEFT,() -> {
             switch(updateManager.activeMenu()){
-                case "game": player.getEntityStateMachine().changeStateAction("Walk", "L", !player.getCurrentToolName().equals("")); break;
+                case "game": player.getEntityStateMachine().changeStateAction("Walk", Orientation.WEST, !player.getCurrentToolName().equals("")); break;
                 case "inventory" : playerInventory.moveSlotSelected("L");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("L");break;
                 case "wheel" : wheelMenus.moveSlotSelected("L");break;
@@ -177,7 +174,7 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.RIGHT,() -> {
             switch(updateManager.activeMenu()){
-                case "game": player.getEntityStateMachine().changeStateAction("Walk", "R", !player.getCurrentToolName().equals("")); break;
+                case "game": player.getEntityStateMachine().changeStateAction("Walk", Orientation.EAST, !player.getCurrentToolName().equals("")); break;
                 case "inventory" : playerInventory.moveSlotSelected("R");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("R");break;
                 case "wheel" : wheelMenus.moveSlotSelected("R");break;
@@ -185,44 +182,44 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.UP,() -> {
                     if (updateManager.activeMenu().equals("game")) {
-                        player.getEntityStateMachine().changeAction("Walk", "U", !player.getCurrentToolName().equals(""));
+                        player.getEntityStateMachine().changeAction("Walk", Orientation.NORTH, !player.getCurrentToolName().equals(""));
                     }
                 });
         inputHandler.mapKeyToAction(Input.Keys.DOWN,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Walk", "D", !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Walk", Orientation.SOUTH, !player.getCurrentToolName().equals(""));
             }
         });
         inputHandler.mapKeyToAction(0,() -> {//Input.Keys.K
             if (updateManager.activeMenu().equals("game")){                     //TODO modof + propre
-                player.getEntityStateMachine().changeAction("Slash", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Slash", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.L,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("SpellCast", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("SpellCast", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.P,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Thrust", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Thrust", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.SPACE,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Jump", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Jump", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.D,() -> {//Run if already walking
             System.out.println("a" + player.getEntityStateMachine().getCurrentStateName());
             if (/*updateManager.activeMenu().equals("game") && */ player.getEntityStateMachine().getCurrentStateName().equals("Walk")){
                 System.out.println("-----------------------------run now please");
-                player.getEntityStateMachine().changeAction("Run", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Run", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
             }
         });
         inputHandler.mapKeyToAction(1,() -> {//O
             if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Shoot", player.getEntityStateMachine().getCurrentDirectionLetter(), !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Shoot", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
             }
         });
                 //?CHEAT HELP TEST

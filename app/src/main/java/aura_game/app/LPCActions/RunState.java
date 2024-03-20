@@ -13,7 +13,7 @@ public class RunState extends ActionState{
 
     @Override
     public void act(Entity entity) {
-        Pair<Integer,Integer> movement = getMovementOf(entity.getEntityStateMachine().getCurrentDirectionLetter());
+        Pair<Integer,Integer> movement = getMovementOf(entity.getEntityStateMachine().getCurrentOrientation().getDirection());
         if(!entity.isColliding(movement.getLeft(), movement.getRight())){//Pas de colission
             entity.move(movement.getLeft(),movement.getRight());
             updateSpriteXWithDuration();
@@ -29,7 +29,7 @@ public class RunState extends ActionState{
                     tool = true;
                 }
             }
-            entity.getEntityStateMachine().changeStateAction("Idle", entity.getEntityStateMachine().getCurrentDirectionLetter(),tool);
+            entity.getEntityStateMachine().changeStateAction("Idle", entity.getEntityStateMachine().getCurrentOrientation(),tool);
         }
 
     }

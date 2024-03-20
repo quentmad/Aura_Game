@@ -144,14 +144,10 @@ public class InventoryMenu extends BasicMenu {
         if(!content.isEmpty()){
             if(content.get(slotSelected).getQuantity()>0){
                 LootType lt= content.get(slotSelected).getLootType();
-                //int oldSlotRestant = slotRestantMenu;
                 removeFromInventory(lt, 1);
-                /*if(oldSlotRestant !=slotRestantMenu){
-                /*if(oldSlotRestant !=slotRestantMenu){
-                    updateToolIndexFrom(slotSelected);//COMME CA ?
-                }*/
-                Pair<Integer,Integer> dep = player.getEntityStateMachine().getCurrentState().getMovementOf(player.getEntityStateMachine().getCurrentDirectionLetter());
-                LootManager.getInstance().spawnLoot(lt,player.getLootSpawnCenterX(lt.width()), player.getPosC_Y()+lt.offY(),true, LootManager.getInstance().getJumpVec(dep.getLeft(),dep.getRight() , 1) );
+                int mx = player.getEntityStateMachine().getCurrentOrientation().getX();
+                int my = player.getEntityStateMachine().getCurrentOrientation().getY();
+                LootManager.getInstance().spawnLoot(lt,player.getLootSpawnCenterX(lt.width()), player.getPosC_Y()+lt.offY(),true, LootManager.getInstance().getJumpVec(mx, my, 1) );
                 return true;
             }
         }

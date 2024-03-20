@@ -3,6 +3,7 @@ package aura_game.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import aura_game.app.LPCActions.EntityStateMachine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -22,7 +23,7 @@ public class MyInputProc implements InputProcessor {
     /**Liste des actions continues actuellement pressés : Walk_L, Walk_R, Walk_U, Walk_D
      * Permet de pouvoir passer d'une direction/action à l'autre sans être arrêté par changeAction(null) si on lâche une ancienne touche
      */
-    private List<String> activeWalkingDirections;//Stockant seulement les "walk" (L,R,U,D) on se permet de ne stocker que la direction
+    private List<Orientation> activeWalkingDirections;//Stockant seulement les "walk" (L,R,U,D) on se permet de ne stocker que la direction
 
     /**Si une action instantanée/autonome est en cours*/
     private boolean onGoingStaticAction = false;
@@ -50,12 +51,12 @@ public class MyInputProc implements InputProcessor {
         onGoingStaticAction = b;
     }
 
-    public String getDirectionWalkingFromKeycode(int keycode){//TODO enum Direction
+    public Orientation getOrientationFromWalkingFromKeycode(int keycode){//TODO enum Direction
         return switch (keycode) {
-            case Input.Keys.LEFT -> "L";
-            case Input.Keys.RIGHT -> "R";
-            case Input.Keys.UP -> "U";
-            case Input.Keys.DOWN -> "D";
+            case Input.Keys.LEFT -> Orientation.EAST;
+            case Input.Keys.RIGHT -> Orientation.WEST;
+            case Input.Keys.UP -> Orientation.NORTH;
+            case Input.Keys.DOWN -> Orientation.SOUTH;
             default -> null;
         };
     }
@@ -109,13 +110,13 @@ public class MyInputProc implements InputProcessor {
                 if(player.getCurrentToolName().equals("")){
                         tool = true;
                 }
-                player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentDirectionLetter(),tool);
+                player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation(),tool);
                 //============
             }
             if(!onGoingStaticAction || keycode != Input.Keys.E){
                 keysPressed.add(keycode);
                 //Si c'est une action continues(Walk_L...) on le met dans activeActions
-                String actionWalkingDirection = getDirectionWalkingFromKeycode(keycode);
+                Orientation actionWalkingDirection = getOrientationFromWalkingFromKeycode(keycode);
                 if(Game.getInstance().getUpdateManager().activeMenu().equals("game")){
                     if(actionWalkingDirection!=null){
                         activeWalkingDirections.add(actionWalkingDirection);
@@ -145,7 +146,7 @@ public class MyInputProc implements InputProcessor {
     public boolean keyUp(int keycode) {
         keysPressed.remove(Integer.valueOf(keycode));
         //Si l'action qu'on vient de désactiver est une action de mouvement/slash
-        String actionWalking = getDirectionWalkingFromKeycode(keycode);
+        Orientation actionWalking = getOrientationFromWalkingFromKeycode(keycode);
         if(actionWalking!=null) {
             activeWalkingDirections.remove(actionWalking);
         }
@@ -171,7 +172,7 @@ public class MyInputProc implements InputProcessor {
         }
         //Si y'a plus rien comme action de mouvement dont la touche est enfoncé on le met a null
         if(activeWalkingDirections.isEmpty()){
-            player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentDirectionLetter(), tool);
+            player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation(), tool);
         }else{//Sinon on met la derniere action (forcement walk) ajouté dans activeActions comme action actuelle
             player.getEntityStateMachine().changeAction("Walk", activeWalkingDirections.get(activeWalkingDirections.size()-1), tool);
         }
@@ -207,14 +208,14 @@ public class MyInputProc implements InputProcessor {
                 if(player.getCurrentToolName().equals("")){
                     tool = true;
                 }
-                player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentDirectionLetter(),tool);
+                player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation(),tool);
                 //============
             }
             // Si aucune action continue n'est en cours ou si le bouton enfoncé est la touche E, on ajoute le bouton à la liste des boutons enfoncés.
             if (!onGoingStaticAction || button != Input.Keys.E) {
                 keysPressed.add(button);
                 // Si le bouton enfoncé correspond à une action continue (comme Walk_L), on ajoute cette action à la liste des actions continues.
-                String actionWalking = getDirectionWalkingFromKeycode(button);
+                Orientation actionWalking = getOrientationFromWalkingFromKeycode(button);
                 if (Game.getInstance().getUpdateManager().activeMenu().equals("game")) {
                     if (actionWalking != null) {
                         activeWalkingDirections.add(actionWalking);
@@ -238,7 +239,7 @@ public class MyInputProc implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         keysPressed.remove(Integer.valueOf(button));
         //Si l'action qu'on vient de désactiver est une action de mouvement/slash
-        String actionWalking = getDirectionWalkingFromKeycode(button);
+        Orientation actionWalking = getOrientationFromWalkingFromKeycode(button);
         if(actionWalking!=null) {
             activeWalkingDirections.remove(actionWalking);
         }

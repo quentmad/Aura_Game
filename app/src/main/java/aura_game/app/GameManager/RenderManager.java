@@ -89,7 +89,7 @@ public class RenderManager {
     /**Pour tester/verifier */
     public void tempoRenderZoneDegatPlayer(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        Rectangle r = player.zoneDegatFromDirection(player.getEntityStateMachine().getCurrentDirectionLetter());
+        Rectangle r = player.zoneDegatFromDirection(player.getEntityStateMachine().getCurrentOrientation().getDirection());
         shapeRenderer.rect(r.getX(), r.getY(), r.getWidth(),r.getHeight());
         shapeRenderer.end();
     }

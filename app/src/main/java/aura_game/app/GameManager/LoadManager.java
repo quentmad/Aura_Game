@@ -166,7 +166,7 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.LEFT,() -> {
             switch(updateManager.activeMenu()){
-                case "game": player.getEntityStateMachine().changeStateAction("Walk", Orientation.WEST, !player.getCurrentToolName().equals("")); break;
+                case "game": player.getEntityStateMachine().changeAction("Walk", Orientation.WEST, !player.getCurrentToolName().equals("")); System.out.println("walk to the left");break;
                 case "inventory" : playerInventory.moveSlotSelected("L");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("L");break;
                 case "wheel" : wheelMenus.moveSlotSelected("L");break;
@@ -174,7 +174,7 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.RIGHT,() -> {
             switch(updateManager.activeMenu()){
-                case "game": player.getEntityStateMachine().changeStateAction("Walk", Orientation.EAST, !player.getCurrentToolName().equals("")); break;
+                case "game": player.getEntityStateMachine().changeAction("Walk", Orientation.EAST, !player.getCurrentToolName().equals(""));System.out.println("walk to the right"); break;
                 case "inventory" : playerInventory.moveSlotSelected("R");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("R");break;
                 case "wheel" : wheelMenus.moveSlotSelected("R");break;
@@ -182,16 +182,16 @@ public class LoadManager {
 
         inputHandler.mapKeyToAction(Input.Keys.UP,() -> {
                     if (updateManager.activeMenu().equals("game")) {
-                        player.getEntityStateMachine().changeAction("Walk", Orientation.NORTH, !player.getCurrentToolName().equals(""));
+                        player.getEntityStateMachine().changeAction("Walk", Orientation.NORTH, !player.getCurrentToolName().equals(""));System.out.println("walk to the up");
                     }
                 });
         inputHandler.mapKeyToAction(Input.Keys.DOWN,() -> {
             if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Walk", Orientation.SOUTH, !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Walk", Orientation.SOUTH, !player.getCurrentToolName().equals(""));System.out.println("walk to the down");
             }
         });
         inputHandler.mapKeyToAction(0,() -> {//Input.Keys.K
-            if (updateManager.activeMenu().equals("game")){                     //TODO modof + propre
+            if (updateManager.activeMenu().equals("game")){
                 player.getEntityStateMachine().changeAction("Slash", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
             }
         });

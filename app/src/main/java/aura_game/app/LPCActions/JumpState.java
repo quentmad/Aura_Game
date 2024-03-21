@@ -50,7 +50,7 @@ public class JumpState extends ActionState{
                     tool = true;
                 }
             }
-            entity.getEntityStateMachine().changeStateAction("Idle", entity.getEntityStateMachine().getCurrentOrientation(),tool);
+            entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation(),tool);
 
         }
 

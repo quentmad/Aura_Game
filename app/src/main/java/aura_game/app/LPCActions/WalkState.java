@@ -28,6 +28,7 @@ public class WalkState extends ActionState{
             }
 
         }else{
+            System.out.println("colission so idle");
             boolean tool = false;
             if(entity instanceof PlayableEntity){
                 if(!((PlayableEntity) entity).getCurrentToolName().equals("")){
@@ -35,7 +36,7 @@ public class WalkState extends ActionState{
                 }
             }
 
-            entity.getEntityStateMachine().changeStateAction("Idle", entity.getEntityStateMachine().getCurrentOrientation(),tool);
+            entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation(),tool);
         }
         //System.out.println("---- currentX :   "+ currentSpriteX);
 

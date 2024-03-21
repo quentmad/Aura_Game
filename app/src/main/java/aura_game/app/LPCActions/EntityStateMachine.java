@@ -3,6 +3,7 @@ package aura_game.app.LPCActions;
 import aura_game.app.GameManager.Game;
 import aura_game.app.Objects.Entity;
 import aura_game.app.Orientation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -21,8 +22,9 @@ public class EntityStateMachine {
 
     public EntityStateMachine() {
         states = new HashMap<>();
-        init();
+        loadStates();
         setCurrentState("Idle");
+        changeAction("Idle", Orientation.SOUTH, false);
 
     }
 
@@ -32,7 +34,7 @@ public class EntityStateMachine {
     }
 
     /**Initialise la hashmap des actions possibles*/
-    private void init(){//A terme: mettre le new animation en param de constructeur pour pouvoir personnaliser
+    private void loadStates(){
         /*Dans l'ordre : SpellCast, Thrust, Walk,
          * Slash, Shoot, Hurt(x1), Jump, Run, Sit(not an animation), Idle(default)
          */
@@ -55,13 +57,6 @@ public class EntityStateMachine {
         return currentOrientation;
     }
 
-    /*public String getCurrentDirectionLetter() {
-        return currentDirectionLetter;
-    }
-
-    public void setCurrentDirectionLetter(String dir) {
-        currentDirectionLetter = dir;
-    }*/
     public ActionState getCurrentState() {
         return currentState;
     }
@@ -82,18 +77,19 @@ public class EntityStateMachine {
      * @return
      */
     public void changeAction(String action, Orientation orientation, boolean haveATool){
-        if(action !="" && orientation != null){
-            if(action.equals(getCurrentStateName())){//Simple changement de direction
+        if(StringUtils.isNotEmpty(action) && orientation != null){
+            String currentStateName = getCurrentStateName();
+            if(action.equals(currentStateName)){
                 this.currentOrientation = orientation;
-                this.currentStateName = action;
-                this.currentState.currentSpriteX =0;
+                this.currentState.currentSpriteX = 0;
                 this.currentState.currentSpriteY = currentState.animation.getIndexYOf(currentOrientation.getDirection());
             }else{
-                changeStateAction(action, currentOrientation, haveATool);
+                changeStateAction(action, orientation, haveATool);
+
             }
         }
-        System.out.println("current action " + currentStateName);
     }
+
 
     /**Méthode appelée lorsqu'on souhaite changer d'action
      * Attention : changer simplement de direction ne change pas de stateAction mais simplement {@code currentOrientation}
@@ -102,26 +98,16 @@ public class EntityStateMachine {
      * @param haveATool vrai si c'est le joueur et qu'il a un tool en main
      * @return {@code true} si le currentTool du player doit être update sinon {@code false}
      */
-    public boolean changeStateAction(String action, Orientation orientation, boolean haveATool){
-        if(!action.isEmpty() && orientation != null){
+    private boolean changeStateAction(String action, Orientation orientation, boolean haveATool){
+        if(StringUtils.isNotEmpty(action) && orientation != null){
             this.currentOrientation = orientation;
+
             Pair<Integer,Integer> prev = currentState.getMovementOf(currentOrientation.getDirection());
             int val = Math.abs(prev.getLeft() + prev.getRight());
-            System.out.println("previous speed : " + val);
+
             this.setCurrentState(action);
-            currentState.resetInfo(val, currentOrientation.getDirection());//remet a 0 les currents et defini le previousSpeed de jump si c'est un jump
-            this.currentStateName = action;
-
-
-            //Si c'est un joueur (LPC) et qu'il a un Tool en main, penser à mettre à jour spriteY et size: retourne true
-            if (haveATool && Game.getInstance().isGameStarted()){
-                return true;//TODO: a revoir
-                //if(!((PlayableEntity) this).getCurrentToolName().equals("")){
-                    //((PlayableEntity)this).updateSpriteToolInfo();//TODO comparer pour pas lancer ca a chaque change action meme h24 sans outils
-                    //((PlayableEntity)this).updateSpriteDurationFromActionName();
-                //}
-
-            }
+            currentState.resetInfo(val, currentOrientation.getDirection());
+            return true;
         }
         return false;
     }

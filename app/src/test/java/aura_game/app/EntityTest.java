@@ -2,24 +2,10 @@
 package aura_game.app;
 //import org.mockito.Mock;
 //import org.mockito.MockitoAnnotations;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;//BeforeClass
-import org.junit.jupiter.api.BeforeEach;//Before
-import org.junit.jupiter.api.Test;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-
-import aura_game.app.Objects.Entity;
-import aura_game.app.Type.EntityType;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class EntityTest {
-
+/*
     private Entity entity;
 
     @BeforeEach

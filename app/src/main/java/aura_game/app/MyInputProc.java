@@ -35,7 +35,7 @@ public class MyInputProc implements InputProcessor {
             Input.Keys.S,//cheat give
             Input.Keys.C,//craft menu,
             Input.Keys.R,//wheel ranged
-            Input.Keys.W,//wheel melee
+            Input.Keys.M,//wheel melee
             Input.Keys.ENTER,//validate in menu
             Input.Keys.A,//select melee tool
             Input.Keys.Z,//select ranged tool
@@ -87,30 +87,13 @@ public class MyInputProc implements InputProcessor {
         };
     }
 
-    /**
-     * 
-     * @param keycode
-     * @return True si c'est une action qui s'executera entièrement en cliquant juste une fois (Slash, Thrust...)
-     */
-    private boolean IsAnAutonomeAction(int keycode) {//             TODO: old ?(existe un attribut)
-        return switch (keycode) {
-            case 0 -> true; //Slash
-            case Input.Keys.L -> true; //Spellcast
-            case Input.Keys.P -> true;//Thrust
-            case 1 -> true;//Shoot
-            case Input.Keys.SPACE -> true;//Jump
-            default -> false;
-        };
-    }
-
     private boolean handleKeyDown(int keycode) {
         // Vérifie si la touche enfoncée correspond à une action valide
         if (!isValidActionKey(keycode)) {
             return false;
         }
         //Si la touche n'est pas déjà enfoncée
-        if (!keysPressed.contains(Integer.valueOf(keycode))) {
-            System.out.println("Key down not contains and ok : " + keycode);
+        if (!keysPressed.contains(keycode)) {
             //Si la touche E est enfoncée et qu'il y a des actions en cours, on arrête ces actions, afin d'ouvrir l'inventaire
             if (keycode == Input.Keys.E && !activeWalkingOrientations.isEmpty()) {
                 stopActions();
@@ -119,10 +102,11 @@ public class MyInputProc implements InputProcessor {
             //Si aucune action n'est en cours
             if (!onGoingAutonomeAction ) {
                 //On ajoute la touche à la liste des touches enfoncées
-                keysPressed.add(Integer.valueOf(keycode));
+                keysPressed.add(keycode);
                 handleContinuousAction(keycode);
                 //On effectue l'action associée à la touche enfoncée
                 Game.getInstance().getInputHandler().performAction(keycode);
+                onGoingAutonomeAction = player.getEntityStateMachine().getCurrentState().isCurrentActionAutonome();
                 //On retourne true pour indiquer que la touche a été enfoncée et l'action en question effectué;
                 return true;
             }
@@ -132,8 +116,7 @@ public class MyInputProc implements InputProcessor {
     }
 
     private boolean handleKeyUp(int keycode) {
-        if (keysPressed.contains(Integer.valueOf(keycode))){
-            System.out.println("Key up was contains: " + keycode);
+        if (keysPressed.contains(keycode)){
             keysPressed.remove(Integer.valueOf(keycode));
             verifHandleKeyUpManualy();
             //On verifie que en cas de relachement de plusieurs touches en simultané, il n'y ait pas de touches enfoncées qui ne le sont plus
@@ -145,7 +128,6 @@ public class MyInputProc implements InputProcessor {
                     finishAction();
                 }
             }
-            System.out.println("player orientation" + player.getEntityStateMachine().getCurrentOrientation());
             return true;
         }
 
@@ -155,7 +137,7 @@ public class MyInputProc implements InputProcessor {
     /**
      * Vérifie si parmis les touches dites enfoncés, il y en a qui ne le sont plus (problème qui survient lors du relachement de plusieurs touches en simultané)
      */
-    private void verifHandleKeyUpManualy(){
+    private void verifHandleKeyUpManualy(){ //Jamais appelé ?
         if(!keysPressed.isEmpty()){
             Iterator<Integer> iterator = keysPressed.iterator();
             while (iterator.hasNext()) {
@@ -184,6 +166,7 @@ public class MyInputProc implements InputProcessor {
         }
         System.out.println("        ----\n----");
     }
+
     private boolean isValidActionKey(int keycode) {
 
         return validKeys.contains(keycode);
@@ -194,26 +177,19 @@ public class MyInputProc implements InputProcessor {
         keysPressed.clear();
         activeWalkingOrientations.clear();
         //Si le joueur a un outil en main
-        boolean tool = !player.getCurrentToolName().equals("");
+        //boolean tool = !player.getToolManager().getCurrentEquippedToolName().equals("");
         //On change l'action du joueur à "Idle"
-        player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation(), tool);
+        player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation());
     }
 
     private void handleContinuousAction(int keycode) {
         //Si c'est une action continue (comme marcher), on l'ajoute à la liste des actions continues
         Orientation actionWalkingDirection = getOrientationIfWalkingFromKeycode(keycode);
         //Si le menu actif est le jeu
-        if (Game.getInstance().getUpdateManager().activeMenu().equals("game")) {
+        if (Game.getInstance().getUpdateManager().getActiveMenu().equals("game")) {
             //Si l'action de marche n'est pas nulle, on l'ajoute à la liste des orientations de marche actives
             if (actionWalkingDirection != null) {
                 activeWalkingOrientations.add(actionWalkingDirection);
-                printActiveWalkingOrientations();
-                System.out.println("\n");
-            }
-            //Si c'est une action statique/autonome, on met à jour l'état `onGoingAutonomeAction` pour indiquer qu'une action autonome est en cours
-            if (IsAnAutonomeAction(keycode)) {
-                System.out.println("is an OnGoingAutonomeAction : ");
-                onGoingAutonomeAction = true;
             }
         }
     }
@@ -246,19 +222,18 @@ public class MyInputProc implements InputProcessor {
      * Sinon, l'action du joueur est mise à jour en fonction de la dernière action de mouvement enregistrée dans activeContinuousActions.
      */
     public void finishAction(){
-        boolean tool = false;
-        if(!player.getCurrentToolName().equals("")){
-            tool = true;
-        }
+        //boolean tool = !player.getToolManager().getCurrentEquippedToolName().equals("");
         //Si y'a plus rien comme action de mouvement dont la touche est enfoncé on le met a null
         if(activeWalkingOrientations.isEmpty()){
-            System.out.println("              idle cause finish action");
-            player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation(), tool);
+            player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation());
         }else{//Sinon on met la derniere action (forcement walk) ajouté dans activeActions comme action actuelle
-            player.getEntityStateMachine().changeAction("Walk", activeWalkingOrientations.get(activeWalkingOrientations.size()-1), tool);
+            player.getEntityStateMachine().changeAction("Walk", activeWalkingOrientations.get(activeWalkingOrientations.size()-1));
         }
         onGoingAutonomeAction = false;
     }
+
+
+
 
     public boolean keyTyped(char keycode) {
 
@@ -268,28 +243,25 @@ public class MyInputProc implements InputProcessor {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         // Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'touchDragged'");
         return false;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         // Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'mouseMoved'");
         return false;
     }
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
         // Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'scrolled'");
         return false;
     }
 
     @Override
     public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
         // Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'touchCancelled'");
+        return false;
     }
 
     

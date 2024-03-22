@@ -16,10 +16,12 @@ import aura_game.app.Objects.Tool;
 /**Par exemple Tool Ranged, Tool Melee, Sorts, Compétences */
 public class Wheel<T>{
 
+    private final String NAME;
     private Sprite wheelMenuSprite;
-    /**Tool actuel du joueur (il a fait enter dessus) */
-    private Tool actualPlayerTool;
-    /**Element selectionné (pas actuel) */
+
+    /**Tool actuel favori  du joueur (il a fait enter dessus) pour cette catégorie (ce wheel) */
+    private Tool actualFavoriteToolForThisWheel;
+    /**Element selectionné (pas actuel) pour ce wheel */
     private Tool selectedElement;
     private List<Tool> content;
     /**Positions (bas a gauche) d'affichage du slot 64*64 x1 y1.. x6 y6*/
@@ -46,8 +48,9 @@ public class Wheel<T>{
 
 
     /**Par exemple Tool Ranged, Tool Melee, Sorts, Compétences */
-    public Wheel(String colorMenu,int totalSlot, int sizeSlot, String selectedSlotName, int slotActualToolDecalX) {
+    public Wheel(String name, String colorMenu,int totalSlot, int sizeSlot, String selectedSlotName, int slotActualToolDecalX) {
 
+        this.NAME = name;
         wheelMenuSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/wheelMenu_"+colorMenu+".png")));
         wheelMenuSprite.setCenter(900, 300);
 
@@ -64,7 +67,7 @@ public class Wheel<T>{
         this.slotOccupied = 0;
         this.selectedSlotSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/"+selectedSlotName+".png")));
         this.selectedElement = null;
-        this.actualPlayerTool = null;
+        this.actualFavoriteToolForThisWheel = null;
         //Slot de taille 64*64 des tools actuels
         this.spriteActualToolSlot = new Sprite(new Texture(Gdx.files.internal("src/main/resources/Rond_slot64_Tool_jarques(blue).png")));
         this.spriteActualToolSlot.setPosition(990+slotActualToolDecalX, 50);//A 50 des bords
@@ -81,25 +84,31 @@ public class Wheel<T>{
      */
     public void setActualToolCategory(PlayableEntity player){
         if(selectedElement !=null){
-            this.actualPlayerTool = selectedElement;
-            //if(player.getCurrentCategory!!! )//TODO faire un setter de la category actuelle du tool du joueur
-            //Puis quand amelioration on stockera que l'arme (si possible) et pas name et cate donc ca sera mieux
-            //Permet de mettre a jour l'arme actuelle lors de enter si c'est le meme type (evite que le joueur est une ancienne arme non maj)
-            //player.setCurrentMeleeToolName(selectedElement.getName());
-            //System.out.println(player.getCurrentMeleeToolName());
+            this.actualFavoriteToolForThisWheel = selectedElement;
         }
     }
 
     /**
-     * Defini l'arme actuelle du joueur a l'arme actuelle de ce wheel (soit l'arme actuelle de melee, soit ranged)
+     * Defini l'arme actuelle du joueur (en main) a l'arme actuelle favorite de ce wheel (soit l'arme actuelle de melee, soit ranged) (set ou update)
+     * {@code Met à jour } les informations de l'outil actuellement équipé ainsi que la currentEquippedToolCategory à cette category si besoin
      * @param player
      */
-    public void setActualToolPlayer(PlayableEntity player){
-        if(actualPlayerTool !=null){
-            player.setCurrentToolName(actualPlayerTool.getName());
+    public void setActualEquippedToolToFavoriteOfThisWheel(PlayableEntity player){
+        if(actualFavoriteToolForThisWheel !=null){
+            player.getToolManager().setCurrentEquippedToolName(actualFavoriteToolForThisWheel.getName());
+            player.getToolManager().haveAToolEquippedNow();
+            if(!player.getToolManager().getCurrentEquippedToolCategory().equals(NAME)) {//Si pas c'est la catégorie actuelle
+                player.getToolManager().setCurrentEquippedToolCategory(NAME);//Met à jour la catégorie de l'outil actuel du joueur
+            }
+            player.getToolManager().updateEquippedToolInfo();//Met à jour les informations de l'outil actuellement équipé car l'arme équipé va directement changer (soit car on a modifié l'arme qui était de la catégorie actuelle, soit car on a changé de catégorie d'arme)
+
         }
+
     }
 
+    public String getNAME() {
+        return NAME;
+    }
 
     /**
      * Ajoute à la liste l'élement en parametre s'il reste de la place
@@ -160,7 +169,7 @@ public class Wheel<T>{
     }
     
     /**
-     * Met l'index du slot selectionné à index, et le l'élément selectionné à l'élement du content correspondant
+     * Met l'index du slot selectionné à index, et l'élément selectionné à l'élement du content correspondant
      */
     public void selectMeleeTool(int index) {
         if (index >= 0 && index < totalSlot) {
@@ -175,10 +184,9 @@ public class Wheel<T>{
      * Si actualPlayerTool est null, ne fait rien
      */
     public void renderActualTool(SpriteBatch batch) {
-        if(actualPlayerTool !=null){
+        if(actualFavoriteToolForThisWheel !=null){
             spriteActualToolSlot.draw(batch);
-            //System.out.println(spriteActualToolSlot.getX()+"y:"+ spriteActualToolSlot.getY());
-            batch.draw(actualPlayerTool.getTextureBlackAndWhite(),spriteActualToolSlot.getX(), spriteActualToolSlot.getY());
+            batch.draw(actualFavoriteToolForThisWheel.getTextureBlackAndWhite(),spriteActualToolSlot.getX(), spriteActualToolSlot.getY());
         }
     }
 

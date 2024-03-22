@@ -83,10 +83,19 @@ public class ToolsSpriteSheetData {
     }
 
     /**
-     * À partir du tableau de Tools et tableau 2d d'actions (sans direction), insert dans la hashmap les actions
-     * (avec direction) ainsi que la spriteY qui est déduit de la position dans actions[][], ainsi que la size de Sprite, 
-     * Pour connaitre SpriteY: On ajoute un à chaque fois. Il y en a 3 différents cars 3 spritesSheet différents (64,128,192)
-     * permettant par la suite de savoir où placer l'image, et quelle sprite entre 64 128 et 192 afficher
+     * Remplit la HashMap spriteDataMap avec les informations des outils et des actions.
+     *
+     * Cette méthode parcourt tous les outils et leurs actions associées pour construire une HashMap.
+     * Chaque outil est associé à une autre HashMap qui contient les informations de chaque action possible pour cet outil.
+     *
+     * Pour chaque action, on récupère toutes les directions possibles et on les ajoute à la HashMap des actions.
+     * Chaque direction est associée à un tableau d'entiers contenant les informations de l'action : spriteY, size et beginX.
+     *
+     * spriteY est calculé en fonction de la taille de l'action : il y a un compteur différent pour chaque taille possible (64, 128, 192).
+     * size est simplement la taille de l'action.
+     * beginX est défini à 2 pour certaines actions spécifiques ("Slash" pour les outils "Hache", "Marteau" et "Pioche"), sinon il est à 0.
+     *
+     * Une fois toutes les actions d'un outil traitées, on ajoute l'outil et sa HashMap d'actions à la HashMap spriteDataMap.
      */
     private void insertIntoToolsDataMap() {        
         //Remplir la HashMap à partir des tableaux
@@ -115,11 +124,9 @@ public class ToolsSpriteSheetData {
                             break;
                     }
                     int beginX =0;
-                    //System.out.println(actionsWithDir[k] +",Y:"+spriteY + ", size:"+size);
                     //Si on a un Tool et qu'on est en Slash alors le début est le 3e sprite.
                     //Ainsi, le sprite de debut n'est pas 0 pour tous...
                     if((tools[i].equals("Hache") || tools[i].equals("Marteau") || tools[i].equals("Pioche")) && (actions[i][j].action().equals("Slash"))){
-                        //System.out.println(actionsWithDir[k] +",Y:"+spriteY + ", size:"+size + " 2 "+tools[i]);
                         beginX = 2;
                     }           
                         actionDataMap.put(actionsWithDir[k], new int[]{spriteY, size, beginX});
@@ -132,9 +139,8 @@ public class ToolsSpriteSheetData {
     /**
      * Obtient les informations de l'action spécifiée pour l'outil donné.
      * @param tool L'outil pour lequel on veut récupérer les informations.
-     * @param action L'action pour laquelle on veut récupérer les informations.
-     * @return Les informations associées à l'action pour l'outil donné, ou -1 si l'action n'existe pas pour l'outil.
-     * Dans le cas où l'outil n'existe carrément pas
+     * @param action L'action pour laquelle on veut récupérer les informations. Par exemple "Walk_U"
+     * @return Les informations associées à l'action avec direction pour l'outil donné, ou -1 si l'action n'existe pas pour l'outil.
      */
     
     public int[] getActionInfo(String tool, String action) {

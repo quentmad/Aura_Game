@@ -3,7 +3,7 @@ package aura_game.app.GameManager;
 import aura_game.app.Grid;
 import aura_game.app.LootManager;
 import aura_game.app.Region;
-import aura_game.app.WheelMenus;
+import aura_game.app.WheelManager;
 import aura_game.app.Objects.BasicObject;
 import aura_game.app.Objects.IAEntity;
 import aura_game.app.Objects.PlayableEntity;
@@ -18,7 +18,7 @@ public class UpdateManager {
     private Region region;
     private PlayableEntity player;
     private String activeMenu;
-    private WheelMenus wheelMenus;
+    private WheelManager wheelManager;
     //RETIRER
     private final Grid gridTest = new Grid(500);
 
@@ -40,10 +40,10 @@ public class UpdateManager {
      * @param region La région du jeu pour la mise à jour.
      * @param player Le joueur jouable de la partie.
      */
-    public void initialize(Region region, PlayableEntity player, WheelMenus wheelMenus) {
+    public void initialize(Region region, PlayableEntity player, WheelManager wheelManager) {
         this.region = region;
         this.player = player;
-        this.wheelMenus = wheelMenus;
+        this.wheelManager = wheelManager;
 
     }
     /**Mises à jour nécessaires */
@@ -83,11 +83,6 @@ public class UpdateManager {
 
     }
 
-    public void setActiveMenu(String menu){
-        this.activeMenu = menu;
-    }
-
-
     public void invertActiveMenu(String menu){
         if(menu.equals(activeMenu)){
             activeMenu = "game";
@@ -96,18 +91,23 @@ public class UpdateManager {
         }
     }
 
-    public void invertActiveMenuWheel(String wheel){
+    /**
+     * Inverse le menu actif entre le menu de jeu et le menu de la roue en parametre
+     * @param wheel meleeWeapons ou rangedWeapons
+     * Appel la méthode {@code setCurrentOpenWheel} de {@code wheelManager}
+     */
+    public void invertCurrentOpenMenuWheel(String wheel){
         if(activeMenu.equals("wheel") ){
             activeMenu = "game";
-            wheelMenus.setActiveWheel("");
+            wheelManager.setCurrentOpenWheel("");
 
         }else{
             activeMenu = "wheel";
-            wheelMenus.setActiveWheel(wheel);
+            wheelManager.setCurrentOpenWheel(wheel);
         }
     }
 
-    public String activeMenu() {
+    public String getActiveMenu(){
         return activeMenu;
     }
 

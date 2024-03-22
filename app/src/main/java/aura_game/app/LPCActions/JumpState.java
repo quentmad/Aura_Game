@@ -44,13 +44,13 @@ public class JumpState extends ActionState{
             }
 
         }else{
-            boolean tool = false;
+            /*boolean tool = false;
             if(entity instanceof PlayableEntity){
-                if(!((PlayableEntity) entity).getCurrentToolName().equals("")){
+                if(!((PlayableEntity) entity).getToolManager().getCurrentEquippedToolName().equals("")){
                     tool = true;
                 }
-            }
-            entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation(),tool);
+            }*/
+            entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation());
 
         }
 

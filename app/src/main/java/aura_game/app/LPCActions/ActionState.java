@@ -43,10 +43,8 @@ public abstract class ActionState {
         currentSpriteX = (currentSpriteX + 1);
         if(currentSpriteX > animation.getLastIndexX()){//On a fait un tour complet
             currentSpriteX = 0;
-            //System.out.println("---- currentX :   "+ currentSpriteX);
             return true;
         }
-        //System.out.println("----- currentX :   "+ currentSpriteX);
         return false;
 
     }
@@ -61,6 +59,11 @@ public abstract class ActionState {
 
     public Animation getAnimation() {
         return animation;
+    }
+
+    /**@return {@code true} si l'animation est en mode "singleExecution" (ne dépend pas du temps d'appuie sur la touche)*/
+    public boolean isCurrentActionAutonome(){
+        return animation.isAutonomeExecution();
     }
 
     /**

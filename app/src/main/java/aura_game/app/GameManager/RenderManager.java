@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -12,7 +11,7 @@ import aura_game.app.CraftingMenu;
 import aura_game.app.InventoryMenu;
 import aura_game.app.LootManager;
 import aura_game.app.Region;
-import aura_game.app.WheelMenus;
+import aura_game.app.WheelManager;
 import aura_game.app.Objects.BasicObject;
 import aura_game.app.Objects.IAEntity;
 import aura_game.app.Objects.Item;
@@ -29,7 +28,7 @@ public class RenderManager {
     private PlayableEntity player;
     private InventoryMenu playerInventory;
     private CraftingMenu crafting;
-    private WheelMenus wheelMenus;
+    private WheelManager wheelManager;
     private Sky sky;
     private UpdateManager updateManager;
     /**Police pour afficher du texte */
@@ -55,12 +54,12 @@ public class RenderManager {
      * @param inventory L'inventaire du joueur.
      * @param sky Le ciel du jeu.
      */
-    public void initialize(Region region, PlayableEntity player, InventoryMenu inventory,CraftingMenu crafting, Sky sky, UpdateManager updateManager, WheelMenus wheelMenu) {
+    public void initialize(Region region, PlayableEntity player, InventoryMenu inventory,CraftingMenu crafting, Sky sky, UpdateManager updateManager, WheelManager wheelMenu) {
         this.region = region;
         this.player = player;
         this.playerInventory = inventory;
         this.crafting = crafting;
-        this.wheelMenus = wheelMenu;
+        this.wheelManager = wheelMenu;
         this.sky = sky;
         this.updateManager = updateManager ;
         this.lootManager = LootManager.getInstance();
@@ -81,7 +80,7 @@ public class RenderManager {
         renderObjects();
         renderSky(dt);
         //render les elements heart, slots tools...
-        wheelMenus.renderActualTool(batch);
+        wheelManager.renderActualTool(batch);
         renderActiveMenu();
         batch.end();
         //tempoRenderZoneDegatPlayer();
@@ -132,7 +131,7 @@ public class RenderManager {
     }
 
     public void renderActiveMenu(){
-        switch(updateManager.activeMenu()){
+        switch(updateManager.getActiveMenu()){
             case "game":
                 break;
             case "inventory":
@@ -142,7 +141,7 @@ public class RenderManager {
                 crafting.render(batch, font);
                 break;
             case "wheel":
-                wheelMenus.render(batch, font);
+                wheelManager.render(batch, font);
                 break;
         }
     }
@@ -167,14 +166,8 @@ public class RenderManager {
 
     /**Affiche l'outil/arme sélectionné actuellement par le joueur, ou n'affiche rien s'il n'y a rien de sélectionné */
     public void renderTool(){
+        player.getToolManager().render(batch);
 
-        if(!player.getCurrentToolName().isEmpty() && player.getCurrentToolSizeSprite() != -1){
-            //Décallage de x et y si on a une sprite plus grande que celle du personnage
-            int marge = (player.getCurrentToolSizeSprite() - 64);
-            if(marge>0){marge/=2;}else{marge=0;}
-            TextureRegion[][] textureReg= player.getTextureRegionTool(player.getCurrentToolSizeSprite() );
-            batch.draw(textureReg[player.getCurrentToolSpriteY()][player.getEntityStateMachine().getCurrentState().getCurrentSpriteX()], player.getPosOnScreenX(region.getCamera().getX())-marge, player.getPosOnScreenY(region.getCamera().getY())-marge);
-        }
     }
     public void dispose() {
         // Libérer les ressources utilisées par le renderer

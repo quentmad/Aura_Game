@@ -1,13 +1,6 @@
 package aura_game.app.GameManager;
 
-import com.badlogic.gdx.Audio;
-
-import aura_game.app.CraftingMenu;
-import aura_game.app.InputHandler;
-import aura_game.app.InventoryMenu;
-import aura_game.app.MyInputProc;
-import aura_game.app.Region;
-import aura_game.app.WheelMenus;
+import aura_game.app.*;
 import aura_game.app.Craft.CraftManager;
 import aura_game.app.Objects.PlayableEntity;
 import aura_game.app.Type.EntityType;
@@ -26,7 +19,7 @@ public class Game {
 
     private InventoryMenu playerInventory;
     private CraftingMenu crafting;
-    private WheelMenus wheelMenus;
+    private WheelManager wheelManager;
     private Region region; 
     private PlayableEntity player;
     private Sky sky ;
@@ -63,7 +56,7 @@ public class Game {
      */
     public void start() {
         playerInventory = InventoryMenu.getInstance();
-        wheelMenus = WheelMenus.getInstance();//PAS besoin de init car pas de dépendances
+        wheelManager = WheelManager.getInstance();//PAS besoin de init car pas de dépendances
         crafting = CraftingMenu.getInstance();
         region = new Region("map_AuraDark2", "mappix_CollisionX2");
         player = new PlayableEntity(EntityType.player, 3);//4
@@ -79,9 +72,10 @@ public class Game {
         // Injection de dépendances
         this.playerInventory.initialize(player);
         this.crafting.initialize(craftManager, playerInventory);
-        this.loadManager.initialize(updateManager, region, player, playerInventory, inputHandler,crafting, wheelMenus);
-        this.updateManager.initialize(region, player,wheelMenus);
-        this.renderManager.initialize(region, player, playerInventory,crafting, sky, updateManager,wheelMenus);
+        this.loadManager.initialize(updateManager, region, player, playerInventory, inputHandler,crafting, wheelManager);
+        this.updateManager.initialize(region, player, wheelManager);
+        this.renderManager.initialize(region, player, playerInventory,crafting, sky, updateManager, wheelManager);
+        player.getEntityStateMachine().changeAction("Idle", Orientation.SOUTH);//init
 
         
 
@@ -91,8 +85,8 @@ public class Game {
         return playerInventory;
     }
 
-    public WheelMenus getWheelMenus(){
-        return wheelMenus;
+    public WheelManager getWheelMenus(){
+        return wheelManager;
     }
 
     public CraftingMenu getCrafting(){

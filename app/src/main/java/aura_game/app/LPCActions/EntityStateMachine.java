@@ -24,7 +24,7 @@ public class EntityStateMachine {
         states = new HashMap<>();
         loadStates();
         setCurrentState("Idle");
-        changeAction("Idle", Orientation.SOUTH, false);
+        //changeAction("Idle", Orientation.SOUTH);
 
     }
 
@@ -38,7 +38,7 @@ public class EntityStateMachine {
         /*Dans l'ordre : SpellCast, Thrust, Walk,
          * Slash, Shoot, Hurt(x1), Jump, Run, Sit(not an animation), Idle(default)
          */
-        addState("SpellCast", new SpellCastState(new Animation(0,6,true)));
+        addState("SpellCast", new SpellCastState(new Animation(0,6,new int[]{2,2,2,2,3,5,3,2},true)));
         addState("Thrust", new ThrustState(new Animation(4, 7, true)));
         addState("Walk",new WalkState(new Animation(8,8,new int[]{2,3,2,3,3,2,2,3,3},false)));
         addState("Slash",new SlashState(new Animation(12,5, new int[]{2,1,1,2,4,3},true)));
@@ -76,17 +76,18 @@ public class EntityStateMachine {
      * Appel changeStateAction si changement d'action ou juste change la direction si l'action en elle meme reste la meme
      * @return
      */
-    public void changeAction(String action, Orientation orientation, boolean haveATool){
+    public void changeAction(String action, Orientation orientation){
         if(StringUtils.isNotEmpty(action) && orientation != null){
             String currentStateName = getCurrentStateName();
-            if(action.equals(currentStateName)){
+            if(action.equals(currentStateName)){//On change juste de direction
                 this.currentOrientation = orientation;
                 this.currentState.currentSpriteX = 0;
                 this.currentState.currentSpriteY = currentState.animation.getIndexYOf(currentOrientation.getDirection());
-            }else{
-                changeStateAction(action, orientation, haveATool);
-
+            }else{//On change d'action
+                changeStateAction(action, orientation);
             }
+            Game.getInstance().getPlayer().getToolManager().updateEquippedToolInfo();//Met à jour les informations de l'outil actuellement équipé car l'action ou la direction de l'entité change
+
         }
     }
 
@@ -95,10 +96,9 @@ public class EntityStateMachine {
      * Attention : changer simplement de direction ne change pas de stateAction mais simplement {@code currentOrientation}
      * @param action l'action a mettre (ex: Walk, Slash, Sit)
      * @param orientation de l'action qu'on veut mettre (North, south...)
-     * @param haveATool vrai si c'est le joueur et qu'il a un tool en main
      * @return {@code true} si le currentTool du player doit être update sinon {@code false}
      */
-    private boolean changeStateAction(String action, Orientation orientation, boolean haveATool){
+    private boolean changeStateAction(String action, Orientation orientation){
         if(StringUtils.isNotEmpty(action) && orientation != null){
             this.currentOrientation = orientation;
 

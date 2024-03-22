@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import aura_game.app.*;
-import aura_game.app.LPCActions.EntityStateMachine;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.badlogic.gdx.Input;
@@ -28,7 +27,7 @@ public class LoadManager {
     private InventoryMenu playerInventory;
     private InputHandler inputHandler;
     private CraftingMenu crafting;
-    private WheelMenus wheelMenus;
+    private WheelManager wheelManager;
 
 
     /**
@@ -49,14 +48,14 @@ public class LoadManager {
      * @param crafting Le gestionnaire de craft
      * @param wheelMenu les menus de ranged et meele
      */
-    public void initialize(UpdateManager updateManager,Region region, PlayableEntity player, InventoryMenu inventory, InputHandler inputHandler, CraftingMenu crafting, WheelMenus wheelMenu) {
+    public void initialize(UpdateManager updateManager,Region region, PlayableEntity player, InventoryMenu inventory, InputHandler inputHandler, CraftingMenu crafting, WheelManager wheelMenu) {
         this.updateManager = updateManager;
         this.region = region;
         this.player = player;
         this.playerInventory = inventory;
         this.inputHandler = inputHandler;
         this.crafting = crafting;
-        this.wheelMenus = wheelMenu;
+        this.wheelManager = wheelMenu;
     }
         // Initialisez les éléments nécessaires ici
 
@@ -156,70 +155,70 @@ public class LoadManager {
     private void initHashMapInputHandler(){
 
         inputHandler.mapKeyToAction(Input.Keys.BACKSPACE, () -> {
-            if (updateManager.activeMenu().equals("inventory")){
+            if (updateManager.getActiveMenu().equals("inventory")){
                 playerInventory.drop();
             }   });
         inputHandler.mapKeyToAction(Input.Keys.E, () -> updateManager.invertActiveMenu("inventory"));
         inputHandler.mapKeyToAction(Input.Keys.C, () -> updateManager.invertActiveMenu("crafting"));
-        inputHandler.mapKeyToAction(Input.Keys.R, () -> { updateManager.invertActiveMenuWheel("rangedWeapons");/*wheelMenus.setActiveWheel("rangedWeapons");*/});
-        inputHandler.mapKeyToAction(Input.Keys.M, () -> { updateManager.invertActiveMenuWheel("meleeWeapons");/*wheelMenus.setActiveWheel("meleeWeapons");*/});
+        inputHandler.mapKeyToAction(Input.Keys.R, () -> { updateManager.invertCurrentOpenMenuWheel("rangedWeapons");});
+        inputHandler.mapKeyToAction(Input.Keys.M, () -> { updateManager.invertCurrentOpenMenuWheel("meleeWeapons");});
 
         inputHandler.mapKeyToAction(Input.Keys.LEFT,() -> {
-            switch(updateManager.activeMenu()){
-                case "game": player.getEntityStateMachine().changeAction("Walk", Orientation.WEST, !player.getCurrentToolName().equals("")); System.out.println("walk to the left");break;
+            switch(updateManager.getActiveMenu()){
+                case "game": player.getEntityStateMachine().changeAction("Walk", Orientation.WEST);break;
                 case "inventory" : playerInventory.moveSlotSelected("L");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("L");break;
-                case "wheel" : wheelMenus.moveSlotSelected("L");break;
+                case "wheel" : wheelManager.moveSlotSelected("L");break;
             } });
 
         inputHandler.mapKeyToAction(Input.Keys.RIGHT,() -> {
-            switch(updateManager.activeMenu()){
-                case "game": player.getEntityStateMachine().changeAction("Walk", Orientation.EAST, !player.getCurrentToolName().equals(""));System.out.println("walk to the right"); break;
+            switch(updateManager.getActiveMenu()){
+                case "game": player.getEntityStateMachine().changeAction("Walk", Orientation.EAST); break;
                 case "inventory" : playerInventory.moveSlotSelected("R");break;
                 case "crafting" : crafting.moveSlotAndLootsSelected("R");break;
-                case "wheel" : wheelMenus.moveSlotSelected("R");break;
+                case "wheel" : wheelManager.moveSlotSelected("R");break;
             } });
 
         inputHandler.mapKeyToAction(Input.Keys.UP,() -> {
-                    if (updateManager.activeMenu().equals("game")) {
-                        player.getEntityStateMachine().changeAction("Walk", Orientation.NORTH, !player.getCurrentToolName().equals(""));System.out.println("walk to the up");
+                    if (updateManager.getActiveMenu().equals("game")) {
+                        player.getEntityStateMachine().changeAction("Walk", Orientation.NORTH);
                     }
                 });
         inputHandler.mapKeyToAction(Input.Keys.DOWN,() -> {
-            if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Walk", Orientation.SOUTH, !player.getCurrentToolName().equals(""));System.out.println("walk to the down");
+            if (updateManager.getActiveMenu().equals("game")){
+                player.getEntityStateMachine().changeAction("Walk", Orientation.SOUTH);
             }
         });
         inputHandler.mapKeyToAction(0,() -> {//Input.Keys.K
-            if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Slash", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
+            if (updateManager.getActiveMenu().equals("game")){
+                player.getEntityStateMachine().changeAction("Slash", player.getEntityStateMachine().getCurrentOrientation());
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.L,() -> {
-            if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("SpellCast", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
+            if (updateManager.getActiveMenu().equals("game")){
+                player.getEntityStateMachine().changeAction("SpellCast", player.getEntityStateMachine().getCurrentOrientation());
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.P,() -> {
-            if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Thrust", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
+            if (updateManager.getActiveMenu().equals("game")){
+                player.getEntityStateMachine().changeAction("Thrust", player.getEntityStateMachine().getCurrentOrientation());
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.SPACE,() -> {
-            if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Jump", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
+            if (updateManager.getActiveMenu().equals("game")){
+                player.getEntityStateMachine().changeAction("Jump", player.getEntityStateMachine().getCurrentOrientation());
             }
         });
         inputHandler.mapKeyToAction(Input.Keys.D,() -> {//Run if already walking
             System.out.println("a" + player.getEntityStateMachine().getCurrentStateName());
             if (/*updateManager.activeMenu().equals("game") && */ player.getEntityStateMachine().getCurrentStateName().equals("Walk")){
                 System.out.println("-----------------------------run now please");
-                player.getEntityStateMachine().changeAction("Run", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
+                player.getEntityStateMachine().changeAction("Run", player.getEntityStateMachine().getCurrentOrientation());
             }
         });
         inputHandler.mapKeyToAction(1,() -> {//O
-            if (updateManager.activeMenu().equals("game")){
-                player.getEntityStateMachine().changeAction("Shoot", player.getEntityStateMachine().getCurrentOrientation(), !player.getCurrentToolName().equals(""));
+            if (updateManager.getActiveMenu().equals("game")){
+                player.getEntityStateMachine().changeAction("Shoot", player.getEntityStateMachine().getCurrentOrientation());
             }
         });
                 //?CHEAT HELP TEST
@@ -230,13 +229,13 @@ public class LoadManager {
         });
 
         inputHandler.mapKeyToAction(Input.Keys.ENTER,() -> {
-            if (updateManager.activeMenu().equals("crafting")) {
+            if (updateManager.getActiveMenu().equals("crafting")) {
                 crafting.getCraftManager().craftItem(Pair.of(crafting.getLootSelected().getName(),1));
-            }else if (updateManager.activeMenu().equals("wheel")) { wheelMenus.setActualTool(player);}
+            }else if (updateManager.getActiveMenu().equals("wheel")) { wheelManager.setActualTool(player);}
         });
 
-        inputHandler.mapKeyToAction(Input.Keys.A, () -> wheelMenus.getMeleeWeapons().setActualToolPlayer(player)); //TODO LAISSER NCA ICI ??? C'est ici qu'on dit qu'elle type d'arme on veut....
-        inputHandler.mapKeyToAction(Input.Keys.Z, () -> wheelMenus.getRangedWeapons().setActualToolPlayer(player));
+        inputHandler.mapKeyToAction(Input.Keys.A, () -> wheelManager.getMeleeWeapons().setActualEquippedToolToFavoriteOfThisWheel(player)); //TODO LAISSER NCA ICI ??? C'est ici qu'on dit qu'elle type d'arme on veut....
+        inputHandler.mapKeyToAction(Input.Keys.Z, () -> wheelManager.getRangedWeapons().setActualEquippedToolToFavoriteOfThisWheel(player));
     }
 
 }

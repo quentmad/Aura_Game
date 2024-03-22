@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import aura_game.app.HashmapManager;
 import aura_game.app.InventoryMenu;
 import aura_game.app.LootStack;
-import aura_game.app.WheelMenus;
+import aura_game.app.WheelManager;
 import aura_game.app.Objects.Loot;
 import aura_game.app.Objects.Tool;
 import aura_game.app.Type.LootType;
@@ -26,13 +26,13 @@ public class CraftManager {
      * et retrouvé via selectedSlot les ingredients du craft sélectionné pour les afficher  */
     private List<LootType> availableLoots;
     private InventoryMenu inventoryMenu;
-    private WheelMenus wheelMenus;
+    private WheelManager wheelManager;
 
     public CraftManager() {
         this.recipeManager = new HashmapManager<>();
         this.availableLoots = new ArrayList<>();
         this.inventoryMenu = InventoryMenu.getInstance();
-        this.wheelMenus = WheelMenus.getInstance();
+        this.wheelManager = WheelManager.getInstance();
         initHashmap();
         initAvailableLoot();
 
@@ -84,7 +84,7 @@ public class CraftManager {
 
                 if(isAWeapon(LootType.valueOf(nameQuantity.getLeft()))){
                     System.out.println("Arme !");
-                    wheelMenus.add(new Tool(ToolType.valueOf(nameQuantity.getLeft()), 0, 0, false, null, true));
+                    wheelManager.add(new Tool(ToolType.valueOf(nameQuantity.getLeft()), 0, 0, false, null, true));
                 }else{
                     System.out.println("Non arme !");
                     // Ajouter l'objet fabriqué à l'inventaire

@@ -7,26 +7,26 @@ import aura_game.app.Objects.PlayableEntity;
 import aura_game.app.Objects.Tool;
 
 /**Class singleton regroupant tous les wheels différents (ranged, melee...) */
-public class WheelMenus {
-    private static WheelMenus instance;
+public class WheelManager {
+    private static WheelManager instance;
 
     private Wheel<Tool> meleeWeapons;
     private Wheel<Tool> rangedWeapons;
 
-    /**Wheel actuellement actif */
-    private Wheel<Tool> activeWheel; //Un seul attribut pour gérer le menu actif
+    /**Wheel actuellement ouvert (actif) */
+    private Wheel<Tool> currentOpenWheel; //Un seul attribut pour gérer le menu actif
 
 
-    private WheelMenus(String colorMenu ) {
-        activeWheel = null;
-        meleeWeapons = new Wheel<>(colorMenu, 12, 64, "slotWheelMenuMelee",0);
-        rangedWeapons = new Wheel<>(colorMenu, 12, 64, "slotWheelMenuRanged",80);
+    private WheelManager(String colorMenu ) {
+        currentOpenWheel = null;
+        meleeWeapons = new Wheel<>("melee",colorMenu, 12, 64, "slotWheelMenuMelee",0);
+        rangedWeapons = new Wheel<>("ranged",colorMenu, 12, 64, "slotWheelMenuRanged",80);
 
     }
 
-    public static WheelMenus getInstance() {
+    public static WheelManager getInstance() {
         if (instance == null) {
-            instance = new WheelMenus("BLUE");
+            instance = new WheelManager("BLUE");
         }
         return instance;
     }
@@ -41,21 +41,20 @@ public class WheelMenus {
         return rangedWeapons;
     }
 
-    /**Defini le Wheel actif, si le string est un nom valide */
-    public void setActiveWheel(String wheel) {
-        //if (isValidWheelName(wheel)) {
+    /**
+     * Défini le wheel actuellement ouvert à celui en paramètre*/
+    public void setCurrentOpenWheel(String wheel) {
             switch (wheel) {
                 case "meleeWeapons":
-                    activeWheel = meleeWeapons;
+                    currentOpenWheel = meleeWeapons;
                     break;
                 case "rangedWeapons":
-                    activeWheel = rangedWeapons;
+                    currentOpenWheel = rangedWeapons;
                     break;
                 default:
-                    activeWheel = null;
+                    currentOpenWheel = null;
                     break;
             }
-        //}
     }
 
     /**
@@ -76,9 +75,12 @@ public class WheelMenus {
      * @param player
      */
     public void setActualTool(PlayableEntity player){
-        if (activeWheel != null) {
-            System.out.println("activeWheel is "+ activeWheel);
-            activeWheel.setActualToolCategory(player);
+        if (currentOpenWheel != null) {
+            currentOpenWheel.setActualToolCategory(player);
+            if(player.getToolManager().getCurrentEquippedToolCategory().equals(currentOpenWheel.getNAME())) {//Si c'est la catégorie actuelle
+                currentOpenWheel.setActualEquippedToolToFavoriteOfThisWheel(player);
+            }
+
         } 
     }
 
@@ -109,8 +111,8 @@ public class WheelMenus {
      * @param direction "R" ou "L"
      */
     public void moveSlotSelected(String direction){
-        if (activeWheel != null) {
-            activeWheel.moveSlotSelected(direction);
+        if (currentOpenWheel != null) {
+            currentOpenWheel.moveSlotSelected(direction);
         }     }
 
 
@@ -123,8 +125,8 @@ public class WheelMenus {
 
     /**Appel la méthode du {@code activeWheel}*/
     public void render(SpriteBatch batch, BitmapFont font) {
-        if (activeWheel != null) {
-            activeWheel.render(batch, font);
+        if (currentOpenWheel != null) {
+            currentOpenWheel.render(batch, font);
         }  
     }  
 

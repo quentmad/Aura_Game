@@ -1,13 +1,8 @@
 package aura_game.app.LPCActions;
 
-import aura_game.app.Objects.CollidableObject;
 import aura_game.app.Objects.Entity;
-import aura_game.app.Objects.IAEntity;
 import aura_game.app.Objects.PlayableEntity;
-import com.badlogic.gdx.math.Rectangle;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
 
 public class WalkState extends ActionState{
 
@@ -28,15 +23,15 @@ public class WalkState extends ActionState{
             }
 
         }else{
-            System.out.println("colission so idle");
+            /*System.out.println("colission so idle");
             boolean tool = false;
             if(entity instanceof PlayableEntity){
-                if(!((PlayableEntity) entity).getCurrentToolName().equals("")){
+                if(!((PlayableEntity) entity).getToolManager().getCurrentEquippedToolName().equals("")){
                     tool = true;
                 }
-            }
+            }*/
 
-            entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation(),tool);
+            entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation());
         }
         //System.out.println("---- currentX :   "+ currentSpriteX);
 

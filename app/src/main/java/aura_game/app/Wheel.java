@@ -95,7 +95,9 @@ public class Wheel<T>{
      */
     public void setActualEquippedToolToFavoriteOfThisWheel(PlayableEntity player){
         if(actualFavoriteToolForThisWheel !=null){
+            System.out.println("o*it's okkkkkkkkkkkkkkkkk, tool set ");
             player.getToolManager().setCurrentEquippedToolName(actualFavoriteToolForThisWheel.getName());
+            player.getToolManager().setCurrentEquippedTool(actualFavoriteToolForThisWheel);
             player.getToolManager().haveAToolEquippedNow();
             if(!player.getToolManager().getCurrentEquippedToolCategory().equals(NAME)) {//Si pas c'est la catégorie actuelle
                 player.getToolManager().setCurrentEquippedToolCategory(NAME);//Met à jour la catégorie de l'outil actuel du joueur

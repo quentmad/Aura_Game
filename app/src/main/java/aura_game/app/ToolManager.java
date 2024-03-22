@@ -1,8 +1,10 @@
 package aura_game.app;
 
 import aura_game.app.Objects.PlayableEntity;
+import aura_game.app.Objects.Tool;
 import aura_game.app.SpriteSheet.SpriteSheetInfo;
 import aura_game.app.SpriteSheet.ToolsSpriteSheetData;
+import aura_game.app.Type.ToolType;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -12,6 +14,7 @@ public class ToolManager {
     private PlayableEntity player;
     /**Nom de l'outil actuel (dans la main) */
     private String currentEquippedToolName;
+    private Tool currentEquippedTool;
     private String currentEquippedToolCategory;
 
     /**SpriteSheet Texture de taille 64,128,192*/
@@ -24,7 +27,6 @@ public class ToolManager {
     /**Accès à l'unique instance de ToolsSpriteSheetData*/
     private final ToolsSpriteSheetData toolsspriteSheetData;
 
-
     public ToolManager(PlayableEntity player) {
         this.player = player;
         this.toolsspriteSheetData = ToolsSpriteSheetData.getInstance();
@@ -34,6 +36,7 @@ public class ToolManager {
         this.currentToolSizeSprite = -1;
         this.currentEquippedToolName = "";
         this.currentEquippedToolCategory = "";
+        this.currentEquippedTool = null;
         this.haveAToolEquipped = false;
     }
 
@@ -46,6 +49,14 @@ public class ToolManager {
         this.currentEquippedToolName = toolName;
     }
 
+    public void setCurrentEquippedTool(Tool tool){
+        this.currentEquippedTool = tool;
+    }
+
+    public Tool getCurrentEquippedTool(){
+        return currentEquippedTool;
+    }
+
     public String getCurrentEquippedToolCategory(){
         return currentEquippedToolCategory;
     }
@@ -56,6 +67,10 @@ public class ToolManager {
     /**Permet d'update les infos sur l'outil actuellement équipé que s'il y a une arme d'équipé*/
     public void haveAToolEquippedNow(){
         this.haveAToolEquipped = true;
+    }
+
+    public boolean isHaveAToolEquipped(){
+        return haveAToolEquipped;
     }
 
     /** @return Le spriteY actuel de l'arme actuelle */
@@ -94,15 +109,24 @@ public class ToolManager {
                     currentToolSpriteY = actualActionTool[0];
                     currentToolSizeSprite = actualActionTool[1];
                     player.setCurrentBeginX(actualActionTool[2]);//?
+                    System.out.println("update info tool");
+                    //Met a jour le current hitZonePointDecallage et hitZoneLenght de l'arme actuelle
+                    player.setCurrentHitZonePointDecallage(currentEquippedTool.getHitZonePointDecallage());
+                    player.setCurrentHitZoneLenght(currentEquippedTool.getHitZoneLenght());
                     return true;
                 }
-            }else{haveAToolEquipped = false;}
-            System.out.println("L'outil " + getCurrentEquippedToolName() + " n'a pas de sprite pour l'action ou il n'y a pas d'armes");
+            }else{
+                haveAToolEquipped = false;
+                currentEquippedTool = null;
+            }
+            System.out.println("L'outil " + getCurrentEquippedToolName() + " n'a pas de sprite pour l'action, ou il n'y a pas d'armes");
             //Pas d'arme ou pas de sprite pour l'action actuelle
+
             currentToolSpriteY = -1;
             currentToolSizeSprite = -1;
             player.setCurrentBeginX(0);
-            return false;
+            player.setCurrentHitZonePointDecallage(player.getHitZonePointDecallageDefault());
+            player.setCurrentHitZoneLenght(player.getHitZoneLenghtDefault());
         }
         return false;
     }
@@ -132,7 +156,6 @@ public class ToolManager {
         return toolsspriteSheetData;
     }
 
-
     public void render(SpriteBatch batch){
 
         if(!currentEquippedToolName.isEmpty() && currentToolSizeSprite != -1){
@@ -143,6 +166,7 @@ public class ToolManager {
             batch.draw(textureReg[currentToolSpriteY][player.getEntityStateMachine().getCurrentState().getCurrentSpriteX()], player.getPosOnScreenX(player.getActualRegion().getCamera().getX())-marge, player.getPosOnScreenY(player.getActualRegion().getCamera().getY())-marge);
         }
     }
+
 
 
 }

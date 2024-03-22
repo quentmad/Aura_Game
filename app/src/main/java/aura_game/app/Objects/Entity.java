@@ -13,6 +13,7 @@ import aura_game.app.GameManager.AudioManager;
 import aura_game.app.GameManager.Game;
 import aura_game.app.SpriteSheet.*;
 import aura_game.app.Type.EntityType;
+import org.w3c.dom.css.Rect;
 
 
 //Les spritesheet ont de base x=13 et y=21 sprites
@@ -46,6 +47,9 @@ public class Entity extends CollidableObject {
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité
     */
     private final Pair<Integer,Integer> hitZonePointDecallageDefault;
+
+    private Pair<Integer, Integer> currentHitZoneLenght;
+    private Pair<Integer, Integer> currentHitZonePointDecallage;
     
     private int speed;
 
@@ -72,6 +76,8 @@ public class Entity extends CollidableObject {
         this.actualRegion = Game.getInstance().getRegion();
         this.hitZoneLenghtDefault = type.hitZoneLenghtDefault();
         this.hitZonePointDecallageDefault = type.hitZonePointDecallageDefault();
+        this.currentHitZoneLenght = hitZoneLenghtDefault;
+        this.currentHitZonePointDecallage = hitZonePointDecallageDefault;
         this.degatDefault = type.degatDefault();
     }
 
@@ -157,6 +163,14 @@ public class Entity extends CollidableObject {
     }
 
 
+    public Pair<Integer, Integer> getHitZoneLenghtDefault() {
+        return hitZoneLenghtDefault;
+    }
+
+    public Pair<Integer, Integer> getHitZonePointDecallageDefault() {
+        return hitZonePointDecallageDefault;
+    }
+
     /**
      * Déplace l'entité de dx en X et dy en Y tout en gérant les collisions.
      * Met à jour posC_X et posC_Y par tranche de 1 pour evité des blocages en bord de map, et appelle updateHitbox().
@@ -239,26 +253,28 @@ public class Entity extends CollidableObject {
      * Si oui, on lance hurt(int pv) sur ces objets.
      */
     public void hit(){//Animation de mort (attendre fin anim coup) + ajout detection polynom
-        Rectangle zoneDegat = zoneDegatFromDirection(entityStateMachine.getCurrentOrientation().getDirection());
-        //System.out.println(zoneDegat);
+        Rectangle currentHitZone = zoneDegatFromDirection(entityStateMachine.getCurrentOrientation().getDirection());
         //Liste des items en colission par rapport à leur rectangle
-        List<CollidableObject> itemsColRect = actualRegion.getGridItem().getCollidingObjects(zoneDegat).getList();
+        List<CollidableObject> itemsColRect = actualRegion.getGridItem().getCollidingObjects(currentHitZone).getList();
         //Liste des entity en colission (pas besoin d'autres test)//TODO pas encore PLAYER
-        List<CollidableObject> entityCol = actualRegion.getGridIAEntity().getCollidingObjects(zoneDegat).getList();
+        List<CollidableObject> entityCol = actualRegion.getGridIAEntity().getCollidingObjects(currentHitZone).getList();
         boolean col = false;
         for(CollidableObject ent : entityCol){
             //System.out.println("ENTITY HURT");
             AudioManager.getInstance().playSound("entity","hurt",0.1f);
-            ent.hurt(1);
+            ent.hurt(getCurrentDegat());
+            reduceDurabilityToTool();
+
             if(ent.life <=0){//TODO DIE + Animation
                 Game.getInstance().getRegion().killFromRegion((Entity)ent); //TODO: mettre dans collidableOBJ et que ca le fasse sur l'obj souhaité
             }
         }
         for (CollidableObject item : itemsColRect) {
-            if(item.isPresentInZoneNoMove(zoneDegat)){//Verification polygon
+            if(item.isPresentInZoneNoMove(currentHitZone)){//Verification polygon
                 AudioManager.getInstance().playSound("wood","hurt",0.1f);
                 //System.out.println("Item HURT");
-                item.hurt(1);
+                item.hurt(getCurrentDegat());
+                reduceDurabilityToTool();
                 //System.out.println("item touche");
                 if(item.life <=0){//TODO DIE + Animation
                     Game.getInstance().getRegion().killFromRegion((Item)item); //TODO: mettre dans collidableOBJ et que ca le fasse sur l'obj souhaité
@@ -269,9 +285,37 @@ public class Entity extends CollidableObject {
         
     }
 
+    /**
+     * Réduit la durabilité de l'outil actuellement équipé par l'entité jouable.
+     * Si l'entité est une instance de PlayableEntity et qu'un outil est actuellement équipé,
+     * la durabilité de cet outil est réduite de 1.
+     */
+    public void reduceDurabilityToTool(){
+        if(this instanceof PlayableEntity && ((PlayableEntity)this).getToolManager().isHaveAToolEquipped()){
+            ((PlayableEntity)this).getToolManager().getCurrentEquippedTool().setSolidity(((PlayableEntity)this).getToolManager().getCurrentEquippedTool().getSolidity()-1);
+            System.out.println("solidity : "+((PlayableEntity)this).getToolManager().getCurrentEquippedTool().getSolidity());
 
+        }
+    }
 
-    /**Donne le rectangle de colission de l'outil/main, selon la direction de l'entite... */
+    /**
+     * Récupère les dégâts actuels de l'entité.
+     * Si l'entité est une instance de PlayableEntity et qu'un outil est actuellement équipé,
+     * les dégâts de cet outil sont retournés. Sinon, les dégâts par défaut de l'entité sont retournés.
+     *
+     * @return Les dégâts actuels de l'entité.
+     */
+    public float getCurrentDegat(){
+        float deg = degatDefault;
+        if(this instanceof PlayableEntity && ((PlayableEntity)this).getToolManager().isHaveAToolEquipped()){
+            deg = ((PlayableEntity)this).getToolManager().getCurrentEquippedTool().getDamage();
+        }
+        System.out.println("current degat: "+deg);
+        return deg;
+    }
+
+    /**Update le rectangle de colission de l'outil/main, selon la direction de l'entite...
+     * Il est donc nécessaire de mettre à jour currentHitZonePointDecallage et currentHitZoneLenght à chaque moment de hit ou quand nous voulons connaitre la zone de degat (calcul selon la position)*/
     public Rectangle zoneDegatFromDirection(String dir){
         //Point en bas à gauche du rectangle, décallé par hitZonePointDecallageDefault
         int startX=0;
@@ -279,59 +323,68 @@ public class Entity extends CollidableObject {
         int width=0;
         int height=0;
         int marge = 15;
-        if(this instanceof PlayableEntity){
-            Pair<Integer, Integer> hitZoneLenght = getCurrentHitZoneLenght();
-            Pair<Integer, Integer> hitZonePointDecallage = getCurrentHitZonePointDecallage();
-            }
-            if(dir.equals("U")||dir.equals("D")){
-                //System.out.println("up taille");
-                width = hitZoneLenghtDefault.getLeft();
-                height = hitZoneLenghtDefault.getRight();
-            }
-            else{
-                width = hitZoneLenghtDefault.getRight();
-                height = hitZoneLenghtDefault.getLeft();
-            }
-            //System.out.println(currentDirectionLetter);
-            switch(dir){
-                case "U":
-                    //System.out.println("up xy");
-                    startX = posHitboxX + hitZonePointDecallageDefault.getLeft() ;//Décal: long interieur:1 gauche(+)
-                    startY = posHitboxY + marge + hitboxHeightFlat + hitZonePointDecallageDefault.getRight();//Decal: Eloignement:2 haut(+)
-                    break;
-                case "D":
-                    startX = posHitboxX + hitZonePointDecallageDefault.getLeft() ;//Décal: long interieur:1 gauche(+)
-                    startY = posHitboxY - height + marge - hitZonePointDecallageDefault.getRight();//Decal: Eloignement:2 bas(-)
-                    break;//Ajustement /4 car pas symetrique coup haut bas
-                case "R":
-                    startX = posHitboxX + hitboxWidth + hitZonePointDecallageDefault.getRight();//Decal: Eloignement:2 droite(+)
-                    startY = posHitboxY + hitZonePointDecallageDefault.getLeft() ;//Décal: long interieur:1 haut(+)
-                    break;
-                case "L":
-                    startX = posHitboxX - width - hitZonePointDecallageDefault.getRight();//Decal: Eloignement:2 gauche(-)
-                    startY = posHitboxY + hitZonePointDecallageDefault.getLeft() ;//Décal: long interieur:1 haut(+)
-                    break;
-                default:
-                    System.out.print("error, currentDirectionLetter is null for zoneDegatFromDirection ");
-                    startX = 0;
-                    startY = 0;
-            }
-        //}
+        //Pair<Integer, Integer> hitZoneLenght = getCurrentHitZoneLenght();
+        //Pair<Integer, Integer> hitZonePointDecallage = getCurrentHitZonePointDecallage();
+
+        if(dir.equals("U")||dir.equals("D")){
+            //System.out.println("up taille");
+            width = currentHitZoneLenght.getLeft();
+            height = currentHitZoneLenght.getRight();
+        }
+        else{
+            width = currentHitZoneLenght.getRight();
+            height = currentHitZoneLenght.getLeft();
+        }
+        switch(dir){
+            case "U":
+                startX = posHitboxX + currentHitZonePointDecallage.getLeft() ;//Décal: long interieur:1 gauche(+)
+                startY = posHitboxY + marge + hitboxHeightFlat + currentHitZonePointDecallage.getRight();//Decal: Eloignement:2 haut(+)
+                break;
+            case "D":
+                startX = posHitboxX + currentHitZonePointDecallage.getLeft() ;//Décal: long interieur:1 gauche(+)
+                startY = posHitboxY - height + marge - currentHitZonePointDecallage.getRight();//Decal: Eloignement:2 bas(-)
+                break;//Ajustement /4 car pas symetrique coup haut bas
+            case "R":
+                startX = posHitboxX + hitboxWidth + currentHitZonePointDecallage.getRight();//Decal: Eloignement:2 droite(+)
+                startY = posHitboxY + currentHitZonePointDecallage.getLeft() ;//Décal: long interieur:1 haut(+)
+                break;
+            case "L":
+                startX = posHitboxX - width - currentHitZonePointDecallage.getRight();//Decal: Eloignement:2 gauche(-)
+                startY = posHitboxY + currentHitZonePointDecallage.getLeft() ;//Décal: long interieur:1 haut(+)
+                break;
+            default:
+                System.out.print("error, currentDirectionLetter is null for zoneDegatFromDirection ");
+                startX = 0;
+                startY = 0;
+        }
+
         return new Rectangle(startX, startY,width, height);
     }
+
+
+
 
     /**Pour les entités on retourne la valeur par defaut.
      *  Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
      * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
-    private Pair<Integer, Integer> getCurrentHitZonePointDecallage() {
+   /* private Pair<Integer, Integer> getCurrentHitZonePointDecallage() {
         return hitZonePointDecallageDefault;
     }
-
+    */
     /**Pour les entités on retourne la valeur par defaut.
      * Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
-    private Pair<Integer, Integer> getCurrentHitZoneLenght() {
+    /*private Pair<Integer, Integer> getCurrentHitZoneLenght() {
         return hitZoneLenghtDefault;
+    }*/
+
+    public void setCurrentHitZoneLenght(Pair<Integer, Integer> hitZoneLenght) {
+        this.currentHitZoneLenght = hitZoneLenght;
     }
+    public void setCurrentHitZonePointDecallage(Pair<Integer, Integer> hitZonePointDecallage) {
+        this.currentHitZonePointDecallage = hitZonePointDecallage;
+    }
+
+
 
      /** Donne les entités dans la zone (selon leur rectangle hitbox)*/
     public List<Entity> collideZoneNoMove(List<Entity> entCol,Rectangle zone){

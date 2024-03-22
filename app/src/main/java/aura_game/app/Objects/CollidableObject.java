@@ -43,7 +43,7 @@ public class CollidableObject extends BasicObject {
         super(posC_X, posC_Y);
         this.name = name;
         this.ui = new UIBar();
-        this.maxLives = 2;
+        this.maxLives = 15; //todo: Prendre depuis le type
         this.life = maxLives;
         this.dead = false;
         this.hitboxFlat = hitboxFlat;

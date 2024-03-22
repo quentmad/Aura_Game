@@ -52,7 +52,16 @@ public class Tool extends Loot{
     public Pair<Integer, Integer> getHitZonePointDecallage() {
         return hitZonePointDecallage;
     }
-    
 
+    public float getDamage() {
+        return damage;
+    }
 
+    public float getSolidity() {
+        return solidity;
+    }
+
+    public void setSolidity(float solidity) {
+        this.solidity = solidity;
+    }
 }

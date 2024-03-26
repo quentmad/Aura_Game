@@ -3,6 +3,7 @@ package aura_game.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import aura_game.app.Type.ToolType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -82,10 +83,10 @@ public class Wheel<T>{
      * <p> Attention: set le tool actuel du type, mais pas directement le tool du joueur
      * @param player
      */
-    public void setActualToolCategory(PlayableEntity player){
-        if(selectedElement !=null){
+    public void setActualToolForCategory(PlayableEntity player){
+        //if(selectedElement !=null){
             this.actualFavoriteToolForThisWheel = selectedElement;
-        }
+        //}
     }
 
     /**
@@ -94,18 +95,19 @@ public class Wheel<T>{
      * @param player
      */
     public void setActualEquippedToolToFavoriteOfThisWheel(PlayableEntity player){
-        if(actualFavoriteToolForThisWheel !=null){
-            System.out.println("o*it's okkkkkkkkkkkkkkkkk, tool set ");
+        if(actualFavoriteToolForThisWheel !=null) {
             player.getToolManager().setCurrentEquippedToolName(actualFavoriteToolForThisWheel.getName());
             player.getToolManager().setCurrentEquippedTool(actualFavoriteToolForThisWheel);
             player.getToolManager().haveAToolEquippedNow();
-            if(!player.getToolManager().getCurrentEquippedToolCategory().equals(NAME)) {//Si pas c'est la catégorie actuelle
+            if (!player.getToolManager().getCurrentEquippedToolCategory().equals(NAME)) {//Si pas c'est la catégorie actuelle
                 player.getToolManager().setCurrentEquippedToolCategory(NAME);//Met à jour la catégorie de l'outil actuel du joueur
             }
             player.getToolManager().updateEquippedToolInfo();//Met à jour les informations de l'outil actuellement équipé car l'arme équipé va directement changer (soit car on a modifié l'arme qui était de la catégorie actuelle, soit car on a changé de catégorie d'arme)
 
+        }else{
+            player.getToolManager().setCurrentEquippedToolName("");
+            player.getToolManager().setCurrentEquippedTool(null);
         }
-
     }
 
     public String getNAME() {
@@ -126,7 +128,13 @@ public class Wheel<T>{
                 slotOccupied++;
                 slotRestant--;
                 System.out.println("Added " + element.getLootType().getName() + " to "+ this);
+                //Si c'est le premier ajout, on le met en selected
+                if(slotOccupied == 1){
+                    selectedElement = element;
+                    this.selectedSlotSprite.setPosition(startMenuX+positionsSlot[selectedSlotIndex*2], startMenuY + positionsSlot[selectedSlotIndex*2+1]-sizeSlot);
+                }
                 return true;
+
             }
         }
         System.out.println("Can't add " + element.getLootType().getName()+" to wheelMenu, there is no place anymore");
@@ -134,16 +142,53 @@ public class Wheel<T>{
     }
 
     /**
-     * Retire à la liste l'élement en parametre
-     * @param element 
-     * @return {@code true} si le remove a fonctionné sinon {@code false}
+     * Supprime un outil du menu Wheel.
+     * Si l'outil est présent dans le menu, il est retiré, le nombre de slots occupés est décrémenté et le nombre de slots restants est incrémenté.
+     * Si l'index du slot sélectionné est supérieur au nombre de slots occupés (après suppression) et supérieur à 0, l'index du slot sélectionné est décrémenté.
+     * La position du sprite du slot sélectionné est ensuite mise à jour.
+     *
+     * @param element L'outil à supprimer du menu.
+     * @return {@code true} si l'outil a été supprimé avec succès, {@code false} sinon.
      */
     public boolean remove(Tool element) {
         if(content.remove(element)){
             slotOccupied--;
+            slotRestant++;
             //Evite que le slot selectionné soit hors tableau car on a vider un slot
             if(selectedSlotIndex > (slotOccupied)-1 && selectedSlotIndex > 0 ){//Commence à 0
                 selectedSlotIndex--;
+                this.selectedSlotSprite.setPosition(startMenuX+positionsSlot[selectedSlotIndex*2], startMenuY + positionsSlot[selectedSlotIndex*2+1]-sizeSlot);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Jette l'outil actuellement sélectionné du menu Wheel sur le terrain.
+     * Si l'outil sélectionné n'est pas null, il est retiré du menu Wheel et un nouvel objet de type Loot est créé à la position du joueur.
+     * Si l'outil jeté est l'outil actuellement favori du joueur pour cette catégorie d'outil, l'outil favori est mis à jour.
+     *
+     * @param player L'entité jouable qui jette l'outil.
+     * @return {@code true} si l'outil a été jeté avec succès, {@code false} sinon.
+     */
+    public boolean drop(PlayableEntity player){
+        if(selectedElement != null){
+            Tool oldSelected = selectedElement;
+            ToolType tt= ToolType.valueOf(selectedElement.getName());
+            remove(selectedElement);
+            int mx = player.getEntityStateMachine().getCurrentOrientation().getX();
+            int my = player.getEntityStateMachine().getCurrentOrientation().getY();
+            LootManager.getInstance().spawnTool(tt,player.getLootSpawnCenterX(tt.lootType().width()), player.getPosC_Y()+tt.lootType().offY(),true, LootManager.getInstance().getJumpVec(mx, my, 1), selectedElement.getSolidity());
+            selectedElement = content.isEmpty() ? null : content.get(selectedSlotIndex);
+            if(selectedElement ==null){
+                System.out.println("    Selected element is null");
+            }
+            //Besoin de refresh le tool actuel du joueur si c'est celui qu'on a drop
+            if(selectedElement ==null || (actualFavoriteToolForThisWheel !=null && actualFavoriteToolForThisWheel.getName().equals(oldSelected.getName()))){
+                setActualToolForCategory(player);//Met à jour l'arme actuelle de la category
+                setActualEquippedToolToFavoriteOfThisWheel(player);
+                System.out.println("Droped the actual tool of the player");
             }
             return true;
         }

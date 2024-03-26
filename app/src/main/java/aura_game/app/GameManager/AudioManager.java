@@ -61,7 +61,7 @@ public class AudioManager {
      * @param volume du sonn joué entre 0 et 1
      */
     public void playSound(Sound sound,float volume ){
-        sound.play(0);//! remettre volume !!!!!!!!! TODO
+        sound.play(volume);//! remettre volume !!!!!!!!! TODO
     }
 
     /**MEttre action et name dans les type si pas fait (item, entity...) */

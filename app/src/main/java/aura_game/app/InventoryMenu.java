@@ -40,9 +40,6 @@ public class InventoryMenu extends BasicMenu {
         return instance;
     }
 
-    //GETTERS et SETTERS AFIN D'Y ACCEDER DEPUIS BASICMENUMANAGER
-
-
     /**
      * Verifie si le loot est déjà présent dans l'inventaire, et dans la quantité souhaitée
      * @param lootType
@@ -132,14 +129,7 @@ public class InventoryMenu extends BasicMenu {
 
     }
 
-    /* a maj
-    public boolean drop(LootType lootType){
-        removeFromInventory(lootType, 1);
-        LootManager.getInstance().spawnLoot(lootType,player.getLootSpawnCenterX(lootType.width()), player.getPosC_Y()+lootType.offY(),true, LootManager.getInstance().getJumpVec(player.getCurrentDeplacement().getLeft(),player.getCurrentDeplacement().getRight() , 1) );
-        return true;
-    }*/
-
-    /**Drop le loot selectionné */
+    /**Drop le loot selectionné depuis l'inventaire */
     public boolean drop(){
         if(!content.isEmpty()){
             if(content.get(slotSelected).getQuantity()>0){
@@ -153,38 +143,6 @@ public class InventoryMenu extends BasicMenu {
         }
         return false;
     }
-
-        /** Appelle moveSlotSelected et met à jour également l'arme actuelle (si il selectionne une arme)//TODO modif selon facon de changer d'armes/acceder + tard
-         * @param direction "R" ou "L"
-         * @return
-         *///! update : pu de tool dans Inventory
-        /*public int moveSlotUpdateCurrentTool(String direction){//TODO: vers haut et bas aussi
-            int newSlotSelected = moveSlotSelected(direction);
-           // updateToolIndexFrom(newSlotSelected);//TODO enlever !!! wheelmenu les tools
-                
-
-            return newSlotSelected; 
-        }*/
-
-        /**Met a jour le currentTool a partir du slot selected en parametre
-         * Si le slot correspond a un tool, on défini le currentTool à l'index correspondant, sinon -1
-         * Voir updateCurrentToolIndex la méthode appelé avec le String tool (ou "")
-         * @param slotSelected le slot selectionné dans l'inventaire
-         */ /* //! ENLEVERRRRR OLD 
-        private void updateToolIndexFrom(int slotSelected) {
-            LootType lootSelected = content.get(slotSelected).getLootType();
-
-            if(lootSelected !=null && !lootSelected.getName().equals(player.getCurrentToolName()) && lootSelected.type().equals("tool")){
-                System.out.println(lootSelected.getName());
-                player.updateCurrentToolIndex(lootSelected.getName());
-
-            }else if(!player.getCurrentToolName().equals("")){//TODO voir quand lancer else pour "desarmer"
-                player.updateCurrentToolIndex("");//Aucune arme   
-            }
-        }*/
-
-
-
 
     /**Affiche le menu inventaire et les loots, quand l'inventaire est ouvert  */
     public void render(SpriteBatch batch, BitmapFont font) {

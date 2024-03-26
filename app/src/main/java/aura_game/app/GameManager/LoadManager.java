@@ -157,7 +157,12 @@ public class LoadManager {
         inputHandler.mapKeyToAction(Input.Keys.BACKSPACE, () -> {
             if (updateManager.getActiveMenu().equals("inventory")){
                 playerInventory.drop();
-            }   });
+            }
+            if (updateManager.getActiveMenu().equals("wheel")){
+                wheelManager.getCurrentOpenWheel().drop(player);
+            }
+
+        });
         inputHandler.mapKeyToAction(Input.Keys.E, () -> updateManager.invertActiveMenu("inventory"));
         inputHandler.mapKeyToAction(Input.Keys.C, () -> updateManager.invertActiveMenu("crafting"));
         inputHandler.mapKeyToAction(Input.Keys.R, () -> { updateManager.invertCurrentOpenMenuWheel("rangedWeapons");});

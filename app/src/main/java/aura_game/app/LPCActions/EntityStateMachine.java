@@ -47,7 +47,7 @@ public class EntityStateMachine {
         addState("Jump", new JumpState(new Animation(21,5, new int[]{2,2,2,3,4,5},true)));
         addState("Run", new RunState(new Animation(25,7,new int[]{3,2,2,3,3,2,2,3},false)));
         addState("Sit", new SitState(new Animation(29, 2, false)));
-        addState("Idle", new IdleState(new Animation(33, 1,new int[]{20,6}, false)));
+        addState("Idle", new IdleState(new Animation(33, 7,new int[]{30,8,49,9,18,1,1,1}, false)));
 
 
 

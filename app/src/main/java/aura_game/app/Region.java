@@ -3,16 +3,12 @@ package aura_game.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import aura_game.app.Objects.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 import aura_game.app.GameManager.Game;
-import aura_game.app.Objects.BasicObject;
-import aura_game.app.Objects.CollidableObject;
-import aura_game.app.Objects.Entity;
-import aura_game.app.Objects.Item;
-import aura_game.app.Objects.Loot;
 
 
 /**
@@ -54,15 +50,11 @@ public class Region {
     private List<BasicObject> basicObjectsOnRegion;
     /**Permet de lancer sort() sur ObjectsOnRegion que s'il y a eu au moins un mouvement*/
     private boolean objectsOnMapNeedSort;
-
-    //private Quadtree quadtreeItem;
     private Grid gridItem;
     private Grid gridIAEntity;
-    //private Quadtree quadtreeIAEntity;
 
     /**Instance unique*/
     private InventoryMenu inventoryMenu;
-    //private LootManager lootManager;
 
     public Region(String nameMap, String namePixmap){
         this.carte = new Texture(Gdx.files.internal("src/main/resources/"+nameMap+".png"));//Sans ombres
@@ -372,10 +364,29 @@ public class Region {
                 loot.setCollected(true);
                 basicObjectsOnRegion.remove(loot);
             }
-        }//Mettre dans playable ?
+        }
 
         return true;
     }
 
+    /**
+     * Cette classe est appelé quand le joueur passe au-dessus d'un loot (tool) et va le récupérer
+     * Ainsi, on regarde si on peut le mettre dans le wheel correspondant (melee, ranged...)
+     * si c'est le cas on défini le tool comme collected (ce qui le retira de loots), et on le retire de basicObjectsOnRegion
+     * @param tool le loot (tool) qu'on souhaite recupéré
+     * @return true si l'opération s'est déroulé avec succès (place dans le wheel) sinon false
+     */
+    public boolean retrieveToolFromRegionAndPutInWheel(Tool tool){
+        if(tool !=null){
+            //boolean succeed = inventoryMenu.addToInventory(tool,1);
+            boolean succeed = Game.getInstance().getWheelManager().add(tool);
+            if(succeed){
+                tool.setCollected(true);
+                basicObjectsOnRegion.remove(tool);
+            }
+        }
+
+        return true;
+    }
     
 }

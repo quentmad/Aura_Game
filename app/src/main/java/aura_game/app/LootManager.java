@@ -70,18 +70,20 @@ public class LootManager {
     }
 
 
-    /**
+    /**TODO : pk ne pas direct mettre le tool en parametre ?
      * Méthode pour faire apparaître une arme.
      * @param tl Le type de butin.
      * @param x La position en x.
      * @param y La position en y.
      * @param bounce Indique si l'objet de butin doit rebondir.
      * @param dir La direction de l'objet de butin.
+     * @param durability La durabilité restante de l'arme.
      */
-    public void spawnTool(ToolType tl, int x, int y, boolean bounce, Vector2 dir) {
+    public void spawnTool(ToolType tl, int x, int y, boolean bounce, Vector2 dir, float durability){
         //System.out.println("new "+ lt.getName());
-        Loot loot = new Tool(tl,x, y, bounce, dir,false);
-        loots.add(loot);
+        Tool tool = new Tool(tl,x, y, bounce, dir,false);
+        tool.setSolidity(durability);
+        loots.add(tool);
     }
 
     /**

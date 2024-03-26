@@ -41,6 +41,9 @@ public class WheelManager {
         return rangedWeapons;
     }
 
+    public Wheel<Tool> getCurrentOpenWheel() {
+        return currentOpenWheel;
+    }
     /**
      * Défini le wheel actuellement ouvert à celui en paramètre*/
     public void setCurrentOpenWheel(String wheel) {
@@ -76,7 +79,7 @@ public class WheelManager {
      */
     public void setActualTool(PlayableEntity player){
         if (currentOpenWheel != null) {
-            currentOpenWheel.setActualToolCategory(player);
+            currentOpenWheel.setActualToolForCategory(player);
             if(player.getToolManager().getCurrentEquippedToolCategory().equals(currentOpenWheel.getNAME())) {//Si c'est la catégorie actuelle
                 currentOpenWheel.setActualEquippedToolToFavoriteOfThisWheel(player);
             }

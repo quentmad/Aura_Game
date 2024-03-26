@@ -142,9 +142,9 @@ public class MyInputProc implements InputProcessor {
             Iterator<Integer> iterator = keysPressed.iterator();
             while (iterator.hasNext()) {
                 int key = iterator.next();
-                System.out.println("key : " + key + " is in keysPressed ?");
+                //System.out.println("key : " + key + " is in keysPressed ?");
                 if(!Gdx.input.isKeyPressed(key)){
-                    System.out.println(key + " was suppose to be released");
+                    //System.out.println(key + " was suppose to be released");
                     iterator.remove();
                     handleKeyUp(key);
                 }

@@ -124,7 +124,12 @@ public class Loot extends BasicObject{
                 }
             }*/
 
-            region.retrieveLootFromRegionAndPutInInventory(this);
+            if(this instanceof Tool) {
+                region.retrieveToolFromRegionAndPutInWheel((Tool)this);
+            }else{
+                region.retrieveLootFromRegionAndPutInInventory(this);
+
+            }
             //System.out.println("Devrait prendre le loot");
         }
     /*

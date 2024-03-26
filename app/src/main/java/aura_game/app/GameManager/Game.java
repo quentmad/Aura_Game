@@ -85,7 +85,7 @@ public class Game {
         return playerInventory;
     }
 
-    public WheelManager getWheelMenus(){
+    public WheelManager getWheelManager(){
         return wheelManager;
     }
 

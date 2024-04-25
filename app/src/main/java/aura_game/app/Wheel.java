@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import aura_game.app.GameManager.AudioManager;
 import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Objects.Tool;
+import aura_game.app.Objects.Tool.Tool;
 
 /**Par exemple Tool Ranged, Tool Melee, Sorts, Compétences */
 public class Wheel<T>{

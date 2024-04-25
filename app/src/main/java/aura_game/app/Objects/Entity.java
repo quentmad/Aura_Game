@@ -13,7 +13,6 @@ import aura_game.app.GameManager.AudioManager;
 import aura_game.app.GameManager.Game;
 import aura_game.app.SpriteSheet.*;
 import aura_game.app.Type.EntityType;
-import org.w3c.dom.css.Rect;
 
 
 //Les spritesheet ont de base x=13 et y=21 sprites
@@ -162,6 +161,9 @@ public class Entity extends CollidableObject {
         return getPosC_X() + (spriteSheetInfo.SPRITE_WIDTH() / 2) - (lootWidth / 2);
     }
 
+    public int getSpeed(){
+        return speed;
+    }
 
     public Pair<Integer, Integer> getHitZoneLenghtDefault() {
         return hitZoneLenghtDefault;
@@ -220,32 +222,31 @@ public class Entity extends CollidableObject {
      * @param objCol l'objet avec l'entité est détecté en colission au niveau du rectangle hitbox (si il se déplace)
     */
     public boolean willCollidePolygoneMove(int nextPosX, int nextPosY, CollidableObject objCol){
-        boolean collisionDetected = false;
         int directionX = (int) Math.signum(nextPosX - getPosC_X());
         int directionY = (int) Math.signum(nextPosY - getPosC_Y());
         for (int x = posHitboxX; x < posHitboxX + getHitboxFlat().getWidth(); x++) {
             if (directionY==-1 && objCol.getHitboxPolygon().contains(x, posHitboxY)) {//TODO: ----------overlaps existe pas, contains trop long ?....
                 // Il y a collision sur le bord supérieur de l'hitbox
-                collisionDetected = true;
+                return true;
                 //TODO:Return la couleur pour comparer ensuite en fonction de l'utilité
             }
             if (directionY==1 && objCol.getHitboxPolygon().contains(x, posHitboxY+(int)getHitboxFlat().getHeight())) {
                 // Il y a collision sur le bord inférieur de l'hitbox
                 //System.out.println("colission en bas de l'arb");
-                collisionDetected = true;
+                return true;
             }
         }
         for (int y = posHitboxY; y < posHitboxY + getHitboxFlat().getHeight(); y++) {
             if (directionX == 1 && objCol.getHitboxPolygon().contains(posHitboxX+ (int)getHitboxFlat().getWidth(), y)) {
                 // Il y a collision sur le bord gauche de l'hitbox
-                collisionDetected = true;
+                return true;
             }
             if (directionX == -1 && objCol.getHitboxPolygon().contains(posHitboxX, y)) {
                 // Il y a collision sur le bord droit de l'hitbox
-                collisionDetected = true;
+                return true;
             }
         }     
-        return collisionDetected;
+        return false;
     }
 
     /**Cette méthode est appelé lorsqu'on souhaite donner un coup, à la fin de l'animation statique.
@@ -255,9 +256,9 @@ public class Entity extends CollidableObject {
     public void hit(){//Animation de mort (attendre fin anim coup) + ajout detection polynom
         Rectangle currentHitZone = zoneDegatFromDirection(entityStateMachine.getCurrentOrientation().getDirection());
         //Liste des items en colission par rapport à leur rectangle
-        List<CollidableObject> itemsColRect = actualRegion.getGridItem().getCollidingObjects(currentHitZone).getList();
+        List<CollidableObject> itemsColRect = actualRegion.getGridItem().getCollidingObjectsWithoutItself(currentHitZone, this).getList();
         //Liste des entity en colission (pas besoin d'autres test)//TODO pas encore PLAYER
-        List<CollidableObject> entityCol = actualRegion.getGridIAEntity().getCollidingObjects(currentHitZone).getList();
+        List<CollidableObject> entityCol = actualRegion.getGridIAEntity().getCollidingObjectsWithoutItself(currentHitZone, this).getList();
         boolean col = false;
         for(CollidableObject ent : entityCol){
             //System.out.println("ENTITY HURT");
@@ -361,22 +362,6 @@ public class Entity extends CollidableObject {
         return new Rectangle(startX, startY,width, height);
     }
 
-
-
-
-    /**Pour les entités on retourne la valeur par defaut.
-     *  Décallage par rapport au point en bas a gauche du rectangle de longueur hitZoneLenghtDefault, le rectangle ayant un coté touchant le rectangleHitbox (selon la direction) 
-     * 1er: décallage vers le long intérieur de l'entité, 2e: en s'éloignant de l'entité*/
-   /* private Pair<Integer, Integer> getCurrentHitZonePointDecallage() {
-        return hitZonePointDecallageDefault;
-    }
-    */
-    /**Pour les entités on retourne la valeur par defaut.
-     * Longueur de la zone de dégats sans armes: 1e: le long de l'entité, 2e: en s'éloignant de l'entité, formant le rectangle commencant en hitZoneLenghtDefault*/
-    /*private Pair<Integer, Integer> getCurrentHitZoneLenght() {
-        return hitZoneLenghtDefault;
-    }*/
-
     public void setCurrentHitZoneLenght(Pair<Integer, Integer> hitZoneLenght) {
         this.currentHitZoneLenght = hitZoneLenght;
     }
@@ -386,7 +371,9 @@ public class Entity extends CollidableObject {
 
 
 
-     /** Donne les entités dans la zone (selon leur rectangle hitbox)*/
+     /** Donne les entités dans la zone (selon leur rectangle hitbox)
+      * @param entCol la liste des entités à tester
+      * */
     public List<Entity> collideZoneNoMove(List<Entity> entCol,Rectangle zone){
         List<Entity> entityCol = new ArrayList<Entity>(); 
         for (Entity ent : entCol) {
@@ -404,22 +391,40 @@ public class Entity extends CollidableObject {
      * @param dy La variation verticale de la position.
      * @return true s'il y a une collision, false sinon.
      */
-    public boolean isColliding(int dx, int dy){
-        if(!actualRegion.willCollideGroundMove(getPosC_X() + dx, getPosC_Y() + dy, this)){
-            //On met a jour l'emplacement de la hitbox rectangle par rapport au possible mouvement
-            Rectangle actRect = getHitboxFlat();
-            getHitboxFlat().set(actRect.x+dx, actRect.y + dy, actRect.width, actRect.height);
-            List<CollidableObject> objColList = actualRegion.getGridItem().getCollidingObjects(getHitboxFlat()).getList();
 
-            for (CollidableObject object : objColList) {
-                if(willCollidePolygoneMove(getPosC_X() + dx,getPosC_Y()+dy, object)){
-                    getHitboxFlat().set(actRect);//Sinon on remet la position avant mouvement (pour le hitbox)
-                    return true;//Il y a colission (avec autres objets)
-                }
+    public boolean isColliding(int dx, int dy){
+        return isCollidingWithGround(dx, dy) || (isCollidingWithObjects(dx, dy)!=null);
+    }
+
+    /**
+     * Vérifie s'il y a une collision avec le sol.
+     * @param dx La variation horizontale de la position.
+     * @param dy La variation verticale de la position.
+     * @return
+     */
+    public boolean isCollidingWithGround(int dx, int dy){
+        return actualRegion.willCollideGroundMove(getPosC_X() + dx, getPosC_Y() + dy, this);
+    }
+
+    /**
+     * Vérifie s'il y a une collision avec d'autres objets.
+     * @param dx
+     * @param dy
+     * @return l'objet (le premier) avec lequel il y a collision, null sinon.
+     */
+    public CollidableObject isCollidingWithObjects(int dx, int dy){
+        //On met a jour l'emplacement de la hitbox rectangle par rapport au possible mouvement
+        Rectangle actRect = getHitboxFlat();
+        getHitboxFlat().set(actRect.x+dx, actRect.y + dy, actRect.width, actRect.height);
+        List<CollidableObject> objColList = actualRegion.getGridItem().getCollidingObjectsWithoutItself(getHitboxFlat(), this).getList();
+
+        for (CollidableObject object : objColList) {
+            if(willCollidePolygoneMove(getPosC_X() + dx,getPosC_Y()+dy, object)){
+                getHitboxFlat().set(actRect);//Sinon on remet la position avant mouvement (pour le hitbox)
+                return object;//Il y a colission (avec autres objets)
             }
-            return false;//Pas de colission
         }
-        return true;//Il y a colission (avec le sol)
+        return null;//Pas de colission
     }
 
     

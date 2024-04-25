@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Objects.Tool;
+import aura_game.app.Objects.Tool.Tool;
 
 /**Class singleton regroupant tous les wheels différents (ranged, melee...) */
 public class WheelManager {

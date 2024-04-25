@@ -97,7 +97,7 @@ public class GridTest {
         ListCollidableObject expected = new ListCollidableObject();
         expected.add(objBasic);
         expected.add(obj3);
-        ListCollidableObject result = grid.getCollidingObjects(zoneCollision);
+        ListCollidableObject result = grid.getCollidingObjectsWithoutItself(zoneCollision);
         assertEquals(expected, result);
     }
 
@@ -174,7 +174,7 @@ public class GridTest {
         ListCollidableObject expected = new ListCollidableObject();
         expected.add(objBasic);
 
-        assertEquals(expected, grid.getCollidingObjects(objBasic.getHitboxFlat()));
+        assertEquals(expected, grid.getCollidingObjectsWithoutItself(objBasic.getHitboxFlat()));
     }
 
     /**
@@ -190,7 +190,7 @@ public class GridTest {
         grid.add(objBasic, objBasic.getListIndexGrid()); 
         grid.remove(objBasic, listIndex); 
         ListCollidableObject expected = new ListCollidableObject(); 
-        assertEquals(expected, grid.getCollidingObjects(objBasic.getHitboxFlat())); 
+        assertEquals(expected, grid.getCollidingObjectsWithoutItself(objBasic.getHitboxFlat()));
     } 
 
 

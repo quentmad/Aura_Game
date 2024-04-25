@@ -39,7 +39,9 @@ public class MyInputProc implements InputProcessor {
             Input.Keys.ENTER,//validate in menu
             Input.Keys.A,//select melee tool
             Input.Keys.Z,//select ranged tool
-            Input.Keys.BACKSPACE//drop item from inventory
+            Input.Keys.BACKSPACE,//drop item from inventory
+            Input.Keys.U,//carry (if walking)
+            Input.Keys.Y //push (if walking)
 
     );
     /**Liste des keycode actuellement pressée*/

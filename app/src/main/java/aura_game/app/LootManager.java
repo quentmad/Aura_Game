@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.math.Vector2;
 
 import aura_game.app.Objects.Loot;
-import aura_game.app.Objects.Tool;
+import aura_game.app.Objects.Tool.Tool;
 import aura_game.app.Type.LootType;
 import aura_game.app.Type.ToolType;
 /** 

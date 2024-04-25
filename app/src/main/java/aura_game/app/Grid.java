@@ -101,9 +101,10 @@ public class Grid {
      * Retourne une liste d'objets en collision avec une zone de collision donnée, selon leur rectangle hitbox.
      *
      * @param zoneColission La zone de collision à tester.
+     * @param itself L'objet dont on ne veut pas vérifier la collision.
      * @return Une liste des Collidable en collision avec la zone de collision spécifiée.
      */
-    public ListCollidableObject getCollidingObjects(Rectangle zoneColission) {
+    public ListCollidableObject getCollidingObjectsWithoutItself(Rectangle zoneColission, CollidableObject itself) {
         //Cases que survole zoneColission
         List<Pair<Integer, Integer>> pairsIndex = getCaseFor(zoneColission);
         ListCollidableObject inSameCases= new ListCollidableObject();
@@ -119,6 +120,7 @@ public class Grid {
                 objInColission.add(inSameCases.get(i));
             }
         }
+        objInColission.remove(itself);
         return objInColission;
     }
 

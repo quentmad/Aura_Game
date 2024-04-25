@@ -11,8 +11,11 @@ public class WalkState extends ActionState{
 
     }
 
-    @Override
-    public void act(Entity entity) {
+
+    /** Permet de faire marcher l'entité dans la direction actuelle s'il n'y a pas de colission, sinon on change l'action de l'entité en Idle
+     * @param entity l'entité qui doit marcher
+     */
+    public void act(Entity entity){
         Pair<Integer,Integer> movement = getMovementOf(entity.getEntityStateMachine().getCurrentOrientation().getDirection());
         if(!entity.isColliding(movement.getLeft(), movement.getRight())){//Pas de colission
             entity.move(movement.getLeft(),movement.getRight());
@@ -23,21 +26,9 @@ public class WalkState extends ActionState{
             }
 
         }else{
-            /*System.out.println("colission so idle");
-            boolean tool = false;
-            if(entity instanceof PlayableEntity){
-                if(!((PlayableEntity) entity).getToolManager().getCurrentEquippedToolName().equals("")){
-                    tool = true;
-                }
-            }*/
-
             entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation());
         }
-        //System.out.println("---- currentX :   "+ currentSpriteX);
-
-
     }
-
     @Override
     public Pair<Integer,Integer> getMovementOf(String direction){
         return switch (direction){

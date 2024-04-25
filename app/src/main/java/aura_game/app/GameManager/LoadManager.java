@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import aura_game.app.*;
+import aura_game.app.LPCActions.PushState;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.badlogic.gdx.Input;
@@ -220,6 +221,23 @@ public class LoadManager {
                 System.out.println("-----------------------------run now please");
                 player.getEntityStateMachine().changeAction("Run", player.getEntityStateMachine().getCurrentOrientation());
             }
+        });
+        inputHandler.mapKeyToAction(Input.Keys.U,() -> {//Carry if already walking
+            System.out.println("a" + player.getEntityStateMachine().getCurrentStateName());
+            if (player.getEntityStateMachine().getCurrentStateName().equals("Walk")){
+                System.out.println("-----------------------------carry now please");
+                player.getEntityStateMachine().changeAction("Carry", player.getEntityStateMachine().getCurrentOrientation());
+            }
+        });
+        inputHandler.mapKeyToAction(Input.Keys.Y,() -> {//Push if already walking
+            System.out.println("a" + player.getEntityStateMachine().getCurrentStateName());
+            //if (player.getEntityStateMachine().getCurrentStateName().equals("Walk")){
+                System.out.println("-----------------------------push now please");
+                player.getEntityStateMachine().changeAction("Push", player.getEntityStateMachine().getCurrentOrientation());
+                //On regarde si il y a une entité à pousser
+                ((PushState)player.getEntityStateMachine().getCurrentState()).findObjectToPush(player);
+
+            //}
         });
         inputHandler.mapKeyToAction(1,() -> {//O
             if (updateManager.getActiveMenu().equals("game")){

@@ -1,0 +1,6 @@
+## Bugs à corriger / Code à modifier
+
+- [ ] **[A corriger]** : Arreter de courir quand on quand lache le bouton d.
+
+
+

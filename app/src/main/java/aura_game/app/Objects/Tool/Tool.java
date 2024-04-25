@@ -1,5 +1,6 @@
-package aura_game.app.Objects;
+package aura_game.app.Objects.Tool;
 
+import aura_game.app.Objects.Loot;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +12,7 @@ import aura_game.app.Type.ToolType;
  * On utilise LootType et ToolType (les 2 par outil) pour construire les tools
  * Les outils spéciaux (arcs, bombes...) ne sont pas ici
  */
-public class Tool extends Loot{
+public class Tool extends Loot {
     /**Dégats que fait l'outil*/
     private final float damage;
     private float solidity;

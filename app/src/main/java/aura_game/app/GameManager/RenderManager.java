@@ -83,7 +83,7 @@ public class RenderManager {
         wheelManager.renderActualTool(batch);
         renderActiveMenu();
         batch.end();
-        tempoRenderZoneDegatPlayer();
+        //tempoRenderZoneDegatPlayer();
     }
     /**Pour tester/verifier */
     public void tempoRenderZoneDegatPlayer(){

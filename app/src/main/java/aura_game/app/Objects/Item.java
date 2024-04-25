@@ -3,6 +3,7 @@ package aura_game.app.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import aura_game.app.GameManager.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -100,17 +101,35 @@ public class Item extends CollidableObject {
         this.setPosC_X((casePosX - 1) * 32 + 1);
         this.setPosC_Y((casePosY - 1) * 32 + 1);
         this.z = getPosC_Y() + getOffY();
-        this.getHitboxFlat().set(getPosC_X(), getPosC_Y(), textureItem.getWidth(),textureItem.getHeight());
-        this.setHitboxPolygon(new Polygon(updatePolygonPoints(casePosX, casePosY)));
+         this.updateHitbox();
         
     }
+
+    public void updateHitbox(){
+        this.getHitboxFlat().set(getPosC_X(), getPosC_Y(), textureItem.getWidth(),textureItem.getHeight());
+        this.setHitboxPolygon(new Polygon(updatePolygonPoints()));
+    }
+
     /**
-     * Permet d'avoir la liste des points du polygon mis à jour avec les x y en parametre et le polygon origonal de l'item
-     * @param casePosX
-     * @param casePosY
-     * @return
+    * Met a jour la position de l'item, le hitbox rectangle et polygon à partir des coordonnées en parametre* @param casePosX
+     * @param dx déplacement en x
+     * @param dy déplacement en y
      */
-    public float[] updatePolygonPoints(int casePosX, int casePosY){
+    public void moveHitboxsAndPosition(int dx, int dy){
+        System.out.println("move the" + this.getName() +" of " + dx+", dy: "+dy);
+        this.setPosC_X(this.getPosC_X() + dx);
+        this.setPosC_Y(this.getPosC_Y() + dy);
+        this.z = getPosC_Y() + getOffY();
+        this.updateHitbox();
+
+    }
+    /**
+     * Met a jour la position de l'item, le hitbox rectangle et polygon à partir des coordonnées en parametre
+     *
+     * @return la liste des points du polygon de l'item avec la position actuelle de l'item
+     */
+
+    public float[] updatePolygonPoints(){
         float[] points = new float[getListOriginalPolygon().length];
         for (int i = 0; i < getListOriginalPolygon().length; i++) {
             points[i] = getListOriginalPolygon()[i];
@@ -137,13 +156,49 @@ public class Item extends CollidableObject {
         float[] polyf = getHitboxPolygon().getVertices();// Tableau avec l'ensemble des points du polygone hitbox
         
         // Collision avec polygon:
-        List<CollidableObject> objColList = region.getGridItem().getCollidingObjects(getHitboxFlat()).getList();
+        List<CollidableObject> objColList = region.getGridItem().getCollidingObjectsWithoutItself(getHitboxFlat(), this).getList();
         // Detection au niveau de la region/pixmap
         if(willCollideGroundNoMove(region, polyf)){return true;}
         //Detection avec les autres entités
         if(!willCollidePolygonNoMove(polyf, objColList, region).isEmpty()){return true;}
         return false;
     }
+
+    /**
+     * Détermine s'il y a une collision avec la map / les entités /items avec la hitbox de this.
+     * On ignore la possible collission avec l'objet passé en paramètre
+     * @param region sur lequel l'objet se trouve lors de l'action effectuée
+     * @param ignoredObject l'objet avec lequel on ne veut pas détecter de collision
+     * @return
+     */
+    public boolean willCollideInIgnoring(Region region, CollidableObject ignoredObject){
+
+        float[] polyf = getHitboxPolygon().getVertices();// Tableau avec l'ensemble des points du polygone hitbox
+
+        // Collision avec polygon:
+        List<CollidableObject> objColList = region.getGridItem().getCollidingObjectsWithoutItself(getHitboxFlat(), this).getList();
+
+        // Detection au niveau de la region/pixmap
+        if(willCollideGroundNoMove(region, polyf)){return true;}
+        //Detection avec les autres entités
+        List<CollidableObject> colissionPoly = willCollidePolygonNoMove(polyf, objColList, region);
+        if(!colissionPoly.isEmpty()){
+            //Si il y a collision avec un objet autre que celui qu'on veut ignorer
+            System.out.println(this.getName() + "have col with other object");
+            System.out.println("colissionPoly: size: "+colissionPoly.size());
+            for (CollidableObject collidableObject : colissionPoly) {
+                System.out.println("col with: "+collidableObject.getName());
+            }
+            if(colissionPoly.size() == 1 && colissionPoly.get(0) == ignoredObject){
+                System.out.println("col with ignored object only");
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+
 
 
     /**Pour les items (sans mouvement), dit s'il y a collision de this avec PixColision map
@@ -178,6 +233,8 @@ public class Item extends CollidableObject {
                                                                                                          
                     //System.out.println("col with objdetected");
                     colissionPoly.add(object);
+                    //On passe au prochain objet
+                    break;
                 }
 
             }
@@ -185,4 +242,60 @@ public class Item extends CollidableObject {
         return colissionPoly;        
     }
 
+
+    /**
+     * Déplace l'entité de dx en X et dy en Y tout en gérant les collisions.
+     * Met à jour posC_X et posC_Y par tranche de 1 pour evité des blocages en bord de map, et appelle updateHitbox().
+     *
+     * @param dx Le déplacement en X.
+     * @param dy Le déplacement en Y.
+     */
+    public void move(int dx, int dy, int speed) {
+        int remainingDx = Math.abs(dx)*speed;
+        int remainingDy = Math.abs(dy)*speed;
+
+        int stepMoveDx = (dx > 0) ? 1 : -1;
+        while (remainingDx != 0) {
+
+            if (isXOnRegion(getPosC_X() + stepMoveDx)) {
+                this.addToPosC_X(stepMoveDx);
+                remainingDx -= 1;
+            } else {
+                break; // Stop le déplacement si collision ou bord atteint
+            }
+        }
+        int stepMoveDy = (dy > 0) ? 1 : -1;
+        while (remainingDy != 0) {
+
+            if (isYOnRegion(getPosC_Y() + stepMoveDy)) {
+                this.addToPosC_Y(stepMoveDy);
+                remainingDy -= 1;
+            } else {
+                break; // Stop le déplacement si collision ou bord atteint
+            }
+        }
+
+        updateHitbox(); // Met à jour l'hitbox une fois les déplacements effectués.
+        Game.getInstance().getRegion().getGridItem().update(this);
+
+    }
+
+
+    /**
+     * Verifie si le X est dans la region (selon la hitbox du personnage) (au niveau des bords)
+     * @param x la coordonnée x dont on veut tester l'appartenance
+     * @return true si x est dans la region 0 sinon
+     */
+    public boolean isXOnRegion(int x){
+        return (x >= -textureWidth && x <= (Game.getInstance().getRegion().getRegionWidth() - textureWidth)) ;
+    }
+
+    /**
+     * Verifie si le Y est dans la region (selon la hitbox du personnage) (au niveau des bords)
+     * @param y la coordonnée y dont on veut tester l'appartenance
+     * @return true si y est dans la region 0 sinon
+     */
+    public boolean isYOnRegion(int y){
+        return (y >= 0 && y <= (Game.getInstance().getRegion().getRegionHeight() - getHitboxHeight())) ;
+    }
 }

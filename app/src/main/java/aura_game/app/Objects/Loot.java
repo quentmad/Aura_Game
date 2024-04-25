@@ -1,5 +1,6 @@
 package aura_game.app.Objects;
 
+import aura_game.app.Objects.Tool.Tool;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 

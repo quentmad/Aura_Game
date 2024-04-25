@@ -1,10 +1,9 @@
 package aura_game.app;
 
 import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Objects.Tool;
+import aura_game.app.Objects.Tool.Tool;
 import aura_game.app.SpriteSheet.SpriteSheetInfo;
 import aura_game.app.SpriteSheet.ToolsSpriteSheetData;
-import aura_game.app.Type.ToolType;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

@@ -10,7 +10,7 @@ import aura_game.app.InventoryMenu;
 import aura_game.app.LootStack;
 import aura_game.app.WheelManager;
 import aura_game.app.Objects.Loot;
-import aura_game.app.Objects.Tool;
+import aura_game.app.Objects.Tool.Tool;
 import aura_game.app.Type.LootType;
 import aura_game.app.Type.ToolType;
 

@@ -48,7 +48,9 @@ public class EntityStateMachine {
         addState("Run", new RunState(new Animation(25,7,new int[]{3,2,2,3,3,2,2,3},false)));
         addState("Sit", new SitState(new Animation(29, 2, false)));
         addState("Idle", new IdleState(new Animation(33, 7,new int[]{30,8,49,9,18,1,1,1}, false)));
-
+        addState("Carry", new CarryState(new Animation(37, 8, new int[]{2,3,2,3,3,2,2,3,3}, false)));
+        //addState("Crab", new CarryState(new Animation(41, 8, new int[]{2,2,2,2,2,2,2,2}, true)));
+        addState("Push", new PushState(new Animation(45, 8, new int[]{2,3,2,3,3,2,2,3,3}, false)));
 
 
     }

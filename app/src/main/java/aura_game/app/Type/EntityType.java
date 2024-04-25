@@ -9,7 +9,7 @@ import aura_game.app.Util.Triplet;
 
 //TODO idee : faire comme les lemmings des "strategy" en fonction de l'action actuelle (qui ont chacune U L D R ou just 1 pour hurt
 public enum EntityType {//TODO: ajouter speed ici ?
-    player("Aiden_CompleteV2", 64, 64, 50, 32, 50, 10,  List.of(), 1, Pair.of(15, 20),Pair.of(4, -5)),
+    player("Aiden_Complete_V3", 64, 64, 50, 32, 50, 10,  List.of(), 1, Pair.of(15, 20),Pair.of(4, -5)),
 
     cerf1("cerf1", 48, 60, 45, 32, 56, 16,//end x : 3
             //new String[] {"Walk_D","Walk_L", "Walk_R", "Walk_U"},
@@ -21,7 +21,9 @@ public enum EntityType {//TODO: ajouter speed ici ?
             //new String[] {"Walk_D","Walk_L", "Walk_R", "Walk_U"},
             List.of(
                     new Triplet<>("stick", 0, 4)
-            ), 1, Pair.of(30, 40),Pair.of(0, 0));
+            ), 1, Pair.of(30, 40),Pair.of(0, 0)),
+
+    basicArrow("basicArrow", 16, 16, 16, 16, 16, 16, List.of(), 1, Pair.of(16, 16),Pair.of(0, 0));
 
 
     /**Nom pour charger le fichier png spriteSheet*/

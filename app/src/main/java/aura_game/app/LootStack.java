@@ -1,18 +1,17 @@
 package aura_game.app;
 
+import aura_game.app.rework.TypeEnum.LootableObjectType;
 import com.badlogic.gdx.graphics.Texture;
-
-import aura_game.app.Type.LootType;
 
 /**
  * Permet de stocker dans l'inventaire l'lootType avec son nombre
  */
 public class LootStack {
-    private LootType lootType;
+    private LootableObjectType lootType;
     private Texture texture; //For inventory
     private int quantity;
 
-    public LootStack(LootType lootType, int quantity) {
+    public LootStack(LootableObjectType lootType, int quantity) {
         this.lootType = lootType;
         this.quantity = quantity;
         texture = new Texture(lootType.texturePath());
@@ -20,11 +19,11 @@ public class LootStack {
 
     // Getters et setters pour lootType et quantity
 
-    public LootType getLootType() {
+    public LootableObjectType getLootType() {
         return lootType;
     }
 
-    public void setItem(LootType lootType) {
+    public void setItem(LootableObjectType lootType) {
         this.lootType = lootType;
     }
 

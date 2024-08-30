@@ -1,0 +1,137 @@
+@startuml rework
+
+abstract class BasicObject {
+  - posC_X: int
+  - posC_Y: int
+
+  + BasicObject(x: int, y: int)
+  + getPosC_X(): int
+  + getPosC_Y(): int
+  + addToPosC_X(x: int): void
+  + addToPosC_Y(y: int): void
+  + setPosC_X(x: int): void
+  + setPosC_Y(y: int): void
+  + getPosOnScreenX(cameraX: int): int
+  + getPosOnScreenY(cameraY: int): int
+  + getZProf(): int
+  + calculateDistancePair(obj2: CollidableObject): Pair<Integer, Integer>
+  + calculateDistance(obj2: CollidableObject): int
+}
+
+class CollidableObject extends BasicObject{
+  - name: String
+  - hitboxFlat: Rectangle
+  - tall: int
+  - offY: int
+  - hitboxHeight: int
+  - hitboxPolygon: Polygon
+  - ui: UI
+  - maxLives: float
+  - life: float
+  - dead: boolean
+  - deathLoots: List<Triplet<String, Integer, Integer>>
+  - lootManager: LootManager
+  - listIndexGrid: List<Pair<Integer, Integer>>
+
+  + CollidableObject(name: String, hitboxFlat: Rectangle, posC_X: int, posC_Y: int, tall: int, hitboxPolygon: Polygon, hitboxHeight: int, offY: int, deathLoots: List<Triplet<String, Integer, Integer>>)
+  + getName(): String
+  + getListIndexGrid(): List<Pair<Integer, Integer>>
+  + setListIndexGrid(newGridList: List<Pair<Integer, Integer>>): void
+  + getHitboxFlat(): Rectangle
+  + getTall(): int
+  + getUI(): UI
+  + getOffY(): int
+  + getHitboxHeight(): int
+  + getHitboxPolygon(): Polygon
+  + getLootSpawnCenterX(lootWidth: int): int
+  + getCenterX(): int
+  + setHitboxPolygon(poly: Polygon): void
+  + getLife(): float
+  + getMaxLives(): float
+  + hurt(pv: float): void
+  + spawnDeathLoots(): void
+  + isPresentInZoneNoMove(zone: Rectangle): boolean
+}
+
+
+class Entity extends CollidableObject{
+  - spriteSheetInfo: SpriteSheetInfo
+  - currentSpriteX: int
+  - currentSpriteY: int
+  - currentBeginX: int
+  - hitboxHeightFlat: int
+  - lastEndSpriteX: int
+  - posHitboxX: int
+  - posHitboxY: int
+  - hitboxWidth: int
+  - spriteSheetData: SpriteSheetData
+  - tabOfAction: int[]
+  - actualActionName: String
+  - spritesActionDuration: int[]
+  - currentSpriteDuration: int
+  - defaultSpriteDuration: int
+  - currentDeplacement: Pair<Integer,Integer>
+  - currentDirectionLetter: String
+  - refreshTEMPO: int
+  - actualRegion: Region
+  - degatDefault: float
+  - hitZoneLenghtDefault: Pair<Integer,Integer>
+  - hitZonePointDecallageDefault: Pair<Integer,Integer>
+  - speed: int
+
+  + Entity(type: EntityType, speed: int, initX: int, initY: int)
+  + getDefaultSpriteDuration(): int
+  + getSpritesActionDuration(): int[]
+  + setCurrentBeginX(beginX: int): void
+  + getCurrentBeginX(): int
+  + getCurrentDeplacement(): Pair<Integer,Integer>
+  + getSpriteSheetInfo(): SpriteSheetInfo
+  + getCurrentSpriteX(): int
+  + setCurrentSpriteX(x: int): void
+  + getCurrentSpriteY(): int
+  + getHitboxHeightFlat(): int
+  + getLastEndSpriteX(): int
+  + getPosHitboxX(): int
+  + getPosHitboxY(): int
+  + getHitboxWidth(): int
+  + getCenterX(): int
+  + changeAction(action: String): void
+  + getActualActionName(): String
+  + updateHitbox(): void
+  + getDifferrenceImageHitboxX(): int
+  + getActualRegion(): Region
+  + isXOnRegion(x: int): boolean
+  + isYOnRegion(y: int): boolean
+  + getLootSpawnCenterX(lootWidth: int): int
+  + hit(): void
+  + hitZoneFromDirection(): Rectangle
+  + collideZoneNoMove(entCol: List<Entity>, zone: Rectangle): List<Entity>
+  + isInDanger(): boolean
+  + canSee(player: Entity): boolean
+}
+
+
+class Item extends CollidableObject {
+  - textureItem: Texture
+  - z: int
+  - listOriginalPolygon: float[]
+  - textureWidth: int
+  - textureHeight: int
+  - type: ItemType
+  - color: String
+
+  + Item(type: ItemType, casePosX: int, casePosY: int, color: String)
+  + getTextureItem(): Texture
+  + getZ(): int
+  + getListOriginalPolygon(): float[]
+  + getType(): ItemType
+  + getColor(): String
+  + getCenterX(): int
+  + getLootSpawnCenterX(lootWidth: int): int
+  + updateHitboxsAndPosition(casePosX: int, casePosY: int): void
+  + updatePolygonPoints(casePosX: int, casePosY: int): float[]
+  + willCollideIn(region: Region): boolean
+  + willCollideGroundNoMove(region: Region, vertices: float[]): boolean
+  + willCollidePolygonNoMove(verticesColission: float[], objCol: List<CollidableObject>, map: Region): List<CollidableObject>
+}
+@enduml

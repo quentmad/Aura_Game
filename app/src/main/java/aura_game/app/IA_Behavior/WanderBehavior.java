@@ -1,7 +1,8 @@
 package aura_game.app.IA_Behavior;
-import aura_game.app.*;
 //import aura_game.app.VisualGDX.Direction;
-import aura_game.app.Objects.IAEntity;
+
+
+import aura_game.app.rework.IAActorEntity;
 
 /**Logique de déplacement aléatoire pour l'errance*/
 public class WanderBehavior implements Behavior {
@@ -18,7 +19,7 @@ public class WanderBehavior implements Behavior {
 
 
     @Override
-    public void act(IAEntity entity, float deltaTime) {
+    public void act(IAActorEntity entity, float deltaTime) {
        wanderTimer += deltaTime;
         if (wanderTimer >= wanderInterval) {
             // Logique de déplacement aléatoire pour l'errance

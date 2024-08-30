@@ -1,7 +1,7 @@
 package aura_game.app.LPCActions;
 
-import aura_game.app.Objects.Entity;
-import org.apache.commons.lang3.tuple.Pair;
+import aura_game.app.rework.ActorEntity;
+import aura_game.app.rework.Point;
 
 public abstract class ActionState {
     /**Dans l'ordre : SpellCast, Thrust, Walk,
@@ -31,9 +31,9 @@ public abstract class ActionState {
     // problem: the first frame is not displayed for the first tour of an animation because the currentSpriteX is incremented before the first display because it can depend on the act (colissions...)
 
 
-    public abstract void act(Entity entity);
+    public abstract void act(ActorEntity entity);
 
-    public abstract Pair<Integer, Integer> getMovementOf(String direction);
+    public abstract Point getMovementOf(String direction);
 
     /**Met à jour le spriteX en lui attribuant le spriteX suivant de l'action actuelle
      * @return true si l'animation a effectué un tour complet (est revenu à 0)

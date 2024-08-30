@@ -21,6 +21,7 @@ public class SpriteSheetInfo{
         this.SPRITE_HEIGHT = spHeight;
         this.texture = new Texture(Gdx.files.internal("src/main/resources/"+file+".png"));
         this.spriteSheetRegions  = TextureRegion.split(texture, SPRITE_WIDTH, SPRITE_HEIGHT);  
+
     }
 
     /**Constructeur où spriteWidth et spriteHeight sont égaux */

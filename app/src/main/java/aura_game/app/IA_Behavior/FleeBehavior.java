@@ -1,25 +1,23 @@
 package aura_game.app.IA_Behavior;
 
-import aura_game.app.*;
-import aura_game.app.Objects.Entity;
-import aura_game.app.Objects.IAEntity;
-import com.badlogic.gdx.math.MathUtils;
+import aura_game.app.rework.AbstractEntity;
+import aura_game.app.rework.IAActorEntity;
 
 /**Logique de fuite en fonction d'une menace*/
 public class FleeBehavior implements Behavior {
     /**On utilise la position de la menace (threat) pour calculer la direction opposée à celle-ci, puis déplace l'entité dans cette direction*/
-    private Entity threat;
+    private AbstractEntity threat;
     
 
     /**Logique de fuite en fonction d'une menace*/
-    public FleeBehavior(Entity threat) {
+    public FleeBehavior(AbstractEntity threat) {
         this.threat = threat;
     }
 
 
     //generate a method to do the flee behavior
     @Override
-    public void act(IAEntity entity, float deltaTime) {
+    public void act(IAActorEntity entity, float deltaTime) {
         /*
         // Logique de fuite en fonction d'une menace
         if (threat != null) {
@@ -58,7 +56,7 @@ public class FleeBehavior implements Behavior {
 
 
     /**Menace de l'entité*/
-    public Entity getThreat() {
+    public AbstractEntity getThreat() {
         return threat;
     }
 }

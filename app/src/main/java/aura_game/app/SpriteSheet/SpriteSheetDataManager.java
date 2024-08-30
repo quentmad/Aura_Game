@@ -1,8 +1,9 @@
 package aura_game.app.SpriteSheet;
+import aura_game.app.rework.AbstractEntity;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import aura_game.app.Type.EntityType;
 
 public class SpriteSheetDataManager {
     /**Permet à chaque instance d'entité du même type d'accéder à la même instance de SpriteSheetData associée à ce type d'entité*/
@@ -18,15 +19,15 @@ public class SpriteSheetDataManager {
      * l'ajoutera à la HashMap et la renverra.
      * @param entityType type d'entité pour laquelle on veut avoir une instance
      */
-    public static SpriteSheetData getSpriteSheetDataInstance(EntityType entityType) {
-        if (spriteSheetDataMap.containsKey(entityType.getName())) {
+    public static SpriteSheetData getSpriteSheetDataInstance(AbstractEntity entityType) {
+        if (spriteSheetDataMap.containsKey(entityType.name())) {
             // Si les données de sprite existent déjà pour le type d'entité, les retourner
-            return spriteSheetDataMap.get(entityType.getName());
+            return spriteSheetDataMap.get(entityType.name());
         } else {
             // Sinon, créer de nouvelles données de sprite pour le type d'entité et les ajouter à la HashMap, initialisé aux valeurs du type
             SpriteSheetData spriteSheetData = new SpriteSheetData(createActionDataMap(entityType));
             //On rajoute donc ce nouveau type a la spriteSheetDataMap
-            spriteSheetDataMap.put(entityType.getName(), spriteSheetData);
+            spriteSheetDataMap.put(entityType.name(), spriteSheetData);
             return spriteSheetData;
         }
     }
@@ -37,7 +38,7 @@ public class SpriteSheetDataManager {
      * et tableau String[] de EntitySpriteSheet permettant de remplir le nom dans la hashMap
      * @return la hashMap
      */
-    private static Map<String, int[]> createActionDataMap(EntityType entType ) {
+    private static Map<String, int[]> createActionDataMap(AbstractEntity entType ) {
         Map<String, int[]> map = new HashMap<>();
         String[] actionsName = null;// entType.spriteSheetActionsName(); //TODO : a changer
         int[] actions = null;//entType.spriteSheetXEnd();

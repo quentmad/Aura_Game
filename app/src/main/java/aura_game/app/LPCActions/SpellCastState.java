@@ -1,7 +1,8 @@
 package aura_game.app.LPCActions;
 
 import aura_game.app.GameManager.Game;
-import aura_game.app.Objects.Entity;
+import aura_game.app.rework.ActorEntity;
+import aura_game.app.rework.Point;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class SpellCastState extends ActionState{
@@ -12,7 +13,7 @@ public class SpellCastState extends ActionState{
     }
 
     /** Static action one loop*/
-    public void act(Entity entity) {
+    public void act(ActorEntity entity) {
         boolean finish = updateSpriteXWithDuration();
         // Vérifie si l'animation est terminée
         if(finish) {
@@ -21,8 +22,8 @@ public class SpellCastState extends ActionState{
     }
 
     @Override
-    public Pair<Integer, Integer> getMovementOf(String direction) {
-        return Pair.of(0,0);
+    public Point getMovementOf(String direction) {
+        return new Point(0,0);
     }
 
 }

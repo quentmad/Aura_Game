@@ -1,9 +1,10 @@
 package aura_game.app;
 
+import aura_game.app.GameManager.Game;
+import aura_game.app.rework.AbstractEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import aura_game.app.Objects.CollidableObject;
 
 /**Cette classe permet de génerer les coeurs/barres... des CollidableObject */
 public class UIBar {//RENOMMER LIFE ??? et include life et maxlife, hurt... ?
@@ -12,10 +13,12 @@ public class UIBar {//RENOMMER LIFE ??? et include life et maxlife, hurt... ?
 
 private final Texture bar_font;
 private final Texture bar_red;
-private final float barWidth;
-protected final float barHeight;
+private final int barWidth;
+protected final int barHeight;
 /**Barre mis a jour  */
 private int barWidthAlive;
+
+private int counterLastHurt;
 
     public UIBar(){
         this.bar_font =  new Texture(Gdx.files.internal("src/main/resources/UI/bar_font.png"));
@@ -37,17 +40,21 @@ private int barWidthAlive;
     }
 
     /**Dessine la barre de vie au dessus des CollidableObjects en vie, dont la vie n'est pas entière.
-     * On l'affiche en centerX et au niveau de son 'tall'
+     * On l'affiche en centerX et au niveau de sa stature, en fonction de la camera du jeu.
      * La taille de la barre rouge est mis a jour avec hurt()
      */
-    public void drawBar(CollidableObject obj, SpriteBatch batch){
-        if(obj.getLife() < obj.getMaxLives() && obj.getLife() !=0 ){
-            //TextureRegion region = new TextureRegion(bar_red, 0, 0, barWidthMaj, barHeight);
-            int x = Math.round(obj.getCenterX() - getBarWidth()/2);
-            int y = obj.getPosC_Y() + obj.getOffY()+ obj.getTall();
-            batch.draw(bar_font, x, y);
-            batch.draw(bar_red,x, y,getBarWidthAlive(),barHeight );
+    public void drawBar(AbstractEntity obj, SpriteBatch batch){
+        if(obj.durability() < obj.maxDurability() && obj.durability() !=0 && counterLastHurt < 100){
+            int x = Math.round(obj.getCenterX() - getBarWidth()/2) - Game.getInstance().getRegion().camera().position().x();
+            int y = obj.posC().y()+ obj.stature() + 25 - Game.getInstance().getRegion().camera().position().y();
+            batch.draw(bar_font, x, y);                                     //TODO: pas propre le Game.getInstance().getRegion().camera().position().x()...
+            batch.draw(bar_red,x, y,0, 0, getBarWidthAlive(),barHeight );
 
+            counterLastHurt++;
         }
+    }
+
+    public void resetCounterLastHurt() {
+        this.counterLastHurt = 0;
     }
 }

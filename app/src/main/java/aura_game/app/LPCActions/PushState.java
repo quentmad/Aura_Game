@@ -1,91 +1,135 @@
 package aura_game.app.LPCActions;
 
 import aura_game.app.GameManager.Game;
-import aura_game.app.Objects.CollidableObject;
-import aura_game.app.Objects.Entity;
-import aura_game.app.Objects.Item;
-import aura_game.app.Objects.PlayableEntity;
+import aura_game.app.MyInputProc;
+import aura_game.app.rework.*;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Rectangle;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
 
 
 /**
  * Classe représentant l'état de l'entité lorsqu'elle pousse un objet.
+ * Ce state n'est activable que si l'entité est en train de marcher, et sera désactivé si l'entité s'arrête de marcher ou si elle n'a pas d'objet à pousser.
  */
 public class PushState extends ActionState {
-    Item pushedObject;
-    private final int distancePushed = 8;
+    BlockEntity pushedObject;
+    int distanceWithObjectPushed;
+    private final int distancePushed = 25;
 
 
     public PushState(Animation anim) {
         super(anim);
         this.pushedObject = null;
+        this.distanceWithObjectPushed = -1;
     }
 
 
     /** Méthode lancé lorsqu'on appuie sur la touche pour pousser un objet, on cherche l'objet à pousser (de type item)
      * @param entity l'entité qui pousse l'objet
+     * @return true si un objet a été trouvé et qu'il est poussable, false sinon
      */
-    public void findObjectToPush(Entity entity){
+
+    public void findObjectToPush(ActorEntity entity){
+
         //On cherche l'objet à pousser depuis le player
-        int x = entity.getEntityStateMachine().getCurrentOrientation().getX();
-        int y = entity.getEntityStateMachine().getCurrentOrientation().getY();
-        CollidableObject objCol = (entity.isCollidingWithObjects(x*distancePushed,y * distancePushed));
-        this.pushedObject = (objCol instanceof Item) ? (Item) objCol : null;
-
-        if(pushedObject != null)System.out.println("Pushed object : " + pushedObject.getName());
-    }
-
-
-    /**TODO:  comment faire ? On appuie pour activer le porter puis lache apres ou on laisse appuyer tant que ?
-     * Attention il est possible de rester dans la position push mais ne pas avancer si l'objet est bloqué ou si on appuie pas sur avancer
-     * @param entity
-     */
-    @Override
-    public void act(Entity entity) {
-
-        Pair<Integer,Integer> movement = getMovementOf(entity.getEntityStateMachine().getCurrentOrientation().getDirection());
-        //Si on tiens toujours l'objet et que l'entité n'est pas en collision avec le sol
-        if (pushedObject != null && !entity.isCollidingWithGround(0,0) && entity.isCollidingWithObjects(entity.getEntityStateMachine().getCurrentOrientation().getX()+distancePushed,entity.getEntityStateMachine().getCurrentOrientation().getY()+distancePushed) == pushedObject){
-
-
-            //Si l'objet ne va pas rentrer en collision avec la map ou autres collidableObject, sauf nous (l'entité)
-            System.out.println("if one passed");
-            if (!pushedObject.willCollideInIgnoring(Game.getInstance().getRegion(), entity)) {
-                System.out.println("if two passed");
-                //Alors on peut bouger le joueur et l'objet
-                //TODO: Que si le move bien enfoncé...
-                entity.move(movement.getLeft(), movement.getRight());
-                pushedObject.move(movement.getLeft(), movement.getRight(), entity.getSpeed());
-                //update la liste des objets dans la map
-                Game.getInstance().getRegion().updateItemBasicObjectsOnRegion(pushedObject);
-
-            }else{
-                entity.move(-movement.getLeft(), -movement.getRight());
-                entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation());
-                return;
-            }
-            updateSpriteXWithDuration();
-
-            if (entity instanceof PlayableEntity) {//On met a jour la caméra de la map si besoin
-                entity.getActualRegion().calculAndUpdatePosition(entity);//Update pour que le plan/map bouge en fonction du joueur TODO: les autres entites doivent pas faire sur la cam (sauf si cinematique...)
-            }
-
-        } else {
-            entity.getEntityStateMachine().changeAction("Idle", entity.getEntityStateMachine().getCurrentOrientation());
+        int x = entity.stateComponant().getCurrentOrientation().getX();
+        int y = entity.stateComponant().getCurrentOrientation().getY();
+        //Nouveau rectangle basé sur la zone de colission de l'entité aggrandit de "distancePushed" dans la direction de l'entité
+        Rectangle zonePush = new Rectangle(entity.hitbox().approximativeHitbox().x,entity.hitbox().approximativeHitbox().y, entity.hitbox().approximativeHitbox().width + x*distancePushed, entity.hitbox().approximativeHitbox().height+ y*distancePushed);
+        List<AbstractEntity> objsCol = entity.physics().getCollidingObjectsInBothGrids(zonePush);
+        this.pushedObject = getFirstBlock(objsCol);
+        if(pushedObject != null){
+            this.distanceWithObjectPushed = entity.calculateDistanceFromCenter(pushedObject);
+            System.out.println("Object found: "+pushedObject.name() +" distance: "+distanceWithObjectPushed);
         }
     }
 
+
+    /**
+     *
+     * Lors du premier appel de la méthode, on cherche l'objet à pousser, puis on le pousse si possible
+     * @param entity
+     */
     @Override
-    public Pair<Integer,Integer> getMovementOf(String direction){
+    public void act(ActorEntity entity) {
+        boolean succeed = false;
+        if (pushedObject != null && pushedObject.movable() && Math.abs(entity.calculateDistanceFromCenter(pushedObject)- distanceWithObjectPushed) < 20) {
+            System.out.println("Pushing object");
+            //On bouge l'objet ainsi que l'entité
+            Point movement = getMovementOf(entity.stateComponant().getCurrentOrientation().getDirection());
+            movement.mult((int)(entity.speed()/3));//On multiplie par la vitesse pour avoir le bon déplacement (selon la vitesse de l'entité)
+            Point posWishEntity = new Point(entity.posC().x() + movement.x(),entity.posC().y() + movement.y());
+            Point posWishObject = new Point(pushedObject.posC().x() + movement.x(),pushedObject.posC().y() + movement.y());
+            //On vérifie si il n'y a pas de colission
+            int objectColission = pushedObject.physics().isColliding(pushedObject,posWishObject);
+            boolean objectCanMove = objectColission == 0 || objectColission == 1; //Pas de colission ou colission avec lui meme car vérifie la colission avec lui meme
+            if(objectCanMove) {
+                System.out.println("Object can move");
+                pushedObject.move(movement.x(), movement.y());
+                pushedObject.toStringInfo();
+                Game.getInstance().getRegion().interactionComponent().abstractObjectsOnGround().setNeedSort(true);
+                if(entity.physics().isColliding(entity,posWishEntity) == 0) {
+                    System.out.println("Entity can move");
+                    //On bouge ensuite l'entité
+                    entity.move(movement.x(),movement.y());
+                    updateSpriteXWithDuration();
+                    succeed = true;
+                    if(entity instanceof Player){//On met a jour la caméra de la map si besoin
+                        Game.getInstance().getRegion().camera().calculAndUpdateCameraPosition(entity);//Update pour que le plan/map bouge en fonction du joueur TODO: les autres entites doivent pas faire sur la cam (sauf si cinematique...)
+                    }
+                    //TEST VERIF
+                    System.out.println("Pos"+ pushedObject.posC().x() +" " + pushedObject.posC().y() + "player:"+ entity.posC().x() +" "+ entity.posC().y());
+
+
+
+                }
+            }
+        }
+
+        //Si le bouton n'est plus appuyé, on arrête de pousser l'objet
+        boolean finish = ! MyInputProc.getInstance().getKeysPressed().contains(Input.Keys.Y);//si on appuie plus sur la touche Y
+        // Vérifie si l'animation est terminée
+        if(finish) {
+            Game.getInstance().getMyInputProc().finishAction();
+        }
+
+        if(!succeed) {
+            pushedObject = null;
+            distanceWithObjectPushed = -1;
+            entity.stateComponant().changeAction("Idle", entity.stateComponant().getCurrentOrientation());
+        System.out.println("Pushing failed");
+        }
+
+
+    }
+
+    @Override
+    public Point getMovementOf(String direction){
         return switch (direction){
-            case "U" -> Pair.of(0,1);
-            case "D" -> Pair.of(0,-1);
-            case "L" -> Pair.of(-1,0);
-            case "R" -> Pair.of(1,0);
+            case "U" -> new Point(0,1);
+            case "D" -> new Point(0,-1);
+            case "L" -> new Point(-1,0);
+            case "R" -> new Point(1,0);
             default -> throw new IllegalStateException("Unexpected direction: " + direction);
         };
     }
 
 
+    /**
+     * Méthode permettant de récupérer le premier objet de type BlockEntity dans une liste d'objets AbstractEntity
+     * @param objsCol
+     * @return
+     */
+    private BlockEntity getFirstBlock(List<AbstractEntity> objsCol){
+        for (AbstractEntity obj : objsCol){
+            if (obj instanceof BlockEntity){
+                return (BlockEntity) obj;
+            }
+        }
+        return null;
+    }
 
 }

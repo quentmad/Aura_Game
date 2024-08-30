@@ -1,16 +1,17 @@
 package aura_game.app;
 
-import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Objects.Tool.Tool;
+import aura_game.app.GameManager.Game;
 import aura_game.app.SpriteSheet.SpriteSheetInfo;
 import aura_game.app.SpriteSheet.ToolsSpriteSheetData;
+import aura_game.app.rework.Tool;
+import aura_game.app.rework.ToolWieldingEntity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ToolManager {
 
     private boolean haveAToolEquipped;
-    private PlayableEntity player;
+    private ToolWieldingEntity character;
     /**Nom de l'outil actuel (dans la main) */
     private String currentEquippedToolName;
     private Tool currentEquippedTool;
@@ -26,8 +27,8 @@ public class ToolManager {
     /**Accès à l'unique instance de ToolsSpriteSheetData*/
     private final ToolsSpriteSheetData toolsspriteSheetData;
 
-    public ToolManager(PlayableEntity player) {
-        this.player = player;
+    public ToolManager(ToolWieldingEntity character) {
+        this.character = character;
         this.toolsspriteSheetData = ToolsSpriteSheetData.getInstance();
         //Par défaut: pas d'arme selectionné
         this.spriteTool = new SpriteSheetInfo[]{new SpriteSheetInfo(64,"tools64"), new SpriteSheetInfo(128,"tools128"), new SpriteSheetInfo(192,"tools192")};
@@ -68,7 +69,7 @@ public class ToolManager {
         this.haveAToolEquipped = true;
     }
 
-    public boolean isHaveAToolEquipped(){
+    public boolean haveAToolEquipped(){
         return haveAToolEquipped;
     }
 
@@ -102,19 +103,19 @@ public class ToolManager {
         if(haveAToolEquipped) {
             int[] actualActionTool = null;//spriteY, size, beginX pour l'action_direction
             if (!getCurrentEquippedToolName().isEmpty()) {//Alors une arme est selectionné
-                String actionD = player.getEntityStateMachine().getCurrentStateName() + "_" + player.getEntityStateMachine().getCurrentOrientation().getDirection();
+                String actionD = character.stateComponant().getCurrentStateName() + "_" + character.stateComponant().getCurrentOrientation().getDirection();
                 actualActionTool = getToolsspriteSheetData().getActionInfo(getCurrentEquippedToolName(), actionD);
                 if (actualActionTool != null) {
                     currentToolSpriteY = actualActionTool[0];
                     currentToolSizeSprite = actualActionTool[1];
-                    player.setCurrentBeginX(actualActionTool[2]);//?
+                    character.setCurrentBeginX(actualActionTool[2]);//?
                     System.out.println("update info tool");
                     //Met a jour le current hitZonePointDecallage et hitZoneLenght de l'arme actuelle
-                    player.setCurrentHitZonePointDecallage(currentEquippedTool.getHitZonePointDecallage());
-                    player.setCurrentHitZoneLenght(currentEquippedTool.getHitZoneLenght());
+                    character.setCurrentHitZonePointDecallage(currentEquippedTool.hitZonePointDecallage());
+                    character.setCurrentHitZoneLenght(currentEquippedTool.hitZoneLenght());
                     return true;
                 }
-            }else{
+            }else {
                 haveAToolEquipped = false;
                 currentEquippedTool = null;
             }
@@ -123,9 +124,9 @@ public class ToolManager {
 
             currentToolSpriteY = -1;
             currentToolSizeSprite = -1;
-            player.setCurrentBeginX(0);
-            player.setCurrentHitZonePointDecallage(player.getHitZonePointDecallageDefault());
-            player.setCurrentHitZoneLenght(player.getHitZoneLenghtDefault());
+            character.setCurrentBeginX(0);
+            character.setCurrentHitZonePointDecallage(character.hitZonePointDecallageDefault());
+            character.setCurrentHitZoneLenght(character.hitZoneLenghtDefault());
         }
         return false;
     }
@@ -162,7 +163,7 @@ public class ToolManager {
             int marge = (currentToolSizeSprite - 64);
             if(marge>0){marge/=2;}else{marge=0;}
             TextureRegion[][] textureReg= getTextureRegionTool(currentToolSizeSprite );
-            batch.draw(textureReg[currentToolSpriteY][player.getEntityStateMachine().getCurrentState().getCurrentSpriteX()], player.getPosOnScreenX(player.getActualRegion().getCamera().getX())-marge, player.getPosOnScreenY(player.getActualRegion().getCamera().getY())-marge);
+            batch.draw(textureReg[currentToolSpriteY][character.stateComponant().getCurrentState().getCurrentSpriteX()], character.getPosOnScreenX(Game.getInstance().getRegion().camera().position().x())-marge, character.getPosOnScreenY(Game.getInstance().getRegion().camera().position().y())-marge);
         }
     }
 

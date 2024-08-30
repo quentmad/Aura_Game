@@ -1,0 +1,189 @@
+@startuml
+
+abstract class AbstractObject{
+     - posC : Position
+     - imageWidth : Integer
+     - imageHeight : Integer
+     - contentHeight : Integer
+     - contentWidth : Integer
+     - offsetY : Integer
+     + getPosOnScreenX() : Integer
+     + getPosOnScreenY() : Integer
+}
+
+class Position{
+    - x : Integer
+    - y : Integer
+    + x() : Integer
+    + y() : Integer
+    + setX(x : Integer) : Void
+    + setY(y : Integer) : Void
+}
+
+/'Collidable Entity'/
+abstract class AbstractEntity {
+    - durability : Integer
+    - maxDurability : Integer
+    - hitbox : Hitbox
+    - stature : Integer
+    - deathLoot : List<LootableObject>
+    - z : Integer
+    + kill () : Boolean /'actual killFromRegion, on this'/
+    + getLootSpawnCenterX(lootWidth : Integer): Integer
+
+}
+
+class Hitbox{
+ - width : Integer
+ - height : Integer //Actual Flat
+ - polygon : Polygon
+ - rectangle : Rectangle
+
+ + update() : Void
+}
+
+class PhysicsComponent{
+pixmap, grids
+colliding methods
+}
+PhysicsComponent "1" -- AbstractEntity : has
+class MovableEntity{
+ -speed : Integer
+ + move(dx: Integer, dy : Integer) : Void
+
+ }
+
+/'Static basic entity'/
+class SimpleEntity{
+- image : Image
+- breakable : Boolean
+}
+
+/'Static basic object'/
+class SimpleObject{
+- image : Image
+}
+
+class IAActorEntity{
+- behavior : Behavior
+
+}
+class LootableObject{
+}
+
+class Tool{
+ - durability : Integer
+ - durability_max : Integer
+ - damage : Integer
+ + reduceDurability() : Void
+}
+
+/'Item like tree or rock with a image (static entity)'/
+class BlockEntity{
+- image : Image
+- breakable : Boolean
+- breakableBy : Tool
+- movable : Boolean //by an ActorEntity
+}
+
+/'Item like tree or rock with a continuous loop animation'/
+class AnimatedBlockEntity{
+- animation : Animation
+}
+
+class ToolWieldingEntity{
+}
+
+class Player{
+}
+
+class Boss{
+}
+
+class ActorEntity{
+- currentBeginX : Integer
+- stateComponant : EntityStateMachine
+- damage : Integer
+- hitZone... //TODO comment simplifier ?
++ hit() : Void
++ isInDanger() : Boolean
++ canSee() : Boolean
+
+}
+
+class EntityStateMachine{
+}
+
+
+class Vehicle{
+- driver : ActorEntity
+}
+class Explosion {
+- animation : Animation
+- radius : Integer
+- damage : Integer
+
+}
+
+class  Particle{
+- movement : Vector
+- animation : Animation
+}
+
+class Projectile{
+- damage : Integer
+- movement : Vector
+}
+
+class Region{
+- carte : Texture
+- pixmapCollisions : Pixmap
+- camera : Camera
+- regionWidth
+- regionHeight
+
+
+- objectsOnRegion : List<AbstractObject>/'actual basicObjectsOnRegion'/
+- gridBlocks : Grid
+- gridEntities : Grid
+}
+Region --"1" Camera : has
+class Camera{
+actual..
+cameraMaxX : Integer
+cameraMaxY : Integer
+CAMERA_THRESHOLD_X : Integer
+CAMERA_THRESHOLD_Y : Integer
+
+}
+
+
+AbstractObject -right- Position
+
+AbstractObject <|-- AbstractEntity
+AbstractEntity -left- Hitbox
+AbstractEntity <|-- SimpleEntity
+AbstractEntity <|-- MovableEntity
+MovableEntity <|-- ActorEntity
+ActorEntity <|-- ToolWieldingEntity
+ActorEntity -- EntityStateMachine
+ActorEntity <|-- IAActorEntity
+IAActorEntity <|-- Boss
+
+AbstractEntity <|-right- BlockEntity
+BlockEntity <|-- AnimatedBlockEntity
+AbstractObject <|-left- LootableObject
+LootableObject <|-- Tool
+MovableEntity <|-- Projectile
+
+MovableEntity <|-- Particle
+AbstractEntity <|-- Explosion
+MovableEntity <|-- Vehicle
+AbstractObject <|-right- SimpleObject
+ToolWieldingEntity <|-- Player
+/'Loot can be on inventory or on the ground
+ Tool can be on wheel too
+ BlockEntity (item) can't be on inventory, but can be on the ground)
+ Craft is made with loots. It can craft tool, other loot or block (will be place on ground to be craft)
+ '/
+@enduml

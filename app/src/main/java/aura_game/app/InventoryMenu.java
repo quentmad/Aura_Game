@@ -3,20 +3,20 @@ package aura_game.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import aura_game.app.GameManager.FontManager;
+import aura_game.app.Notifications.NotificationIconText;
+import aura_game.app.Notifications.NotificationManager;
+
+import aura_game.app.rework.Player;
+import aura_game.app.rework.TypeEnum.LootableObjectType;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import aura_game.app.Objects.Loot;
-import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Type.LootType;
 
 /**Inventaire du joueur, singleton */
 public class InventoryMenu extends BasicMenu {
     private static InventoryMenu instance;
-    private PlayableEntity player;
+    private Player player;
 
     //-----------DRAW INVENTORY-------------
     private List<LootStack> content;
@@ -29,7 +29,7 @@ public class InventoryMenu extends BasicMenu {
         
     }
 
-    public void initialize(PlayableEntity player){
+    public void initialize(Player player){
         this.player = player;
     }
 
@@ -46,7 +46,7 @@ public class InventoryMenu extends BasicMenu {
      * @param quantity
      * @return
      */
-    public boolean hasLoot(LootType lootType, int quantity) {
+    public boolean hasLoot(LootableObjectType lootType, int quantity) {
         for (LootStack lootStack : content) {//Si l'id item est déjà présent dans l'inventaire on rajoute une qté
             if (lootStack.getLootType() == lootType) {
                 return lootStack.getQuantity() >= quantity;
@@ -60,7 +60,7 @@ public class InventoryMenu extends BasicMenu {
      * @param lootType
      * @return
      */
-    public int getLootQuantity(LootType lootType) {
+    public int getLootQuantity(LootableObjectType lootType) {
         for (LootStack lootStack : content) {//Si l'id item est déjà présent dans l'inventaire on rajoute une qté
             if (lootStack.getLootType() == lootType) {
                 return lootStack.getQuantity();
@@ -71,27 +71,30 @@ public class InventoryMenu extends BasicMenu {
 
     /**TODO: notif en bas a droite d'ajout
      * Ajoute à l'inventaire la quantité précisé de loot
-     * @param loot loot a rajouter dans l'inventaire (on ajoute son lootType)
+     * @param lootType loot a rajouter dans l'inventaire (on ajoute son lootType)
      * @return True si l'opération s'est effectué avec succès
      */
-    public boolean addToInventory(Loot loot, int quantity){
-        LootType lootTypeCollected = loot.getLootType();
+    public boolean addToInventory(LootableObjectType lootType, int quantity){
+        boolean success = false;
+        //LootableObjectType lootTypeCollected = LootableObjectType.valueOf(loot.getName());
         //TODO:URGENT mettre dans l'enum avec item (bruit quand... bruit quand...)
         for (LootStack lootStack : content) {//Si l'id item est déjà présent dans l'inventaire on rajoute une qté
-            if (lootStack.getLootType() == lootTypeCollected) {
+            if (lootStack.getLootType() == lootType) {
                 lootStack.addQuantity(quantity);
                 getAudioManager().playSound(getAudioManager().getSoundPickedUp(), 0.1f);//TODO:Mauvais endroit
-                return true;
+                success =  true;
+                break;
             }
         }//Sinon on le met dans un nouveau slot
-        if (slotRestantMenu >0) {
-            content.add(new LootStack(lootTypeCollected, quantity));//ou newItem.getQuantity()
+        if (slotRestantMenu >0 && !success) {
+            content.add(new LootStack(lootType, quantity));//ou newItem.getQuantity()
             //System.out.print(slotRestantMenu-1);
             slotRestantMenu--;
             getAudioManager().playSound(getAudioManager().getSoundPickedUp(), 0.1f);//TODO:Mauvais endroit
-            return true;
+            success =  true;
         }
-        return false;
+        if(success) NotificationManager.getInstance().addNotification(new NotificationIconText(lootType.name(), lootType.texture(),quantity, FontManager.getInstance().getFontDescription(), 5, false));
+        return success;
 
     }
 
@@ -99,7 +102,7 @@ public class InventoryMenu extends BasicMenu {
      * Retire à l'inventaire la quantité demandés du loot (lors de craft, drop...)
      * @return le loot dont on a retiré la quantité //TODO utile ? 
      */
-    public boolean removeFromInventory(LootType lootType,int quantity){
+    public boolean removeFromInventory(LootableObjectType lootType, int quantity){
         if (!content.isEmpty()) {
             if(lootType !=null){
                 //TODO:URGENT mettre dans l'enum avec loot (bruit quand... bruit quand...)
@@ -133,11 +136,11 @@ public class InventoryMenu extends BasicMenu {
     public boolean drop(){
         if(!content.isEmpty()){
             if(content.get(slotSelected).getQuantity()>0){
-                LootType lt= content.get(slotSelected).getLootType();
+                LootableObjectType lt= content.get(slotSelected).getLootType();
                 removeFromInventory(lt, 1);
-                int mx = player.getEntityStateMachine().getCurrentOrientation().getX();
-                int my = player.getEntityStateMachine().getCurrentOrientation().getY();
-                LootManager.getInstance().spawnLoot(lt,player.getLootSpawnCenterX(lt.width()), player.getPosC_Y()+lt.offY(),true, LootManager.getInstance().getJumpVec(mx, my, 1) );
+                int mx = player.stateComponant().getCurrentOrientation().getX();
+                int my = player.stateComponant().getCurrentOrientation().getY();
+                LootManager.getInstance().spawnLoot(lt,player.getLootSpawnCenterX(lt.imageWidth()), player.posC().y()+lt.offsetY(),true, LootManager.getInstance().getJumpVec(mx, my, 1) );
                 return true;
             }
         }
@@ -145,10 +148,7 @@ public class InventoryMenu extends BasicMenu {
     }
 
     /**Affiche le menu inventaire et les loots, quand l'inventaire est ouvert  */
-    public void render(SpriteBatch batch, BitmapFont font) {
-            // Configurez la position et le style du texte
-            font.setColor(Color.WHITE);
-            font.getData().setScale(1.0f);
+    public void render(SpriteBatch batch) {
             // Affichez le menu à l'écran
             menuSprite.draw(batch);
             // Parcours du tableau de loots
@@ -163,9 +163,9 @@ public class InventoryMenu extends BasicMenu {
                 // Dessin de l'image du loot à sa position                                      //TODO s'affiche petit                                                                          
                 batch.draw(lootStack.getTexture(), xy.getLeft() + marge, xy.getRight() + marge, lootWidth - (2*marge), lootHeight  - (2*marge));
                 // Affichez le nombre de loots dans le slot
-                font.draw(batch, "x"+ lootStack.getQuantity(), xy.getLeft() +10, xy.getRight()+15);
+                FontManager.getInstance().getFontDescription().draw(batch, "x"+ lootStack.getQuantity(), xy.getLeft() +10, xy.getRight()+15);
             }
-            drawTextCenterIn("INVENTORY",600,500,2.0f,batch,font);
+            drawTextCenterIn("INVENTORY",640,600,2.0f,batch,FontManager.getInstance().getFontMenuTitle());
 
 
     }

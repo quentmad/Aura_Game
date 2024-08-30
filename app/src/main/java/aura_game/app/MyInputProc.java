@@ -5,13 +5,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import aura_game.app.rework.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
 import aura_game.app.GameManager.Game;
-import aura_game.app.Objects.PlayableEntity;
-
 /**
  * Singleton garantissant qu'il n'y ait qu'une seule instance de MyInputProc dans l'application
  */
@@ -25,7 +24,9 @@ public class MyInputProc implements InputProcessor {
             Input.Keys.RIGHT,
             Input.Keys.UP,
             Input.Keys.DOWN,
-            Input.Keys.E,
+            Input.Keys.I,//Inventory
+            Input.Keys.W,//Left menu
+            Input.Keys.X,//Right menu
             0, // Slash
             Input.Keys.L, // Spellcast
             Input.Keys.P, // Thrust
@@ -33,7 +34,6 @@ public class MyInputProc implements InputProcessor {
             Input.Keys.SPACE, // Jump
             Input.Keys.D,//run (if walking)
             Input.Keys.S,//cheat give
-            Input.Keys.C,//craft menu,
             Input.Keys.R,//wheel ranged
             Input.Keys.M,//wheel melee
             Input.Keys.ENTER,//validate in menu
@@ -41,7 +41,8 @@ public class MyInputProc implements InputProcessor {
             Input.Keys.Z,//select ranged tool
             Input.Keys.BACKSPACE,//drop item from inventory
             Input.Keys.U,//carry (if walking)
-            Input.Keys.Y //push (if walking)
+            Input.Keys.Y, //push (if walking)
+            Input.Keys.H//help buttons
 
     );
     /**Liste des keycode actuellement pressée*/
@@ -56,7 +57,7 @@ public class MyInputProc implements InputProcessor {
     private boolean onGoingAutonomeAction;
 
     /**Instance unique du player présent dans GameManager*/
-    private PlayableEntity player;
+    private Player player;
 
     private MyInputProc() {
         // Constructeur privé pour empêcher l'instanciation directe
@@ -108,7 +109,7 @@ public class MyInputProc implements InputProcessor {
                 handleContinuousAction(keycode);
                 //On effectue l'action associée à la touche enfoncée
                 Game.getInstance().getInputHandler().performAction(keycode);
-                onGoingAutonomeAction = player.getEntityStateMachine().getCurrentState().isCurrentActionAutonome();
+                onGoingAutonomeAction = player.stateComponant().getCurrentState().isCurrentActionAutonome();
                 //On retourne true pour indiquer que la touche a été enfoncée et l'action en question effectué;
                 return true;
             }
@@ -181,7 +182,7 @@ public class MyInputProc implements InputProcessor {
         //Si le joueur a un outil en main
         //boolean tool = !player.getToolManager().getCurrentEquippedToolName().equals("");
         //On change l'action du joueur à "Idle"
-        player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation());
+        player.stateComponant().changeAction("Idle", player.stateComponant().getCurrentOrientation());
     }
 
     private void handleContinuousAction(int keycode) {
@@ -227,14 +228,17 @@ public class MyInputProc implements InputProcessor {
         //boolean tool = !player.getToolManager().getCurrentEquippedToolName().equals("");
         //Si y'a plus rien comme action de mouvement dont la touche est enfoncé on le met a null
         if(activeWalkingOrientations.isEmpty()){
-            player.getEntityStateMachine().changeAction("Idle", player.getEntityStateMachine().getCurrentOrientation());
+            player.stateComponant().changeAction("Idle", player.stateComponant().getCurrentOrientation());
         }else{//Sinon on met la derniere action (forcement walk) ajouté dans activeActions comme action actuelle
-            player.getEntityStateMachine().changeAction("Walk", activeWalkingOrientations.get(activeWalkingOrientations.size()-1));
+            player.stateComponant().changeAction("Walk", activeWalkingOrientations.get(activeWalkingOrientations.size()-1));
         }
         onGoingAutonomeAction = false;
     }
 
 
+    public List<Integer> getKeysPressed() {
+        return keysPressed;
+    }
 
 
     public boolean keyTyped(char keycode) {

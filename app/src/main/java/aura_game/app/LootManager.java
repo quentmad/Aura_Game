@@ -1,18 +1,20 @@
 package aura_game.app;
 
 import java.util.ArrayList;
+
+import aura_game.app.GameManager.Game;
+import aura_game.app.rework.LootableObject;
+import aura_game.app.rework.Tool;
+import aura_game.app.rework.TypeEnum.LootableObjectType;
+import aura_game.app.rework.TypeEnum.ToolType;
 import com.badlogic.gdx.math.Vector2;
 
-import aura_game.app.Objects.Loot;
-import aura_game.app.Objects.Tool.Tool;
-import aura_game.app.Type.LootType;
-import aura_game.app.Type.ToolType;
-/** 
+/**
  * Classe qui gère tous les objets de butin dans le jeu. 
  */
 public class LootManager {
     private static LootManager instance;
-    private ArrayList<Loot> loots;
+    private ArrayList<LootableObject> loots;
 
     private LootManager() {
         loots = new ArrayList<>();//TODO mettre dans region
@@ -35,7 +37,7 @@ public class LootManager {
      * @param loot L'objet de butin à supprimer.
      * @return Vrai si l'objet de butin a été supprimé avec succès, sinon faux.
      */
-    public boolean remove(Loot loot){
+    public boolean remove(LootableObject loot){
         return loots.remove(loot);
     }
 
@@ -46,11 +48,11 @@ public class LootManager {
     public void update(float dt) {
         //TODO: changer methode ? (pas boucle a chaque tour...)
         for (int i =0; i< loots.size();i++) {
-            if (loots.get(i).isCollected()){
+            if (!loots.get(i).isOnGround()){
                 loots.remove(i);
             }
         }
-        for (Loot l : loots) {
+        for (LootableObject l : loots) {
             l.update(dt);
         }
     }
@@ -63,9 +65,10 @@ public class LootManager {
      * @param bounce Indique si l'objet de butin doit rebondir.
      * @param dir La direction de l'objet de butin.
      */
-    public void spawnLoot(LootType lt, int x, int y, boolean bounce, Vector2 dir) {
-        //System.out.println("new "+ lt.getName());
-        Loot loot = new Loot(lt,x, y, bounce, dir,false);
+    public void spawnLoot(LootableObjectType lt, int x, int y, boolean bounce, Vector2 dir) {
+
+        LootableObject loot = new LootableObject(lt,x, y, bounce, dir,true);
+        Game.getInstance().getRegion().interactionComponent().abstractObjectsOnGround().add(loot);
         loots.add(loot);
     }
 
@@ -81,7 +84,7 @@ public class LootManager {
      */
     public void spawnTool(ToolType tl, int x, int y, boolean bounce, Vector2 dir, float durability){
         //System.out.println("new "+ lt.getName());
-        Tool tool = new Tool(tl,x, y, bounce, dir,false);
+        Tool tool = new Tool(tl,x, y, bounce, dir,true);
         tool.setSolidity(durability);
         loots.add(tool);
     }

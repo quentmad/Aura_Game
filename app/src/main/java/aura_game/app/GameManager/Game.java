@@ -1,10 +1,12 @@
 package aura_game.app.GameManager;
 
 import aura_game.app.*;
-import aura_game.app.Craft.CraftManager;
-import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Type.EntityType;
+import aura_game.app.Craft.CraftLootManager;
+import aura_game.app.CraftableBlock.CraftBlockManager;
+import aura_game.app.Notifications.NotificationManager;
 import aura_game.app.Weather.Sky;
+import aura_game.app.rework.*;
+import aura_game.app.rework.TypeEnum.ActorEntityType;
 
 /**
  * Classe qui orchestre la gestion du jeu.
@@ -16,26 +18,40 @@ public class Game {
     private LoadManager loadManager;
     private UpdateManager updateManager;
     private RenderManager renderManager;
+    private NotificationManager notificationManager;
 
+    //TODO : regrouper les menus dans commonMenuInfo ??
     private InventoryMenu playerInventory;
-    private CraftingMenu crafting;
+    private CommonInfoMenu commonInfoMenu;
+    private CraftingLootMenu craftingLootMenu;
+    private CraftingBlockMenu craftingBlockMenu;
+    private CapabilitiesMenu capabilitiesMenu;
+    private MapMenu mapMenu;
+    private StoryMenu storyMenu;
     private WheelManager wheelManager;
     private Region region; 
-    private PlayableEntity player;
+    private Player player;
     private Sky sky ;
     private InputHandler inputHandler;
-    private MyInputProc inputProcessor; 
-    private boolean isGameStarted;
+    private MyInputProc inputProcessor;
+    private PhysicsMovableComponent physicsMovableComponent;
+    private PhysicsComponent physicsComponent;
+
+
+    private static boolean isGameStarted;
     //private AudioManager audioManager;
     /**Largeur de l'écran*/
-    private final int screenWidth;
+    public static final int screenWidth = 1280;
     /**Hauteur de l'écran*/
-    private final int screenHeight;
+    public static final int screenHeight = 720;
+
+    /**Largeur de la région actuelle*/
+    public static int actualRegionHeight = 2880;//Hauteur L  'init autre part ??
+    /**Hauteur de la région actuelle*/
+    public static int actualRegionWidth = 3840;//Largeur
 
     private Game(){
         isGameStarted = false;
-        this.screenWidth = 1200;
-        this.screenHeight = 600;
     }
 
     /**
@@ -57,13 +73,22 @@ public class Game {
     public void start() {
         playerInventory = InventoryMenu.getInstance();
         wheelManager = WheelManager.getInstance();//PAS besoin de init car pas de dépendances
-        crafting = CraftingMenu.getInstance();
+        craftingLootMenu = CraftingLootMenu.getInstance();
+        craftingBlockMenu = CraftingBlockMenu.getInstance();
+        capabilitiesMenu = CapabilitiesMenu.getInstance();
+        mapMenu = MapMenu.getInstance();
+        storyMenu = StoryMenu.getInstance();
         region = new Region("map_AuraDark2", "mappix_CollisionX2");
-        player = new PlayableEntity(EntityType.player, 3);//4
         sky = new Sky();
+        physicsMovableComponent = region.physicsMovableComponent();
+        physicsComponent = region.physicsMovableComponent().get();
+        player = new Player(ActorEntityType.player,10,10);//4
+        commonInfoMenu = CommonInfoMenu.getInstance();
         inputHandler = InputHandler.getInstance();
         inputProcessor  = MyInputProc.getInstance();
-        CraftManager craftManager = new CraftManager();
+        notificationManager = NotificationManager.getInstance();
+        CraftLootManager craftLootManager = new CraftLootManager();
+        CraftBlockManager craftBlockManager = new CraftBlockManager();
 
         this.loadManager = new LoadManager();
         this.updateManager = new UpdateManager();
@@ -71,13 +96,15 @@ public class Game {
 
         // Injection de dépendances
         this.playerInventory.initialize(player);
-        this.crafting.initialize(craftManager, playerInventory);
-        this.loadManager.initialize(updateManager, region, player, playerInventory, inputHandler,crafting, wheelManager);
-        this.updateManager.initialize(region, player, wheelManager);
-        this.renderManager.initialize(region, player, playerInventory,crafting, sky, updateManager, wheelManager);
-        player.getEntityStateMachine().changeAction("Idle", Orientation.SOUTH);//init
-
-        
+        this.craftingLootMenu.initialize(craftLootManager, playerInventory);
+        this.craftingBlockMenu.initialize(craftBlockManager, playerInventory);
+        this.loadManager.initialize(updateManager, region, player, playerInventory, inputHandler, craftingLootMenu, craftingBlockMenu,craftBlockManager, wheelManager, physicsMovableComponent, physicsComponent);
+        this.updateManager.initialize(region, player, wheelManager, commonInfoMenu, notificationManager);
+        this.renderManager.initialize(region, player, playerInventory, craftingLootMenu, craftingBlockMenu,capabilitiesMenu,mapMenu,storyMenu, commonInfoMenu, craftBlockManager,notificationManager,sky, updateManager, wheelManager);
+        this.commonInfoMenu.initialize(player);
+        this.player.initialize(craftBlockManager);
+        player.stateComponant().changeAction("Idle", Orientation.SOUTH);//init
+        //test();
 
     }
 
@@ -89,15 +116,23 @@ public class Game {
         return wheelManager;
     }
 
-    public CraftingMenu getCrafting(){
-        return crafting;
+    public CraftingLootMenu getCraftingLootMenu(){
+        return craftingLootMenu;
+    }
+
+    public CraftingBlockMenu getCraftingBlockMenu(){
+        return craftingBlockMenu;
+    }
+
+    public CommonInfoMenu getCommonMenuManager(){
+        return commonInfoMenu;
     }
 
     public Region getRegion(){
         return region;
     }
     
-    public PlayableEntity getPlayer(){
+    public Player getPlayer(){
         return player;
     }
 
@@ -134,12 +169,12 @@ public class Game {
         isGameStarted = v;
     }
 
-    public int getScreenWidth(){
-        return screenWidth;
+    public PhysicsMovableComponent getPhysicsMovableComponent(){
+        return physicsMovableComponent;
     }
 
-    public int getScreenHeight(){
-        return screenHeight;
+    public PhysicsComponent getPhysicsComponent(){
+        return physicsComponent;
     }
 
 }

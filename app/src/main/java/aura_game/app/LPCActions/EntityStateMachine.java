@@ -1,8 +1,10 @@
 package aura_game.app.LPCActions;
 
 import aura_game.app.GameManager.Game;
-import aura_game.app.Objects.Entity;
 import aura_game.app.Orientation;
+import aura_game.app.rework.AbstractEntity;
+import aura_game.app.rework.ActorEntity;
+import aura_game.app.rework.Point;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -88,7 +90,7 @@ public class EntityStateMachine {
             }else{//On change d'action
                 changeStateAction(action, orientation);
             }
-            Game.getInstance().getPlayer().getToolManager().updateEquippedToolInfo();//Met à jour les informations de l'outil actuellement équipé car l'action ou la direction de l'entité change
+            Game.getInstance().getPlayer().toolManager().updateEquippedToolInfo();//Met à jour les informations de l'outil actuellement équipé car l'action ou la direction de l'entité change
 
         }
     }
@@ -104,8 +106,8 @@ public class EntityStateMachine {
         if(StringUtils.isNotEmpty(action) && orientation != null){
             this.currentOrientation = orientation;
 
-            Pair<Integer,Integer> prev = currentState.getMovementOf(currentOrientation.getDirection());
-            int val = Math.abs(prev.getLeft() + prev.getRight());
+            Point prev = currentState.getMovementOf(currentOrientation.getDirection());
+            int val = Math.abs(prev.x() + prev.y());
 
             this.setCurrentState(action);
             currentState.resetInfo(val, currentOrientation.getDirection());
@@ -116,8 +118,8 @@ public class EntityStateMachine {
 
 
     /**Exécute l'action associée à l'état actuel*/
-    public void executeCurrentAction(Entity entity) {
-        if (currentState != null && currentState != null) {
+    public void executeCurrentAction(ActorEntity entity) {
+        if (currentState != null) {
             currentState.act(entity);
         } else {
             System.out.println("No current state set or action not defined.");

@@ -1,10 +1,11 @@
 package aura_game.app.LPCActions;
 
 import aura_game.app.GameManager.Game;
-import aura_game.app.Objects.Entity;
-import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Objects.Tool.RangedTool;
-import aura_game.app.Objects.Tool.Tool;
+import aura_game.app.rework.ActorEntity;
+import aura_game.app.rework.Player;
+import aura_game.app.rework.Point;
+import aura_game.app.rework.Tool;
+import aura_game.app.rework.Tools.RangedTool;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ShootState extends ActionState{
@@ -15,14 +16,14 @@ public class ShootState extends ActionState{
     }
 
     /** Static action one loop*/
-    public void act(Entity entity) {
+    public void act(ActorEntity entity) {
         boolean finish = updateSpriteXWithDuration();
         // Vérifiez si l'animation est terminée
         if(finish) {
-            if (entity instanceof PlayableEntity) {
-                Tool equippedTool = ((PlayableEntity) entity).getToolManager().getCurrentEquippedTool();
+            if (entity instanceof Player) {
+                Tool equippedTool = ((Player) entity).toolManager().getCurrentEquippedTool();
                 if (equippedTool instanceof RangedTool) {
-                    ((RangedTool) equippedTool).shoot((PlayableEntity) entity, null);
+                    ((RangedTool) equippedTool).shoot((Player) entity, null);
                 }
             }
             Game.getInstance().getMyInputProc().finishAction();
@@ -30,8 +31,8 @@ public class ShootState extends ActionState{
     }
 
     @Override
-    public Pair<Integer, Integer> getMovementOf(String direction) {
-        return Pair.of(0,0);
+    public Point getMovementOf(String direction) {
+        return new Point(0,0);
     }
 
 }

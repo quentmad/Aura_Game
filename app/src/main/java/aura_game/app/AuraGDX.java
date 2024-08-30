@@ -58,7 +58,7 @@ public class AuraGDX extends ApplicationAdapter {
         //fpsCounter.update();
         renderManager.render();
         if(frameCount%2==0){
-            updateManager.update();
+            updateManager.update(0.3f);
         }
         frameCount++;
     }

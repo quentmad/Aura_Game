@@ -1,12 +1,10 @@
 package aura_game.app.GameManager;
 
-import aura_game.app.Grid;
+import aura_game.app.CraftingBlockMenu;
 import aura_game.app.LootManager;
-import aura_game.app.Region;
+import aura_game.app.Notifications.NotificationManager;
 import aura_game.app.WheelManager;
-import aura_game.app.Objects.BasicObject;
-import aura_game.app.Objects.IAEntity;
-import aura_game.app.Objects.PlayableEntity;
+import aura_game.app.rework.*;
 
 
 //TODO: creer une classe SaveManager pour gérer la sauvegarde et le chargement du jeu
@@ -16,11 +14,11 @@ import aura_game.app.Objects.PlayableEntity;
 public class UpdateManager {
 
     private Region region;
-    private PlayableEntity player;
+    private Player player;
     private String activeMenu;
+    private CommonInfoMenu commonInfoMenu;
     private WheelManager wheelManager;
-    //RETIRER
-    private final Grid gridTest = new Grid(500);
+    private NotificationManager notificationManager;
 
     public UpdateManager(){
         this.activeMenu = "game";
@@ -40,55 +38,76 @@ public class UpdateManager {
      * @param region La région du jeu pour la mise à jour.
      * @param player Le joueur jouable de la partie.
      */
-    public void initialize(Region region, PlayableEntity player, WheelManager wheelManager) {
+    public void initialize(Region region, Player player, WheelManager wheelManager,CommonInfoMenu commonInfoMenu, NotificationManager notificationManager) {
         this.region = region;
         this.player = player;
         this.wheelManager = wheelManager;
+        this.commonInfoMenu = commonInfoMenu;
+        this.notificationManager = notificationManager;
 
     }
     /**Mises à jour nécessaires */
-    public void update() {
+    public void update(float dt) {
 
-        player.getEntityStateMachine().executeCurrentAction(player);
-        updateEntities(); // Mettre à jour les behavior et positions des entités du jeu
+        player.stateComponant().executeCurrentAction(player);
+        updateEntities();
+        notificationManager.update(0.1f);
+        // Mettre à jour les behavior et positions des entités du jeu
         // Autres mises à jour nécessaires
+        region.interactionComponent().update(dt);
         LootManager.getInstance().update(2);
+        //Tri de la liste ObjectsOnMap
+        if(region.interactionComponent().abstractObjectsOnGround().needSort()) {
+            region.interactionComponent().abstractObjectsOnGround().sort();
+            System.out.println("est trié : " + region.interactionComponent().abstractObjectsOnGround().isSorted());
+            //Liste triée: nouveau tri pas nécessaire tant que de nouveaux mouvements d'entités n'auront pas lieu
+            region.interactionComponent().abstractObjectsOnGround().setNeedSort(false);
+        }
     }
 
     /**
      * Mettre à jour les entités du jeu (mouvement, animation, etc.)
      */
     private void updateEntities() {
-        for(BasicObject obj : region.getBasicObjectsOnRegion()) {
-            if(obj instanceof IAEntity){
-            ((IAEntity) obj).update(0.1f);
+        for(AbstractObject obj : region.interactionComponent().abstractObjectsOnGround().objects()) {
+            if(obj instanceof IAActorEntity){
+            ((IAActorEntity) obj).update(0.1f);
             }
-        }
-        if(region.getBasicObjectsOnRegionNeedSort()){
-            region.getBasicObjectsOnRegion().sort((obj1, obj2) -> {
-                float zProf1 = obj1.getZProf();
-                float zProf2 = obj2.getZProf();
-
-                if (zProf1 > zProf2) {
-                    return -1; // Tri décroissant
-                } else if (zProf1 < zProf2) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            });
-            //Liste triée: nouveau tri pas nécessaire tant que de nouveaux mouvements d'entités n'auront pas lieu
-            region.setBasicObjectsOnRegionNeedSort(false);
         }
 
     }
 
-    public void invertActiveMenu(String menu){
-        if(menu.equals(activeMenu)){
+    /**
+     * Inverse le menu actif entre le menu de jeu et le menu en parametre (ouvre le menu en parametre)
+     */
+    public void invertActiveMenu(CommonInfoMenu.Menu menu){
+        if(menu.name().equals(activeMenu)){
             activeMenu = "game";
+            commonInfoMenu.setCurrentMenu(null);//TEST
+
         }else{
-            activeMenu = menu;
+            activeMenu = menu.name();
+            commonInfoMenu.setCurrentMenu(menu);//TEST TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
         }
+    }
+
+    /**Pour ceux qui ne sont pas dans MENU, a changer...*/
+    public void invertActiveMenu(String othermenu){
+        if(othermenu.equals(activeMenu)){
+            activeMenu = "game";
+            commonInfoMenu.setCurrentMenu(null);//TEST
+
+        }else{
+            activeMenu = othermenu;
+            commonInfoMenu.setCurrentMenu(null);//TEST TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+        }
+    }
+
+
+
+    public void setActiveMenu(String menu){
+        if(menu.equals("placementBlock"))commonInfoMenu.setCurrentMenu(null);
+        activeMenu = menu;
     }
 
     /**
@@ -97,6 +116,7 @@ public class UpdateManager {
      * Appel la méthode {@code setCurrentOpenWheel} de {@code wheelManager}
      */
     public void invertCurrentOpenMenuWheel(String wheel){
+        commonInfoMenu.setCurrentMenu(null);
         if(activeMenu.equals("wheel") ){
             activeMenu = "game";
             wheelManager.setCurrentOpenWheel("");

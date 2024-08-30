@@ -1,7 +1,7 @@
 package aura_game.app.LPCActions;
 
-import aura_game.app.GameManager.Game;
-import aura_game.app.Objects.Entity;
+import aura_game.app.rework.ActorEntity;
+import aura_game.app.rework.Point;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class SitState extends ActionState{
@@ -13,13 +13,13 @@ public class SitState extends ActionState{
 
     /** ne fait rien car pas vraiment une action*/
     @Override
-    public void act(Entity entity) {
+    public void act(ActorEntity entity) {
 
     }
 
     @Override
-    public Pair<Integer, Integer> getMovementOf(String direction) {
-        return Pair.of(0,0);
+    public Point getMovementOf(String direction) {
+        return new Point(0,0);
     }
 
 

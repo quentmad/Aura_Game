@@ -22,7 +22,7 @@ import aura_game.app.Objects.CollidableObject;
  * Classe de test pour la classe Grid.
  */
 public class GridTest {
-    private Grid grid;
+    private Grid grid2;
     private CollidableObject objBasic;
     @BeforeEach
     public void setUp() {
@@ -47,7 +47,7 @@ public class GridTest {
                 throw new UnsupportedOperationException("Unimplemented method 'resume'");
             }
         });
-        grid = new Grid(10);
+        grid2 = new Grid(10);
         objBasic = new CollidableObject("ObjBasic", new Rectangle(5, 5, 10, 10), 0, 0, 0, null, 0, 0, null);
     }
 
@@ -62,7 +62,7 @@ public class GridTest {
         expected.add(Pair.of(0, 1));
         expected.add(Pair.of(1, 0));
         expected.add(Pair.of(1, 1));
-        List<Pair<Integer, Integer>> result = grid.getCaseFor(rect);
+        List<Pair<Integer, Integer>> result = grid2.getCaseFor(rect);
         assertEquals(expected, result);
     }
 
@@ -81,7 +81,7 @@ public class GridTest {
         expected.add(Pair.of(1, 0));
         expected.add(Pair.of(1, 1));
         expected.add(Pair.of(1, 2));
-        List<Pair<Integer, Integer>> result = grid.getNeighborsCasesFor(gridIndex);
+        List<Pair<Integer, Integer>> result = grid2.getNeighborsCasesFor(gridIndex);
         assertEquals(expected, result);
     }
 
@@ -91,13 +91,13 @@ public class GridTest {
         //CollidableObject obj1 = new CollidableObject("Obj1", new Rectangle(5, 5, 10, 10), 0, 0, 0, null, 0, 0, null);
         CollidableObject obj2 = new CollidableObject("Obj2", new Rectangle(25, 25, 10, 10), 0, 0, 0, null, 0, 0, null);
         CollidableObject obj3 = new CollidableObject("Obj3", new Rectangle(15, 15, 10, 10), 0, 0, 0, null, 0, 0, null);
-        grid.add(objBasic, objBasic.getListIndexGrid());
-        grid.add(obj2,obj2.getListIndexGrid());
-        grid.add(obj3, obj3.getListIndexGrid());
+        grid2.add(objBasic, objBasic.getListIndexGrid());
+        grid2.add(obj2,obj2.getListIndexGrid());
+        grid2.add(obj3, obj3.getListIndexGrid());
         ListCollidableObject expected = new ListCollidableObject();
         expected.add(objBasic);
         expected.add(obj3);
-        ListCollidableObject result = grid.getCollidingObjectsWithoutItself(zoneCollision);
+        ListCollidableObject result = grid2.getCollidingObjects(zoneCollision);
         assertEquals(expected, result);
     }
 
@@ -106,8 +106,8 @@ public class GridTest {
         Rectangle zone = new Rectangle(0, 0, 20, 20);
         //CollidableObject obj1 = new CollidableObject("Obj1", new Rectangle(5, 5, 10, 10), 0, 0, 0, null, 0, 0, null);
         CollidableObject obj2 = new CollidableObject("Obj2", new Rectangle(25, 25, 10, 10), 0, 0, 0, null, 0, 0, null);
-        boolean result1 = grid.isInZone(zone, objBasic);
-        boolean result2 = grid.isInZone(zone, obj2);
+        boolean result1 = grid2.isInZone(zone, objBasic);
+        boolean result2 = grid2.isInZone(zone, obj2);
         assertTrue(result1);
         assertFalse(result2);
     }
@@ -118,11 +118,11 @@ public class GridTest {
         CollidableObject obj1 = new CollidableObject("Obj1", new Rectangle(20, 20, 10, 10), 0, 0, 0, null, 0, 0, null);
         CollidableObject obj2 = new CollidableObject("Obj2", new Rectangle(30, 30, 10, 10), 0, 0, 0, null, 0, 0, null);
         CollidableObject obj3 = new CollidableObject("Obj3", new Rectangle(15, 15, 10, 10), 0, 0, 0, null, 0, 0, null);
-        grid.add(obj1,obj1.getListIndexGrid());
-        grid.add(obj2,obj2.getListIndexGrid());
-        grid.add(obj2,obj3.getListIndexGrid());
+        grid2.add(obj1,obj1.getListIndexGrid());
+        grid2.add(obj2,obj2.getListIndexGrid());
+        grid2.add(obj2,obj3.getListIndexGrid());
         CollidableObject expected = obj3;
-        CollidableObject result = grid.getClosestObjectFrom(objBasic);
+        CollidableObject result = grid2.getClosestObjectFrom(objBasic);
         assertEquals(expected, result);
     }
 
@@ -137,7 +137,7 @@ public class GridTest {
         potentialObj.add(obj2);
         potentialObj.add(obj3);
         Pair<CollidableObject, Double> expected = Pair.of(obj3, 10.0);
-        Pair<CollidableObject, Double> result = grid.closestObject(potentialObj, objBasic);
+        Pair<CollidableObject, Double> result = grid2.closestObject(potentialObj, objBasic);
         assertEquals(expected, result);
     }
 
@@ -146,7 +146,7 @@ public class GridTest {
         Rectangle rect1 = new Rectangle(0, 0, 10, 10);
         Rectangle rect2 = new Rectangle(20, 20, 10, 10);
         double expected = 28.284271247461902;
-        double result = grid.distanceBetween(rect1, rect2);
+        double result = grid2.distanceBetween(rect1, rect2);
         assertEquals(expected, result, 0.0001);
     }
 
@@ -154,9 +154,9 @@ public class GridTest {
     @Test
     public void testUpdate() {
         //CollidableObject obj = new CollidableObject("Obj", new Rectangle(5, 5, 10, 10), 0, 0, 0, null, 0, 0, null);
-        grid.add(objBasic, objBasic.getListIndexGrid());
-        boolean result1 = grid.update(objBasic);
-        boolean result2 = grid.update(objBasic);
+        grid2.add(objBasic, objBasic.getListIndexGrid());
+        boolean result1 = grid2.update(objBasic);
+        boolean result2 = grid2.update(objBasic);
         assertTrue(result1);
         assertFalse(result2);
     }
@@ -170,11 +170,11 @@ public class GridTest {
         List<Pair<Integer, Integer>> listIndex = new ArrayList<>();
         listIndex.add(Pair.of(0, 0));
         listIndex.add(Pair.of(0, 1));
-        grid.add(objBasic, listIndex);
+        grid2.add(objBasic, listIndex);
         ListCollidableObject expected = new ListCollidableObject();
         expected.add(objBasic);
 
-        assertEquals(expected, grid.getCollidingObjectsWithoutItself(objBasic.getHitboxFlat()));
+        assertEquals(expected, grid2.getCollidingObjects(objBasic.getHitboxFlat(), objBasic));
     }
 
     /**
@@ -187,10 +187,10 @@ public class GridTest {
         List<Pair<Integer, Integer>> listIndex = new ArrayList<>();
         listIndex.add(Pair.of(0, 0)); 
         listIndex.add(Pair.of(0, 1)); 
-        grid.add(objBasic, objBasic.getListIndexGrid()); 
-        grid.remove(objBasic, listIndex); 
+        grid2.add(objBasic, objBasic.getListIndexGrid());
+        grid2.remove(objBasic, listIndex);
         ListCollidableObject expected = new ListCollidableObject(); 
-        assertEquals(expected, grid.getCollidingObjectsWithoutItself(objBasic.getHitboxFlat()));
+        assertEquals(expected, grid2.getCollidingObjects(objBasic.getHitboxFlat()));
     } 
 
 

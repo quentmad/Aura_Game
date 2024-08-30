@@ -13,6 +13,9 @@ import aura_game.app.GameManager.AudioManager;
 
 import java.util.Objects;
 
+import static aura_game.app.GameManager.Game.screenHeight;
+import static aura_game.app.GameManager.Game.screenWidth;
+
 /**
  * Utile pour gérer l'affichage des points commun entre le menu de "inventory" et crafting
  */
@@ -39,11 +42,11 @@ public abstract class BasicMenu {
     private AudioManager audioManager;    
 
     
-
+/*
     public BasicMenu(String nameMenu, String nameSelectedSlot, int lootWidth, int lootHeight, int startSlotX,
             int startSlotY, int padding, int numColumns, int slotSelected, int marge, int nbSlotsMenu) {
         menuSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/"+nameMenu+".png")));
-        menuSprite.setCenter(600, 300);
+        menuSprite.setCenter(screenWidth/2, screenHeight/2);
         this.selectedSlotSprite = new Sprite (new Texture(Gdx.files.internal("src/main/resources/"+nameSelectedSlot+".png")));
         this.lootWidth = lootWidth;
         this.lootHeight = lootHeight;
@@ -56,20 +59,20 @@ public abstract class BasicMenu {
         this.nbSlotsMenu = nbSlotsMenu;
         this.slotRestantMenu = nbSlotsMenu;
     }
-
+*/
 
     public BasicMenu(String colorMenu) {
         //Textures et sprites:
         // Initialisez le sprite du menu avec la texture chargée
-        menuSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/MENU_"+colorMenu+".png")));
-        menuSprite.setCenter(600, 300);
+        menuSprite = new Sprite(new Texture(Gdx.files.internal("src/main/resources/MENU_"+colorMenu+"_w_head_resized.png")));
+        menuSprite.setCenter(screenWidth/2, screenHeight/2);
         // Initialisez le sprite du slot sélectionné avec la texture chargée
         selectedSlotSprite = new Sprite (new Texture(Gdx.files.internal("src/main/resources/selectedSlot.png")));
         //Valeurs:
         this.lootWidth = 80;
         this.lootHeight = 80;
-        this.startSlotX = 180;// Position de départ de la première image de loot
-        this.startSlotY = 371;
+        this.startSlotX = 180 + 40;// Position de départ de la première image de loot
+        this.startSlotY = 371 + 60;
         this.padding = 10;
         this.numColumns = 6;
         this.slotSelected = 0;

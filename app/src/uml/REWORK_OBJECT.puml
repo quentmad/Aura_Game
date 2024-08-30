@@ -1,0 +1,87 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+'Actual BasicObject
+abstract class Entity{
+     - name : String
+     - posC_X : Integer
+     - posC_Y : Integer
+     - imageWidth : Integer
+     - imageHeight : Integer
+     - contentHeight : Integer
+     - contentWidth : Integer
+     - offY : Integer
+}
+
+abstract class CollidableEntity{
+    - durability_life : Integer
+     - hitbox : Hitbox
+     - stature : Integer
+     - movable : Boolean
+     - z : Integer
+}
+
+'Entity that can move by itself, actual Entity
+class DynamicEntity{
+- stateComponant : EntityStateMachine
++ hit()
++ move()
++ move(CollidableEntity entity): Boolean
+}
+
+class Tool{
+- durability : Integer
+- damage : Integer
+}
+
+class Loot{
+
+}
+
+
+class Hitbox{
+ - width : Integer
+ - height : Integer //Actual Flat
+ - polygon : Polygon
+ - rectangle : Rectangle
+
+ + updateHitbox() : Void
+}
+
+Hitbox -left- CollidableEntity: has
+
+Entity <|-- CollidableEntity
+CollidableEntity <|-- DynamicEntity
+CollidableEntity <|-- Loot
+CollidableEntity <|-- Tool
+
+DynamicEntity <|-- Player
+
+
+@enduml
+- Certains items ont une animation, d'autres non
+-
+- DeathLoot
+-  si projectile est un collidableEntity il ne peut pas etre hurt pour autant
+
+Liste d'entités possibles :
+- Player
+- Enemy
+- Projectile
+- Boomerang
+- Arrow
+- Bomb
+- Sort
+- Loot
+- Tool
+- Chest
+- Boss
+- NPC
+- Vehicule
+- Particule
+- InnerEntity
+
+Tous les loots sont dans une liste tout comme enemies/items.
+-> Pour ramasser un item/loot, on regarde l'hitbox du joueur et on regarde si il y a collision avec un loot.
+
+

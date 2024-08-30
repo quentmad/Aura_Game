@@ -1,10 +1,9 @@
 package aura_game.app;
 
+import aura_game.app.rework.Player;
+import aura_game.app.rework.Tool;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import aura_game.app.Objects.PlayableEntity;
-import aura_game.app.Objects.Tool.Tool;
 
 /**Class singleton regroupant tous les wheels différents (ranged, melee...) */
 public class WheelManager {
@@ -77,10 +76,10 @@ public class WheelManager {
      * Defini l'arme actuelle (le nom) de cette categorie du joueur à l'arme du selected slotIndex
      * @param player
      */
-    public void setActualTool(PlayableEntity player){
+    public void setActualTool(Player player){
         if (currentOpenWheel != null) {
             currentOpenWheel.setActualToolForCategory(player);
-            if(player.getToolManager().getCurrentEquippedToolCategory().equals(currentOpenWheel.getNAME())) {//Si c'est la catégorie actuelle
+            if(player.toolManager().getCurrentEquippedToolCategory().equals(currentOpenWheel.getNAME())) {//Si c'est la catégorie actuelle
                 currentOpenWheel.setActualEquippedToolToFavoriteOfThisWheel(player);
             }
 
@@ -127,9 +126,9 @@ public class WheelManager {
 
 
     /**Appel la méthode du {@code activeWheel}*/
-    public void render(SpriteBatch batch, BitmapFont font) {
+    public void render(SpriteBatch batch) {
         if (currentOpenWheel != null) {
-            currentOpenWheel.render(batch, font);
+            currentOpenWheel.render(batch);
         }  
     }  
 

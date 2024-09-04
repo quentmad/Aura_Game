@@ -1,6 +1,7 @@
 package aura_game.app;
 
 import aura_game.app.GameManager.Game;
+import aura_game.app.GameManager.TextureManager;
 import aura_game.app.rework.AbstractEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,9 +21,9 @@ private int barWidthAlive;
 
 private int counterLastHurt;
 
-    public UIBar(){
-        this.bar_font =  new Texture(Gdx.files.internal("src/main/resources/UI/bar_font.png"));
-        this.bar_red =  new Texture(Gdx.files.internal("src/main/resources/UI/bar_red.png"));
+    public UIBar() {
+        this.bar_font = TextureManager.getInstance().getTexture("src/main/resources/UI/bar_font.png");
+        this.bar_red =  TextureManager.getInstance().getTexture("src/main/resources/UI/bar_red.png");
         this.barWidth = bar_font.getWidth();
         this.barHeight = bar_font.getHeight();
     }

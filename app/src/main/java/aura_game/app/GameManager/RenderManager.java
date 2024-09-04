@@ -26,6 +26,7 @@ public class RenderManager {
     private StoryMenu storyMenu;
     private CommonInfoMenu commonInfoMenu;
     private WheelManager wheelManager;
+    private RainManager rainManager;
     private Sky sky;
     private UpdateManager updateManager;
     /**Lot de sprites pour les graphiques 2D */
@@ -49,7 +50,7 @@ public class RenderManager {
      * @param inventory L'inventaire du joueur.
      * @param sky Le ciel du jeu.
      */
-    public void initialize(Region region, Player player, InventoryMenu inventory, CraftingLootMenu craftingLootMenu, CraftingBlockMenu craftingBlockMenu,CapabilitiesMenu capabilitiesMenu, MapMenu mapMenu, StoryMenu storyMenu, CommonInfoMenu commonInfoMenu,CraftBlockManager craftBlockManager, NotificationManager notificationManager, Sky sky, UpdateManager updateManager, WheelManager wheelMenu) {
+    public void initialize(Region region, Player player, InventoryMenu inventory, CraftingLootMenu craftingLootMenu, CraftingBlockMenu craftingBlockMenu,CapabilitiesMenu capabilitiesMenu, MapMenu mapMenu, StoryMenu storyMenu, CommonInfoMenu commonInfoMenu,CraftBlockManager craftBlockManager, NotificationManager notificationManager, Sky sky,RainManager rainManager, UpdateManager updateManager, WheelManager wheelMenu) {
         this.region = region;
         this.player = player;
         this.playerInventory = inventory;
@@ -62,6 +63,7 @@ public class RenderManager {
         this.craftBlockManager = craftBlockManager;
         this.wheelManager = wheelMenu;
         this.sky = sky;
+        this.rainManager = rainManager;
         this.updateManager = updateManager ;
         this.lootManager = LootManager.getInstance();
         this.notificationManager = notificationManager;
@@ -74,9 +76,14 @@ public class RenderManager {
         batch.begin();
         float dt = Gdx.graphics.getDeltaTime();//DELTA TIME 
         renderMap();
+        synchronized (rainManager.lock()) {
+            rainManager.renderDropsOnFloor(batch, region);
+        }
         renderObjects();
+        synchronized (rainManager.lock()) {
+            rainManager.renderDropsOnSky(batch, region);
+        }
         //renderSky(dt);
-        //render les elements heart, slots tools...
         wheelManager.renderActualTool(batch);
         craftBlockManager.render(batch);
         renderActiveMenu();
@@ -152,6 +159,7 @@ public class RenderManager {
 
     public void dispose() {
         // Libérer les ressources utilisées par le renderer
+        rainManager.stopUpdateThread();
         batch.dispose();
         playerInventory.dispose();
         player.texture().dispose();

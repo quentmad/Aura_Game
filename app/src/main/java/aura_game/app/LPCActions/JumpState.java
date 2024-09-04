@@ -40,7 +40,9 @@ public class JumpState extends ActionState{
                 Game.getInstance().getRegion().camera().calculAndUpdateCameraPosition(entity);//Update pour que le plan/map bouge en fonction du joueur TODO: les autres entites doivent pas faire sur la cam (sauf si cinematique...)
             }
 
-            boolean finish = updateSpriteXWithDuration();
+            Pair<Boolean,Integer> p = animation.returnUpdatedSpriteXWithDuration(currentSpriteX);
+            boolean finish = p.getLeft();
+            currentSpriteX = p.getRight();
             // Vérifie si l'animation est terminée
             if(finish) {
                 Game.getInstance().getMyInputProc().finishAction();

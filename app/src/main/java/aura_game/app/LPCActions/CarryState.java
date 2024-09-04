@@ -6,7 +6,6 @@ import aura_game.app.rework.ActorEntity;
 import aura_game.app.rework.BlockEntity;
 import aura_game.app.rework.Player;
 import aura_game.app.rework.Point;
-import org.apache.commons.lang3.tuple.Pair;
 
 
 /**
@@ -44,7 +43,7 @@ public class CarryState extends ActionState {
                 entity.stateComponant().changeAction("Idle", entity.stateComponant().getCurrentOrientation());
                 return;
             }
-            updateSpriteXWithDuration();
+            this.currentSpriteX = animation.returnUpdatedSpriteXWithDuration(currentSpriteX).getRight();
 
             if (entity instanceof Player) {//On met a jour la caméra de la map si besoin
                 Game.getInstance().getRegion().camera().calculAndUpdateCameraPosition(entity);//Update pour que le plan/map bouge en fonction du joueur TODO: les autres entites doivent pas faire sur la cam (sauf si cinematique...)

@@ -18,7 +18,6 @@ public class ToolWieldingEntity extends ActorEntity{
 
     @Override
     public void hit(){
-        //Rectangle currentHitZone = toolManager.getCurrentEquippedTool().zoneDegat(this);
         Rectangle currentHitZone = zoneDegatFromDirection(stateComponant().getCurrentOrientation().getDirection());
         for(AbstractEntity ent : physics().getCollidingObjectsInBothGrids(currentHitZone)){
             ent.hurt(damage());

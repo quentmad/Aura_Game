@@ -35,19 +35,7 @@ public abstract class ActionState {
 
     public abstract Point getMovementOf(String direction);
 
-    /**Met à jour le spriteX en lui attribuant le spriteX suivant de l'action actuelle
-     * @return true si l'animation a effectué un tour complet (est revenu à 0)
-     */
-    private boolean incrementCurrentSpriteX(){//TODO: on fait vraiment le 0 au debut ?
-        int old = currentSpriteX;
-        currentSpriteX = (currentSpriteX + 1);
-        if(currentSpriteX > animation.getLastIndexX()){//On a fait un tour complet
-            currentSpriteX = 0;
-            return true;
-        }
-        return false;
 
-    }
 
     public int getCurrentSpriteX() {
         return currentSpriteX;
@@ -66,18 +54,7 @@ public abstract class ActionState {
         return animation.isAutonomeExecution();
     }
 
-    /**
-     * Ajoute 1 au temps de la frame actuelle et passe à la frame suivante si besoin.
-     * @return true si l'animation a effectué un "tour" complet.
-     */
-    public boolean updateSpriteXWithDuration() {
-        frameDurationCounter++;
-        if(frameDurationCounter >= animation.getFrameDuration(currentSpriteX) ) {
-            frameDurationCounter = 0;
-            return incrementCurrentSpriteX();//Execution complete de l'animation ?
-        }
-        return false;
-    }
+
 
 
 }

@@ -1,5 +1,6 @@
 package aura_game.app.rework;
 
+import aura_game.app.GameManager.TextureManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,14 +32,16 @@ public abstract class AbstractObject {
         this.onGround = false;//TODO
         this.name = name;
         if(this instanceof Player){
-            this.texture = new Texture("src/main/resources/Entities/Aiden_Complete_V3.png");
-
+            this.texture = TextureManager.getInstance().getTexture("src/main/resources/Entities/Aiden_Complete_V3.png");
         }else {
-            this.texture = new Texture(Gdx.files.internal(fileTexture));
+            this.texture = TextureManager.getInstance().getTexture(fileTexture);
         }
 
 
     }
+
+
+
     /**
      * @return true si l'entité est au sol, false sinon
      */

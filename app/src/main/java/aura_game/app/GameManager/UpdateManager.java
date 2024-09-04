@@ -3,8 +3,13 @@ package aura_game.app.GameManager;
 import aura_game.app.CraftingBlockMenu;
 import aura_game.app.LootManager;
 import aura_game.app.Notifications.NotificationManager;
+import aura_game.app.Weather.RainManager;
 import aura_game.app.WheelManager;
 import aura_game.app.rework.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
+import static java.lang.System.currentTimeMillis;
 
 
 //TODO: creer une classe SaveManager pour gérer la sauvegarde et le chargement du jeu
@@ -18,7 +23,11 @@ public class UpdateManager {
     private String activeMenu;
     private CommonInfoMenu commonInfoMenu;
     private WheelManager wheelManager;
+    private RainManager rainManager;
     private NotificationManager notificationManager;
+    //Texture instance unique
+    private Texture bar_font;
+    private Texture bar_red;
 
     public UpdateManager(){
         this.activeMenu = "game";
@@ -38,10 +47,13 @@ public class UpdateManager {
      * @param region La région du jeu pour la mise à jour.
      * @param player Le joueur jouable de la partie.
      */
-    public void initialize(Region region, Player player, WheelManager wheelManager,CommonInfoMenu commonInfoMenu, NotificationManager notificationManager) {
+    public void initialize(Region region, Player player, WheelManager wheelManager, RainManager rainManager,CommonInfoMenu commonInfoMenu, NotificationManager notificationManager) {
+        this.bar_font =  new Texture(Gdx.files.internal("src/main/resources/UI/bar_font.png"));
+        this.bar_red =  new Texture(Gdx.files.internal("src/main/resources/UI/bar_red.png"));
         this.region = region;
         this.player = player;
         this.wheelManager = wheelManager;
+        this.rainManager = rainManager;
         this.commonInfoMenu = commonInfoMenu;
         this.notificationManager = notificationManager;
 
@@ -56,6 +68,10 @@ public class UpdateManager {
         // Autres mises à jour nécessaires
         region.interactionComponent().update(dt);
         LootManager.getInstance().update(2);
+        // Mettre à jour la pluie, utilisation du lock pour éviter les problèmes de concurrence et ne permettre qu'une seul mise à jour àpar tick
+        synchronized (rainManager.lock()) {
+            rainManager.lock().notify();
+        }
         //Tri de la liste ObjectsOnMap
         if(region.interactionComponent().abstractObjectsOnGround().needSort()) {
             region.interactionComponent().abstractObjectsOnGround().sort();

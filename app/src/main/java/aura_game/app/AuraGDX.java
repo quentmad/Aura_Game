@@ -55,10 +55,10 @@ public class AuraGDX extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Mettre à jour et afficher les FPS
-        //fpsCounter.update();
+        fpsCounter.update();
         renderManager.render();
         if(frameCount%2==0){
-            updateManager.update(0.3f);
+            updateManager.update(0.1f);
         }
         frameCount++;
     }

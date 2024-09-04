@@ -14,7 +14,9 @@ public class SpellCastState extends ActionState{
 
     /** Static action one loop*/
     public void act(ActorEntity entity) {
-        boolean finish = updateSpriteXWithDuration();
+        Pair<Boolean,Integer> p = animation.returnUpdatedSpriteXWithDuration(currentSpriteX);
+        boolean finish = p.getLeft();
+        this.currentSpriteX = p.getRight();
         // Vérifie si l'animation est terminée
         if(finish) {
             Game.getInstance().getMyInputProc().finishAction();

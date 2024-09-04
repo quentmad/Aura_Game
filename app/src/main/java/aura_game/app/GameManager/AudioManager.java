@@ -20,6 +20,7 @@ public class AudioManager {
     Sound soundPutWood;
     Sound soundPickedUp;
     Sound soundHurtEntity;
+    Sound rain;
     //Music music = assetManager.get("audio/music.mp3", Music.class);
 
     private AudioManager(){
@@ -31,19 +32,15 @@ public class AudioManager {
         assetManager.load("src/main/resources/sound/woodbreak.ogg", Sound.class);
         assetManager.load("src/main/resources/sound/pickedUp.ogg", Sound.class);
         assetManager.load("src/main/resources/sound/hitEntity.ogg", Sound.class);
-        /*assetManager.load("audio/sound.wav", Sound.class);
-        assetManager.load("audio/music.mp3", Music.class);//Pour des sons plus long
-        */
+        assetManager.load("src/main/resources/sound/rain.ogg", Sound.class);
         assetManager.finishLoading();
-        /*
-        Sound sound = assetManager.get("audio/sound.wav", Sound.class);
-        Music music = assetManager.get("audio/music.mp3", Music.class);*/
         //TODO: sound1.dispose(); // Pour libérer les ressources du son 1
         soundMoveSelectedItem = assetManager.get("src/main/resources/sound/moveSelectedItem.mp3", Sound.class);
         soundBreakWood = assetManager.get("src/main/resources/sound/woodbreak.ogg", Sound.class);
         soundPutWood = assetManager.get("src/main/resources/sound/putWood.ogg", Sound.class);
         soundPickedUp = assetManager.get("src/main/resources/sound/pickedUp.ogg", Sound.class);
         soundHurtEntity = assetManager.get("src/main/resources/sound/hitEntity.ogg", Sound.class);
+        rain = assetManager.get("src/main/resources/sound/rain.ogg", Sound.class);
 
     }
 
@@ -72,11 +69,26 @@ public class AudioManager {
                 break;
             case"entity_hurt":
                 soundHurtEntity.play(volume);//! remettre volume !!!!!!!!!
+            case "rain_":
+                rain.play(volume);//! remettre volume !!!!!!!!!
+                break;
         }
 
     }
     //Ne rien mettre dans les ItemType... On recherche directement par action et type le son
 
+    public void stopSound(String action,String name){
+        switch (action +"_"+ name){
+            case "wood_hurt":
+                soundBreakWood.stop();
+                break;
+            case"entity_hurt":
+                soundHurtEntity.stop();
+            case "rain_":
+                rain.stop();
+                break;
+        }
+    }
 
 //TODO: stop, loop,pan?, pause
 

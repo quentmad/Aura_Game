@@ -4,6 +4,7 @@ import aura_game.app.*;
 import aura_game.app.Craft.CraftLootManager;
 import aura_game.app.CraftableBlock.CraftBlockManager;
 import aura_game.app.Notifications.NotificationManager;
+import aura_game.app.Weather.RainManager;
 import aura_game.app.Weather.Sky;
 import aura_game.app.rework.*;
 import aura_game.app.rework.TypeEnum.ActorEntityType;
@@ -29,6 +30,7 @@ public class Game {
     private MapMenu mapMenu;
     private StoryMenu storyMenu;
     private WheelManager wheelManager;
+    private RainManager rainManager;
     private Region region; 
     private Player player;
     private Sky sky ;
@@ -87,6 +89,7 @@ public class Game {
         inputHandler = InputHandler.getInstance();
         inputProcessor  = MyInputProc.getInstance();
         notificationManager = NotificationManager.getInstance();
+        rainManager = new RainManager();
         CraftLootManager craftLootManager = new CraftLootManager();
         CraftBlockManager craftBlockManager = new CraftBlockManager();
 
@@ -99,11 +102,12 @@ public class Game {
         this.craftingLootMenu.initialize(craftLootManager, playerInventory);
         this.craftingBlockMenu.initialize(craftBlockManager, playerInventory);
         this.loadManager.initialize(updateManager, region, player, playerInventory, inputHandler, craftingLootMenu, craftingBlockMenu,craftBlockManager, wheelManager, physicsMovableComponent, physicsComponent);
-        this.updateManager.initialize(region, player, wheelManager, commonInfoMenu, notificationManager);
-        this.renderManager.initialize(region, player, playerInventory, craftingLootMenu, craftingBlockMenu,capabilitiesMenu,mapMenu,storyMenu, commonInfoMenu, craftBlockManager,notificationManager,sky, updateManager, wheelManager);
+        this.updateManager.initialize(region, player, wheelManager, rainManager,commonInfoMenu, notificationManager);
+        this.renderManager.initialize(region, player, playerInventory, craftingLootMenu, craftingBlockMenu,capabilitiesMenu,mapMenu,storyMenu, commonInfoMenu, craftBlockManager,notificationManager,sky, rainManager, updateManager, wheelManager);
         this.commonInfoMenu.initialize(player);
         this.player.initialize(craftBlockManager);
         player.stateComponant().changeAction("Idle", Orientation.SOUTH);//init
+        rainManager.startUpdateThread(player.posC());
         //test();
 
     }

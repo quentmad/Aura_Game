@@ -2,7 +2,6 @@ package aura_game.app.LPCActions;
 
 import aura_game.app.rework.ActorEntity;
 import aura_game.app.rework.Point;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Default State
@@ -20,7 +19,7 @@ public class IdleState extends ActionState {
 
         //System.out.println(" !!! debug: player shouldn't have colission with pixmap when he doesn't walk : colission : \n" + entity.physics().isColliding(entity,entity.posC()));
 
-        updateSpriteXWithDuration();
+        this.currentSpriteX = animation.returnUpdatedSpriteXWithDuration(currentSpriteX).getRight();
     }
 
     @Override

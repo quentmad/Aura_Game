@@ -73,6 +73,7 @@ public class LoadManager {
 
     public void startNewGame() {
         // Logique de démarrage d'une nouvelle partie
+        TextureManager.getInstance().loadUsesTextures();
         loadBlockOnRegion("mapForest");
         loadRegionAnimatedBlocks("mapForest");
         initHashMapInputHandler();

@@ -14,8 +14,7 @@ public class FPSCounter {
 
     public void update() {
         frames++;
-
-        if (TimeUtils.nanoTime() - startTime > 1000000000) {
+        if (TimeUtils.nanoTime() - startTime >= 1000000000) {
             System.out.println("FPS: " + frames);
             frames = 0;
             startTime = TimeUtils.nanoTime();

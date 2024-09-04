@@ -4,6 +4,7 @@ import aura_game.app.LootManager;
 import aura_game.app.UIBar;
 import aura_game.app.Util.Triplet;
 import aura_game.app.rework.TypeEnum.LootableObjectType;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.util.List;
 
@@ -34,14 +35,15 @@ public abstract class AbstractEntity extends AbstractObject {
         super(name, imageWidth, imageHeight, contentImageWidth, contentImageHeight, offsetY, fileTexture, posX, posY);
         this.durability = durability;
         this.maxDurability = maxDurability;
-        this.hitbox = hitbox;//spriteSheetInfo.SPRITE_WIDTH()/2 - hitboxWidth/2         //decallageX
+        this.hitbox = hitbox;
         this.physics = physics;
-        this.ui = new UIBar();
+        this.ui = new UIBar(); //test
         this.stature = stature;
         this.deathLoot = deathLoot;
 
         this.hitbox.update(posX, posY);
     }
+
 
     /**
      * @return la position de l'entité en x pour le spawn de loot

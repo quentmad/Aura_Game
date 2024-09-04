@@ -1,10 +1,13 @@
 package aura_game.app.LPCActions;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 /**Animation (U L D R)*/
 public class Animation {
 
     private int indexY;
     private int lastIndexX;
+    private int framesDurationCounter;
 
     /**Durée de chaque frame, étant pareil dans chaque direction*/
     private int[] framesDuration;
@@ -27,6 +30,7 @@ public class Animation {
         this.framesDuration = framesDuration;
         this.autonomeExecution = autonomeExecution;
         this.beginX = 0;
+        this.framesDurationCounter = 0;
     }
 
     /**Cas où tous les frames ont tous la meme durée : 1tps */
@@ -39,6 +43,7 @@ public class Animation {
         }
         this.autonomeExecution = autonomeExecution;
         this.beginX = 0;
+        this.framesDurationCounter = 0;
     }
 
     public int getIndexY() {
@@ -71,6 +76,35 @@ public class Animation {
     /**@return la durée de la frame numéro index (la durée est la meme dans chaque direction)*/
     public int getFrameDuration(int index){
         return framesDuration[index];
+    }
+
+
+    /**
+     * Ajoute 1 au temps de la frame actuelle et passe à la frame suivante si besoin.
+     * @return true si l'animation a effectué un "tour" complet, et currentSpriteX mis à jour
+     */
+    public Pair<Boolean, Integer> returnUpdatedSpriteXWithDuration(int currentSpriteX) {//TODO A METTRE DANS ANIMATION ?
+        framesDurationCounter++;
+        if(framesDurationCounter >= getFrameDuration(currentSpriteX) ) {
+            framesDurationCounter = 0;
+            return incrementCurrentSpriteX(currentSpriteX);//Execution complete de l'animation ?
+        }
+        return Pair.of(false, currentSpriteX);
+    }
+
+
+    /**Met à jour le spriteX en lui attribuant le spriteX suivant de l'action actuelle
+     * @return true si l'animation a effectué un tour complet (est revenu à 0) et currentSpriteX mis à jour
+     */
+    private Pair<Boolean, Integer>  incrementCurrentSpriteX(int currentSpriteX){//TODO: on fait vraiment le 0 au debut ?
+        int old = currentSpriteX;
+        currentSpriteX = (currentSpriteX + 1);
+        if(currentSpriteX > getLastIndexX()){//On a fait un tour complet
+            currentSpriteX = 0;
+            return Pair.of(true, currentSpriteX);
+        }
+        return Pair.of(false, currentSpriteX);
+
     }
 
 }

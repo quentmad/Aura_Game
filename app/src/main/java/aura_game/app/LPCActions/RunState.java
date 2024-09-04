@@ -20,7 +20,7 @@ public class RunState extends ActionState{
         Point posWish = new Point(entity.posC().x() + movement.x(),entity.posC().y() + movement.y());
         if(entity.physics().isColliding(entity,posWish) == 0){//Pas de colission
             entity.move(movement.x(),movement.y());
-            updateSpriteXWithDuration();
+            this.currentSpriteX = animation.returnUpdatedSpriteXWithDuration(currentSpriteX).getRight();
 
             if(entity instanceof Player){//On met a jour la caméra de la map si besoin
                 Game.getInstance().getRegion().camera().calculAndUpdateCameraPosition(entity);//Update pour que le plan/map bouge en fonction du joueur TODO: les autres entites doivent pas faire sur la cam (sauf si cinematique...)

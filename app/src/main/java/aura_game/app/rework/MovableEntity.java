@@ -2,6 +2,7 @@ package aura_game.app.rework;
 
 import aura_game.app.GameManager.Game;
 import aura_game.app.Util.Triplet;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.util.List;
 
@@ -13,7 +14,6 @@ public class MovableEntity extends AbstractEntity{
         super(name, imageWidth, imageHeight, contentImageWidth, contentImageHeight, offsetY, durability, maxDurability, hitbox, Game.getInstance().getPhysicsMovableComponent(), stature, deathLoot, onGround, fileTexture, posX, posY);
         this.speed = speed;
     }
-
 
 
     /**

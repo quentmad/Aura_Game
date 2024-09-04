@@ -18,7 +18,10 @@ public class HurtState extends ActionState{
     @Override
     public void act(ActorEntity entity) {
         if(alive) {
-            if(updateSpriteXWithDuration()){// Vérifie si l'animation est terminée
+            Pair<Boolean,Integer> p = animation.returnUpdatedSpriteXWithDuration(currentSpriteX);
+            boolean finish = p.getLeft();
+            this.currentSpriteX = p.getRight();
+            if(finish){// Vérifie si l'animation est terminée
                 alive = false;
             }
         }

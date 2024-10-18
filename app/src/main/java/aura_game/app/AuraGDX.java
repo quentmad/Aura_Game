@@ -1,6 +1,4 @@
 package aura_game.app;
-
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -30,9 +28,6 @@ public class AuraGDX extends ApplicationAdapter {
     private int frameCount=0;
     FPSCounter fpsCounter;
 
-    //float delay = 0; // Délai initial avant la première exécution (0 signifie tout de suite)
-    //float interval = 2; // Intervalle de temps entre chaque exécution (2 secondes)
-
     @Override
     public void create () {
 
@@ -46,7 +41,6 @@ public class AuraGDX extends ApplicationAdapter {
         loadManager.startNewGame();
         game.setGameStarted(true);
 
-
     }
 
     /**Appelé de façon continue par la boucle principale de libGDX*/
@@ -55,7 +49,7 @@ public class AuraGDX extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Mettre à jour et afficher les FPS
-        fpsCounter.update();
+        //fpsCounter.update();
         renderManager.render();
         if(frameCount%2==0){
             updateManager.update(0.1f);

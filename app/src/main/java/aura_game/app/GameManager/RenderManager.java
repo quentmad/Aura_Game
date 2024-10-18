@@ -92,7 +92,7 @@ public class RenderManager {
         }
         notificationManager.render(batch);
         batch.end();
-       // Debug.getInstance().renderZoneDegat(player);
+        Debug.getInstance().renderZoneDegat(player);
        // Debug.getInstance().renderHitboxPolygon(player);
     }
 

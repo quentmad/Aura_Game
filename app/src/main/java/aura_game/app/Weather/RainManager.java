@@ -186,7 +186,7 @@ public class RainManager {
     public void setInfos(){
         active = false;
         //Date de la prochaine pluie
-        nextRainStart = (int) (timer + (long) (Math.random() * 20) + 50);
+        nextRainStart = (int) (timer + (long) (Math.random() * 10000) + 100);
         nbDropsMax = (int) (Math.random() * 400) + 600;
         System.out.println("nombre de goutes: "+ nbDropsMax);
         //Date de fin de la prochaine pluie
